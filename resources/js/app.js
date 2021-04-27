@@ -7,15 +7,10 @@
 require('./bootstrap');
 
 window.Vue = require('vue').default;
-import VueRouter from 'vue-router'
-import routes from "./router/routes";
+import router from "./router/router";
 import store from "./vuex/store";
 import Vuex from 'vuex'
-
-const router = new VueRouter({
-    mode: 'history',
-    routes
-})
+import TheLayout from './components/TheLayout'
 
 Vue.use(Vuex)
 
@@ -27,5 +22,6 @@ const app = new Vue({
     el: '#app',
     router,
     storage,
+    render: h => h(TheLayout)
 });
 

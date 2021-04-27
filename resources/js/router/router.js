@@ -1,10 +1,45 @@
-import routes from './routes'
-import VueRouter from "vue-router/dist/vue-router";
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import TheLogin from "../components/pages/auth/TheLogin";
+import TheAuth from "../components/layouts/TheAuth";
+import TheRepairPassword from "../components/pages/auth/TheRepairPassword";
+import TheRepairPasswordCode from "../components/pages/auth/TheRepairPasswordCode";
+import TheRepairPasswordNew from "../components/pages/auth/TheRepairPasswordNew";
 
-const router = VueRouter.createRouter({
-    // 4. Provide the history implementation to use. We are using the hash history for simplicity here.
-    history: VueRouter.createWebHashHistory(),
-    routes, // short for `routes: routes`
-})
+Vue.use(VueRouter);
+
+const router = new VueRouter({
+    mode: 'history',
+    linkExactActiveClass: 'active',
+    routes: [
+        {
+            path: '/login',
+            name: 'login.base',
+            component: TheAuth,
+            children: [
+                {
+                    path: '/',
+                    name: 'login.index',
+                    component: TheLogin
+                },
+                {
+                    path: 'repair-password',
+                    name: 'login.repair',
+                    component: TheRepairPassword
+                },
+                {
+                    path: 'repair-password/code',
+                    name: 'login.repair.code',
+                    component: TheRepairPasswordCode
+                },
+                {
+                    path: 'repair-password/new-password',
+                    name: 'login.repair.new',
+                    component: TheRepairPasswordNew
+                }
+            ]
+        },
+    ]
+});
 
 export default router;
