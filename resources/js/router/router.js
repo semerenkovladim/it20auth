@@ -1,9 +1,9 @@
 import routes from './routes'
-import { createRouter, createWebHistory } from 'vue-router'
+import VueRouter from "vue-router/dist/vue-router";
 
-const router = createRouter({
+const router = VueRouter.createRouter({
     // 4. Provide the history implementation to use. We are using the hash history for simplicity here.
-    history: createWebHistory(),
+    history: VueRouter.createWebHashHistory(),
     routes, // short for `routes: routes`
 })
 
