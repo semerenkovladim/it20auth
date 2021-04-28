@@ -8,11 +8,6 @@ import TheRepairPasswordNew from "../components/pages/auth/TheRepairPasswordNew"
 
 Vue.use(VueRouter);
 
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-
-Vue.use(VueRouter)
-
 import UsersManagementPage from "../components/UsersManagement/views/UsersManagementPage";
 
 const router = new VueRouter({
