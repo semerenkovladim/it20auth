@@ -1,10 +1,19 @@
-import routes from './routes'
-import VueRouter from "vue-router/dist/vue-router";
+import Vue from 'vue'
+import VueRouter from 'vue-router'
 
-const router = VueRouter.createRouter({
-    // 4. Provide the history implementation to use. We are using the hash history for simplicity here.
-    history: VueRouter.createWebHashHistory(),
-    routes, // short for `routes: routes`
+Vue.use(VueRouter)
+
+import UsersManagementPage from "../components/UsersManagement/views/UsersManagementPage";
+
+const router = new VueRouter({
+    mode: 'history',
+    linkExactActiveClass: 'active',
+    routes: [
+        {
+            path: '/users-management',
+            component: UsersManagementPage
+        }
+    ]
 })
 
 export default router;
