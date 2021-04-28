@@ -38,13 +38,13 @@ const router = new VueRouter({
                     path: 'repair-password/new-password',
                     name: 'login.repair.new',
                     component: TheRepairPasswordNew
-                },
-                {
-                    path: '/users-management',
-                    component: UsersManagementPage
                 }
             ]
         },
+        {
+             path: '/users-management',
+             component: UsersManagementPage
+        }
     ]
 });
 
