@@ -13,8 +13,6 @@ import store from "./vuex/store";
 import Vuex from 'vuex'
 import TheLayout from './components/TheLayout'
 import Vue from 'vue'
-import router from "./router/router";
-import store from "./vuex/store";
 import TheLayout from "./components/TheLayout";
 
 
