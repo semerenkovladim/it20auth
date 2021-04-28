@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import TheLogin from "../components/pages/auth/TheLogin";
@@ -8,21 +7,19 @@ import TheRepairPasswordCode from "../components/pages/auth/TheRepairPasswordCod
 import TheRepairPasswordNew from "../components/pages/auth/TheRepairPasswordNew";
 
 Vue.use(VueRouter);
-=======
+
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
 import UsersManagementPage from "../components/UsersManagement/views/UsersManagementPage";
->>>>>>> 876872aa19569a91030d2b8fe5d3681f6454b5be
 
 const router = new VueRouter({
     mode: 'history',
     linkExactActiveClass: 'active',
     routes: [
         {
-<<<<<<< HEAD
             path: '/login',
             name: 'login.base',
             component: TheAuth,
@@ -46,17 +43,14 @@ const router = new VueRouter({
                     path: 'repair-password/new-password',
                     name: 'login.repair.new',
                     component: TheRepairPasswordNew
+                },
+                {
+                    path: '/users-management',
+                    component: UsersManagementPage
                 }
             ]
         },
     ]
 });
-=======
-            path: '/users-management',
-            component: UsersManagementPage
-        }
-    ]
-})
->>>>>>> 876872aa19569a91030d2b8fe5d3681f6454b5be
 
 export default router;
