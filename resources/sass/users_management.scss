@@ -1,0 +1,18 @@
+@import "variables";
+input[type=checkbox] {
+    width: 20px;
+    height: 20px;
+    background: #FFFFFF;
+    border: 2px solid #E6E6E6;
+    box-sizing: border-box;
+    border-radius: 4px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:checked {
+        background: url('../images/icons/checked.svg') no-repeat center / 70%, $designColorOne;
+        border: 2px solid $designColorOne;
+    }
+}
