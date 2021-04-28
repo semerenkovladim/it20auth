@@ -11,7 +11,6 @@ window.Vue = require('vue').default;
 import router from "./router/router";
 import store from "./vuex/store";
 import Vuex from 'vuex'
-import TheLayout from './components/TheLayout'
 import Vue from 'vue'
 import TheLayout from "./components/TheLayout";
 
@@ -25,7 +24,7 @@ const storage = new Vuex.Store({
 const app = new Vue({
     el: '#app',
     router,
-    store,
+    storage,
     render: h => h(TheLayout)
 })
 
