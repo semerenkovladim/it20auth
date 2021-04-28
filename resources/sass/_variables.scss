@@ -2,7 +2,7 @@
 $body-bg: #f8fafc;
 
 // Typography
-$font-family-sans-serif: 'Nunito', sans-serif;
+$font-family-sans-serif: 'Roboto', sans-serif;
 $font-size-base: 0.9rem;
 $line-height-base: 1.6;
 
@@ -17,3 +17,27 @@ $yellow: #ffed4a;
 $green: #38c172;
 $teal: #4dc0b5;
 $cyan: #6cb2eb;
+
+
+//header
+$headerHeight: 92px;
+
+//nav
+
+$navWidth: 160px;
+
+//users management
+$userManagementBgColor: rgba(250,250,250);
+$userManagementRowBgColor: rgb(253, 253, 254);
+$userManagementFilterActiveBg: #FCFCFC;
+$userManagementRowBoxShadow: 0px 2px 5px rgba(0, 0, 0, 0.05);
+$userManagementRowBorderRadius: 6px;
+$userManagementUserColor: #999999;
+$userManagementUserFz: 12px;
+$userManagementFF: 'Roboto', sans-serif;
+
+$designColorOne: #1875F0;
+$lightColor: #999999;
+$darkColor: #666666;
+
+$breakpoint: 768px

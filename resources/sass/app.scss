@@ -1,8 +1,17 @@
+<<<<<<< HEAD
+=======
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
 // Fonts
 @import url('https://fonts.googleapis.com/css?family=Nunito');
 
+>>>>>>> 876872aa19569a91030d2b8fe5d3681f6454b5be
 // Variables
 @import 'variables';
 
-// Bootstrap
-@import '~bootstrap/scss/bootstrap';
+@import "normalize.scss";
+
+@import "fonts";
+
+@import "users_management";

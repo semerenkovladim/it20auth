@@ -7,13 +7,12 @@
     <title>Laravel</title>
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,900;1,500&display=swap" rel="stylesheet">
     <link href="{{asset('css/app.css')}}" rel="stylesheet">
 </head>
 <body>
-    <div id="app">
-
-    </div>
+    <div id="app"></div>
 <script src="{{asset('js/app.js')}}"></script>
 </body>
 </html>
