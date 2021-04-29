@@ -22,10 +22,10 @@ class CreateUsersTable extends Migration
             $table->text('avatar')->nullable();
             $table->date('birth');
             $table->date('date_start');
-            $table->string('email')->unique();
-            $table->string('mobile_phone')->nullable();
-            $table->string('work_phone')->nullable();
-            $table->string('skype')->unique()->nullable();
+            $table->string('email', 255)->unique();
+            $table->string('mobile_phone', 255)->nullable();
+            $table->string('work_phone', 255)->nullable();
+            $table->string('skype', 255)->unique()->nullable();
             $table->string('password', 255);
             $table->string('remember_token', 255)->nullable();
             $table->boolean('is_admin')->default(false);
