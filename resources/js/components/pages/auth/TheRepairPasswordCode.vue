@@ -10,15 +10,15 @@
                     </div>
                     <div class="form-group">
                         <label for="inputEmail">Код подтверждения:</label>
-                        <div class="row justify-content-between align-items-center">
-                            <input type="text" class="form-control col-12 col-lg-7" id="inputEmail"
+                        <div class="row justify-content-between align-items-start">
+                            <input type="text" class="form-control col-12 col-lg-7 mt-3" id="inputEmail"
                                    aria-describedby="emailHelp"
                                    placeholder="Код подтверждения:"
                                    name="code"
                                    v-model="code">
                             <div class="btn-resend col-12 col-lg-5">
                                 <div class="text-resend" v-if="!hideTextBtn">Станет доступно через: {{ countSecond }} сек.</div>
-                                <button :class="{cancel: true, 'active-btn': !disableButton}" @click.prevent="startTimer" :disabled="disableButton">Отправить  повторно</button>
+                                <button :class="{cancel: true, 'active-btn': !disableButton}" @click.prevent="startTimer" :disabled="disableButton">Отправить повторно</button>
                             </div>
                         </div>
 
