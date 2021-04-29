@@ -47,7 +47,7 @@
                         </svg>
                     </div>
                     <div class="form-group d-flex flex-row btn-form-group">
-                        <button @click.prevent="newPassword">потдвердить</button>
+                        <button @click.prevent="newPassword">подтвердить</button>
                         <button class="cancel" @click.prevent="clearAll">Отмена</button>
                     </div>
                 </form>
