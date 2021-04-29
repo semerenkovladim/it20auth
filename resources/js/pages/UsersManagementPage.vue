@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import UsersManagement from "../UsersManagement/components/UsersManagement";
+import UsersManagement from "../components/UsersManagement/components/UsersManagement";
 
 export default {
     name: "UsersManagementPage",
