@@ -6,7 +6,6 @@ import TheRepairPassword from "../components/pages/auth/TheRepairPassword";
 import TheRepairPasswordCode from "../components/pages/auth/TheRepairPasswordCode";
 import TheRepairPasswordNew from "../components/pages/auth/TheRepairPasswordNew";
 import UsersManagementPage from "../components/views/UsersManagementPage";
-import PersonalDataPage from "../components/views/PersonalDataPage";
 
 Vue.use(VueRouter);
 
@@ -46,10 +45,6 @@ const router = new VueRouter({
             path: '/users-management',
             component: UsersManagementPage
         },
-        {
-            path: '/personal-data',
-            component: PersonalDataPage
-        }
     ]
 });
 
