@@ -167,7 +167,8 @@ form button, .btn-resend .active-btn {
 
 }
 .btn-form-group {
-    justify-content: space-around;
+    justify-content: center;
+    margin: 0 15px;
 }
 .cancel {
     font-style: normal;
@@ -190,7 +191,7 @@ form button, .btn-resend .active-btn {
     font-weight: 500;
     font-size: 10px;
     line-height: 30px;
-    text-align: center;
+    text-align: left;
     color: #666666;
 }
 .error-msg {
