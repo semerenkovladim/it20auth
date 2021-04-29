@@ -215,7 +215,7 @@ form button, .btn-resend .active-btn {
 .has-error .subtitle-form {
     display: none;
 }
-.btn-resend button {
+.btn-resend button, .btn-form-group .active-btn {
     padding: 14px 10px;
 }
 @media screen and (max-width: 1023.99px) {
