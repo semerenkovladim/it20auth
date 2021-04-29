@@ -2789,7 +2789,6 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _router_router__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./router/router */ "./resources/js/router/router.js");
 /* harmony import */ var _vuex_store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./vuex/store */ "./resources/js/vuex/store.js");
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
 /* harmony import */ var _components_TheLayout__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/TheLayout */ "./resources/js/components/TheLayout.vue");
 /**
@@ -2804,16 +2803,10 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js"
 
 
 
-
-vue__WEBPACK_IMPORTED_MODULE_3__.default.use(vuex__WEBPACK_IMPORTED_MODULE_4__.default); //
-
-var storage = new vuex__WEBPACK_IMPORTED_MODULE_4__.default.Store({
-  store: _vuex_store__WEBPACK_IMPORTED_MODULE_1__.default
-});
 var app = new vue__WEBPACK_IMPORTED_MODULE_3__.default({
   el: '#app',
   router: _router_router__WEBPACK_IMPORTED_MODULE_0__.default,
-  storage: storage,
+  store: _vuex_store__WEBPACK_IMPORTED_MODULE_1__.default,
   render: function render(h) {
     return h(_components_TheLayout__WEBPACK_IMPORTED_MODULE_2__.default);
   }
