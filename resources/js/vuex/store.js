@@ -19,7 +19,6 @@ const store = new Vuex.Store({
             state.usersManagement.settingStatus = !state.usersManagement.settingStatus
         },
         setUMConfirmStatus(state) {
-            console.log('setUMSettingStatus', state.usersManagement.confirmStatus)
             state.usersManagement.confirmStatus = !state.usersManagement.confirmStatus
         },
         setUMConfirm(state) {
@@ -28,15 +27,10 @@ const store = new Vuex.Store({
     },
     actions: {
         async changeUMSettingStatus({commit}) {
-            console.log('changeUMSettingStatus')
             commit('setUMSettingStatus')
         },
         async changeUMConfirmStatus({commit}) {
-            console.log('changeUMConfirmStatus')
-            commit('setUMSettingStatus')
-        },
-        test() {
-            console.log('test')
+            commit('setUMConfirmStatus')
         }
     },
     getters: {

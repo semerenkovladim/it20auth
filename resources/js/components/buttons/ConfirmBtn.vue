@@ -1,34 +1,29 @@
 <template>
     <button class="settings__btn confirm_btn"
-            @click="changeSettings">{{text}}
+            @click="confirm">
+        {{ text }}
     </button>
 </template>
 
 <script>
-import {mapActions, mapGetters} from "vuex";
 
 export default {
     name: "ConfirmBtn",
-    props:['text'],
+    props: ['text'],
     methods: {
-        ...mapActions([
-            'changeUMSettingStatus'
-        ]),
         changeSettings() {
             this.changeUMSettingStatus()
         },
-    },
-    computed: {
-        ...mapGetters([
-            'UM_SETTINGS_STATUS'
-        ])
-
+        confirm() {
+            this.$emit('confirmEvent')
+        }
     }
 }
 </script>
 
 <style lang="scss">
-@import "resources/sass/variables";
+@import "../../../sass/variables";
+
 .confirm_btn {
     background: $designColorOne;
     color: #FFFFFF;

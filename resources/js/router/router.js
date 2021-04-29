@@ -3,7 +3,8 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
-import UsersManagementPage from "../components/UsersManagement/views/UsersManagementPage";
+import UsersManagementPage from "../components/views/UsersManagementPage";
+import PersonalDataPage from "../components/views/PersonalDataPage";
 
 const router = new VueRouter({
     mode: 'history',
@@ -12,6 +13,10 @@ const router = new VueRouter({
         {
             path: '/users-management',
             component: UsersManagementPage
+        },
+        {
+            path: '/personal-data',
+            component: PersonalDataPage
         }
     ]
 })

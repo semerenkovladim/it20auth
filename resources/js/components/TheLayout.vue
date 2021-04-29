@@ -4,7 +4,7 @@
 
 <script>
 
-import UsersManagementPage from "./UsersManagement/views/UsersManagementPage";
+import UsersManagementPage from "./views/UsersManagementPage";
 export default {
     name: "TheLayout",
     components:{
