@@ -1,0 +1,345 @@
+*{
+    font-family: 'Roboto', sans-serif;
+    padding: 0;
+    margin:0;
+}
+.flex{
+    display: flex;
+}
+
+.flex_header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin:10px 10px 5px 5px;
+}
+.accoun_flex{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.wiget{
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 30px;
+    color: #999999;
+    text-align: center;
+    padding-bottom: 25px;
+}
+.link{
+
+    padding-top: 15px;
+    margin:0 auto;
+}
+.link:hover{
+    border-left: 2px solid #1875F0;
+}
+nav{
+    margin-left: 15px;
+}
+nav ul{
+    text-align: center;
+}
+.dropdown-toggle{
+    background: url(../image/ic_keyboard_arrow_down.png) no-repeat;
+}
+.home{
+    background: url(../image/ic_home.png) no-repeat;
+    padding-bottom: 30px;
+    margin-left: 40px;
+}
+.dick{
+    background: url(../image/ic_cloud_dick.png) no-repeat;
+    padding-bottom: 30px;
+    margin-left: 40px;
+}
+.post{
+    background: url(../image/ic_email.png) no-repeat;
+    padding-bottom: 30px;
+    margin-left: 40px;
+}
+.calendar{
+    background: url(../image/ic_today.png) no-repeat;
+    padding-bottom: 30px;
+    margin-left: 40px;
+}
+.photo{
+    background: url(../image/ic_camera_alt.png) no-repeat;
+    padding-bottom: 30px;
+    display: block;
+    margin-left: 40px;
+}
+.contact{
+    background: url(../image/ic_people.png) no-repeat;
+    padding-bottom: 30px;
+    margin-left: 40px;
+}
+.control{
+    background: url(../image/ic_business_center.png) no-repeat;
+    padding-bottom: 30px;
+    margin-left: 40px;
+}
+.location{
+    background: url(../image/ic_location_city.png) no-repeat;
+    padding-bottom: 30px;
+    margin-left: 40px;
+}
+.content{
+    background-color: #E5E5E5;
+}
+
+ul {
+    list-style-type: none;
+ }
+ .hello{
+    background: #FFFFFF;
+    position: relative;
+    border-radius: 1px solid black;
+    width: 500px;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 25px;
+    color: #B3B3B3;
+    margin:0 auto;
+ }
+.footer_content{
+    display: flex;
+    justify-content: space-around;
+    align-items: stretch;
+    color: #B3B3B3;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 30px;
+}
+.policy_photo{
+    background: url(../image/logo_foot2.svg) no-repeat;
+    padding-bottom: 80px;
+    width: 200px;
+}
+.prave{
+    padding-bottom: 30px;
+}
+.background_line{
+    border-bottom: 2px solid #E6E6E6;
+    width: 65px;
+}
+.menu{
+    color: #9B9B9B;
+}
+.title_menu{
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 30px;
+    padding-bottom: 30px;
+    color: #666666;
+}
+.menu_content div{
+    padding-bottom: 15px;
+}
+.title_contact{
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 30px;
+    color: #666666;
+    padding-bottom: 30px;
+}
+.slider{
+    position: absolute;
+}
+.contact_f{
+padding-bottom: 28px;
+}
+.contact_f a{
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 30px;
+    color: #808080;
+}
+.icon_social{
+    padding-top: 32px;
+}
+.icon_social a{
+padding-right: 19px;
+}
+.title_hello{
+    background: #FFFFFF;
+    position: relative;
+    box-shadow: 0 0 3px 3px #f1e9e9;
+    border-radius: 4px;
+    margin: 0 auto;
+    bottom: 15px;
+    left: 15px;
+    padding-bottom: 25px;
+}
+.cards{
+    top: 500px;
+}
+.title{
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 36px;
+    line-height: 30px;
+    text-align: center;
+    color: #666666;
+    padding-bottom: 5px;
+}
+.hello_description{
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 30px;
+    text-align: center;
+    color: #666666;
+}
+.hello{
+    background: #FFFFFF;
+    position: relative;
+    box-shadow: 0 0 3px 3px #f1e9e9;
+    border-radius: 4px;
+    margin: 0 auto;
+ }
+ .contact_item{
+    margin-top: 15px;
+    margin-bottom: 30px;
+}
+.font_text{
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 160px;
+    line-height: 240px;
+    color: #F5F5F5;
+    position: relative;
+}
+.font_icon{
+    background: url(../image/flag_icon.png) no-repeat;
+    padding-top: 70px;
+    padding-left: 15px;
+    left: 25px;
+    top: 80px;
+    width: 80px;
+    position: absolute;
+}
+.offset_calendar{
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 25px;
+    color: #B3B3B3;
+}
+.offers_title{
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 30px;
+    padding-top: 30px;
+    color: #4D4D4D;
+}
+.description{
+    padding-bottom: 15px;
+}
+.wallet_icon{
+    background: url(../image/wallet_icon.png) no-repeat;
+    padding-top: 70px;
+    left: 25px;
+    top: 90px;
+    width: 80px;
+    position: absolute;
+}
+.left_cards{
+    padding-left: 25px;
+}
+.cup_icon{
+    background: url(../image/cup_icon.png) no-repeat;
+    padding-top: 70px;
+    left: 15px;
+    top: 90px;
+    width: 80px;
+    position: absolute;
+}
+.f{
+    margin: 0 auto;
+}
+.links{
+    background: #f3f0f0;
+}
+.footer{
+    margin-top: 15px;
+}
+/* Profile*/
+
+.profile{
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 30px;
+    color: #666666;
+    margin: 0 auto;
+}
+.profile input{
+    width: 400px;
+}
+.profile_photo{
+    margin-top: 25px;
+    padding-bottom: 10px;
+}
+.profile_title{
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 36px;
+    line-height: 90px;
+    box-shadow: 0 0 3px 3px #f1e9e9;
+    border-radius: 4px;
+    background: #FFFFFF;
+    margin-top: 15px;
+    color: #808080;
+}
+.profile_form{
+    background: #FFFFFF;
+    margin-bottom: 62px;
+}
+.inform_title{
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 90px;
+    text-align: center;
+    color: #999999;
+    margin-top: 15px;
+    border-bottom: 2px solid #F5F5F5;
+}
+.form_button{
+    text-align: center;
+    margin-top: 30px;
+    padding-bottom: 36px
+}
+.cancel_btn{
+    background: #FFFFFF;
+    border: 2px solid #F5F5F5;
+    box-sizing: border-box;
+    border-radius: 4px;
+    margin-left: 31px;
+}
+.cancel_btn:hover{
+    background: #bbb5b5;
+}
+/* Profile*/
