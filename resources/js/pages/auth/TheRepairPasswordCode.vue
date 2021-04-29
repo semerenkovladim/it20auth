@@ -10,7 +10,7 @@
                     </div>
                     <div class="form-group">
                         <div class="row justify-content-between align-items-end">
-                            <div class=" col-12 col-lg-9">
+                            <div class=" col-12 col-lg-8">
                                 <label for="inputEmail">Код подтверждения:</label>
                                 <input type="text" class="form-control" id="inputEmail"
                                        aria-describedby="emailHelp"
@@ -18,7 +18,7 @@
                                        name="code"
                                        v-model="code">
                             </div>
-                            <div class="btn-resend col-12 col-lg-3">
+                            <div class="btn-resend col-12 col-lg-4">
                                 <div class="text-resend" v-if="!hideTextBtn">Станет доступно через: {{ countSecond }} сек.</div>
                                 <button :class="{cancel: true, 'active-btn': !disableButton}" @click.prevent="startTimer" :disabled="disableButton">Отправить повторно</button>
                             </div>
