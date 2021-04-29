@@ -1,6 +1,6 @@
 <template>
     <div class="row justify-content-center h-100 align-items-center">
-        <div class="col-12 col-md-6 col-xl-8 form-col">
+        <div class="col-12 col-md-6 form-col">
             <div class="form-wrapper">
                 <form action="#" :class="{'has-error': hasError}">
                     <div class="title-form">Восстановление доступа</div>
@@ -83,6 +83,19 @@ export default {
                     this.hideTextBtn = true;
                 }
             }, 1000);
+        },
+        register (recaptchaToken) {
+            axios.post('/api/login/repair-password/code', {
+                email: this.email,
+                recaptchaToken: recaptchaToken
+            })
+        },
+        validate () {
+            this.$refs.recaptcha.execute()
+        },
+
+        onCaptchaExpired () {
+            this.$refs.recaptcha.reset()
         }
     }
 }
