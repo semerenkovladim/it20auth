@@ -16,3 +16,28 @@ input[type=checkbox] {
         border: 2px solid $designColorOne;
     }
 }
+.users_management {
+    background: $userManagementBgColor;
+    padding-top: calc(#{$headerHeight} + 7px);
+    padding-left: calc(#{$navWidth});
+    min-height: 100vh;
+    @media all and (max-width: $breakpoint) {
+        padding-left: 0;
+    }
+
+    label, ul {
+        margin-bottom: 0;
+    }
+
+    label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+
+}
+
+.users_management__container {
+    max-width: 1270px;
+}
