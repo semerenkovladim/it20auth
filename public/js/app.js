@@ -2990,15 +2990,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
-/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
+/* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
 /* harmony import */ var _pages_auth_TheLogin__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../pages/auth/TheLogin */ "./resources/js/pages/auth/TheLogin.vue");
 /* harmony import */ var _components_layouts_TheAuth__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/layouts/TheAuth */ "./resources/js/components/layouts/TheAuth.vue");
 /* harmony import */ var _pages_auth_TheRepairPassword__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../pages/auth/TheRepairPassword */ "./resources/js/pages/auth/TheRepairPassword.vue");
 /* harmony import */ var _pages_auth_TheRepairPasswordCode__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../pages/auth/TheRepairPasswordCode */ "./resources/js/pages/auth/TheRepairPasswordCode.vue");
 /* harmony import */ var _pages_auth_TheRepairPasswordNew__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../pages/auth/TheRepairPasswordNew */ "./resources/js/pages/auth/TheRepairPasswordNew.vue");
 /* harmony import */ var _pages_usersManagement_UsersManagementPage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../pages/usersManagement/UsersManagementPage */ "./resources/js/pages/usersManagement/UsersManagementPage.vue");
-Object(function webpackMissingModule() { var e = new Error("Cannot find module 'path'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
 
 
 
@@ -3006,10 +3005,10 @@ Object(function webpackMissingModule() { var e = new Error("Cannot find module '
 
 
 
+ // import * as path from "path";
 
-
-vue__WEBPACK_IMPORTED_MODULE_7__.default.use(vue_router__WEBPACK_IMPORTED_MODULE_8__.default);
-var router = new vue_router__WEBPACK_IMPORTED_MODULE_8__.default({
+vue__WEBPACK_IMPORTED_MODULE_6__.default.use(vue_router__WEBPACK_IMPORTED_MODULE_7__.default);
+var router = new vue_router__WEBPACK_IMPORTED_MODULE_7__.default({
   mode: 'history',
   linkExactActiveClass: 'active',
   routes: [{
@@ -3035,11 +3034,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_8__.default({
     }]
   }, {
     path: '/users-management',
-    component: _pages_usersManagement_UsersManagementPage__WEBPACK_IMPORTED_MODULE_5__.default,
-    children: [{
-      path: '/',
-      component: ''
-    }]
+    component: _pages_usersManagement_UsersManagementPage__WEBPACK_IMPORTED_MODULE_5__.default
   }]
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (router);
