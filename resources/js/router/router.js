@@ -5,7 +5,8 @@ import TheAuth from "../components/layouts/TheAuth";
 import TheRepairPassword from "../pages/auth/TheRepairPassword";
 import TheRepairPasswordCode from "../pages/auth/TheRepairPasswordCode";
 import TheRepairPasswordNew from "../pages/auth/TheRepairPasswordNew";
-import UsersManagementPage from "../pages/UsersManagementPage";
+import UsersManagementPage from "../pages/usersManagement/UsersManagementPage";
+// import * as path from "path";
 
 Vue.use(VueRouter);
 
@@ -43,7 +44,7 @@ const router = new VueRouter({
         },
         {
             path: '/users-management',
-            component: UsersManagementPage
+            component: UsersManagementPage,
         },
     ]
 });
