@@ -46,7 +46,7 @@ const store = new Vuex.Store({
         },
         async changeUMConfirmStatus({commit}) {
             console.log('changeUMConfirmStatus')
-            commit('setUMSettingStatus')
+            commit('setUMConfirmStatus')
         },
         saveUserFromServer({commit}, user) {
             commit('setUser', user);
