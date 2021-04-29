@@ -10,7 +10,7 @@
                     </div>
                     <div class="form-group">
                         <div class="row justify-content-between align-items-end">
-                            <div class=" col-12 col-lg-8">
+                            <div class=" col-12 col-lg-8 col-xl-7">
                                 <label for="inputEmail">Код подтверждения:</label>
                                 <input type="text" class="form-control" id="inputEmail"
                                        aria-describedby="emailHelp"
@@ -18,7 +18,7 @@
                                        name="code"
                                        v-model="code">
                             </div>
-                            <div class="btn-resend col-12 col-lg-4">
+                            <div class="btn-resend col-12 col-lg-4 col-xl-5">
                                 <div class="text-resend" v-if="!hideTextBtn">Станет доступно через: {{ countSecond }} сек.</div>
                                 <button :class="{cancel: true, 'active-btn': !disableButton}" @click.prevent="startTimer" :disabled="disableButton">Отправить повторно</button>
                             </div>
@@ -35,6 +35,11 @@
                         <button @click.prevent="newPassword">далее</button>
                         <button class="cancel" @click.prevent="clearAll">Отмена</button>
                     </div>
+                    <vue-recaptcha ref="recaptcha"
+                                   size="invisible"
+                                   sitekey="6LcyCr8aAAAAAPxdtYNSSsIwZz9eSzH766VjeoJw"
+                                   @verify="register"
+                                   @expired="onCaptchaExpired"></vue-recaptcha>
                 </form>
             </div>
         </div>
@@ -42,8 +47,10 @@
 </template>
 
 <script>
+import VueRecaptcha from 'vue-recaptcha';
 export default {
     name: "TheRepairPasswordCode",
+    components: { VueRecaptcha },
     data() {
         return {
             code: '',
@@ -216,7 +223,11 @@ form button, .btn-resend .active-btn {
     display: none;
 }
 .btn-resend button, .btn-resend .active-btn {
-    padding: 14px 10px;
+    width: 170px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 @media screen and (max-width: 1023.99px) {
     .form-wrapper {
