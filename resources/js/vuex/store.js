@@ -14,6 +14,7 @@ const store = new Vuex.Store({
         user: {},
         access_token: '',
         refresh_token: '',
+        resetPasswordEmail: '',
     },
     mutations: {
         increment(state) {
@@ -36,6 +37,9 @@ const store = new Vuex.Store({
         },
         setRefreshToken(state, refresh_token) {
             state.refresh_token = refresh_token;
+        },
+        setResetPasswordEmail(state, resetPasswordEmail) {
+            state.resetPasswordEmail = resetPasswordEmail;
         }
     },
     actions: {
@@ -53,6 +57,9 @@ const store = new Vuex.Store({
         },
         saveRefreshFromServer({commit}, refresh_token) {
             commit('setRefreshToken', refresh_token);
+        },
+        saveResetPasswordEmail({commit}, resetPasswordEmail) {
+            commit('setResetPasswordEmail', resetPasswordEmail);
         }
     },
     getters: {
@@ -67,6 +74,9 @@ const store = new Vuex.Store({
         },
         refresh_token(state) {
             return state.refresh_token;
+        },
+        resetPasswordEmail(state) {
+            return state.resetPasswordEmail;
         }
     },
 

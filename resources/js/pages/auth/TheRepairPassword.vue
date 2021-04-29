@@ -19,9 +19,16 @@
                         <a href="/login/repair-password/secret-code">Установить новый пароль с помощью кодового слова</a>
                     </div>
                     <div class="form-group d-flex flex-row btn-form-group">
-                        <button @click.prevent="repair">далее</button>
+                        <button @click.prevent="validate">далее</button>
                         <button class="cancel" @click.prevent="clearAll">Отмена</button>
                     </div>
+                    <vue-recaptcha
+                        ref="recaptcha"
+                        size="invisible"
+                        sitekey="6LcyCr8aAAAAAPxdtYNSSsIwZz9eSzH766VjeoJw"
+                        @verify="register"
+                        @expired="onCaptchaExpired"
+                    />
                 </form>
             </div>
         </div>
@@ -29,19 +36,42 @@
 </template>
 
 <script>
+import VueRecaptcha from 'vue-recaptcha'
+import {mapActions} from "vuex"
+
 export default {
     name: "TheRepairPassword",
+    components: { VueRecaptcha },
     data() {
         return {
             email: '',
         }
     },
     methods: {
+        ...mapActions([
+           'saveResetPasswordEmail',
+        ]),
         clearAll() {
             this.email = '';
         },
-        repair() {
-            this.$router.push('/login/repair-password/code');
+        register (recaptchaToken) {
+            axios.post('/api/login/repair-password', {
+                email: this.email,
+                recaptchaToken: recaptchaToken
+            }).then(() => {
+                this.saveResetPasswordEmail(this.email);
+            })
+        },
+        validate () {
+            if(this.email.length === 0) {
+                this.$refs.recaptcha.reset();
+            } else {
+                this.$refs.recaptcha.execute()
+            }
+        },
+
+        onCaptchaExpired () {
+            this.$refs.recaptcha.reset()
         }
     }
 }
