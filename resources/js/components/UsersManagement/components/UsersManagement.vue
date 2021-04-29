@@ -2,26 +2,18 @@
     <main class="users_management">
         <user-management-settings></user-management-settings>
         <user-management-confirm></user-management-confirm>
-        <div class="temp_header">
-            <div class="temp_nav"></div>
-        </div>
+        <!--        <div class="temp_header">-->
+        <!--            <div class="temp_nav"></div>-->
+        <!--        </div>-->
         <div class="container-fluid users_management__container">
             <div class="wrapper col">
-                <div class="row users_management__row users_management__title">
-                    <div class="col-12 breadcrumbs">
-                        <nav>
-                            <ul>
-                                <li class="breadcrumbs-item"><a href="#">Управление</a></li>
-                                <li class="breadcrumbs-item"><a href="#">Пользователи</a></li>
-                            </ul>
-                        </nav>
-                    </div>
-                    <div class="col title">Управление пользователями</div>
-                </div>
+                <placeholder :text="placeholderText"
+                             :links="links">
+                </placeholder>
                 <div class="row users_management__row users_management__wrapper">
                     <div class="col-md-3 users_management__col">
                         <div class="users_management__add_user">
-                            <button class="add_user__btn" type="button" @click="test">Добавить пользователя</button>
+                            <button class="add_user__btn" type="button">Добавить пользователя</button>
                         </div>
                         <div class="users_management__users_filter">
                             <ul class="row users_management__filter_list">
@@ -46,7 +38,10 @@
                                 <div class="edit__actions_list">
                                     <ul class="row">
                                         <li class="edit__action">
-                                            <button class="edit_btn" type="button"></button>
+                                            <button class="edit_btn"
+                                                    type="button"
+                                                    @click="$router.push('/personal-data')">
+                                            </button>
                                         </li>
                                         <li class="edit__action">
                                             <button class="remove_btn"
@@ -57,7 +52,7 @@
                                         <li class="edit__action">
                                             <button class="setting_btn"
                                                     type="button"
-                                                    @click="changeUMSettingStatus">
+                                                    @click="toggleSettings">
                                             </button>
                                         </li>
                                     </ul>
@@ -137,6 +132,7 @@
 </template>
 
 <script>
+import Placeholder from "../../placeholder/Placeholder";
 import UserManagementConfirm from "./UserManagementConfirm";
 import UserManagementSettings from "./UserManagementSettings";
 import {mapActions} from "vuex";
@@ -144,12 +140,26 @@ import {mapActions} from "vuex";
 export default {
     name: "UsersManagement",
     components: {
+        'placeholder': Placeholder,
         'user-management-settings': UserManagementSettings,
         'user-management-confirm': UserManagementConfirm
     },
     data() {
         return {
             settingsStatus: false,
+            placeholderText: 'Управление пользователями',
+            links: [
+                {
+                    id: 1,
+                    name: 'Управление',
+                    href: '#'
+                },
+                {
+                    id: 2,
+                    name: 'Пользователи',
+                    href: '#'
+                },
+            ],
             users: [
                 {
                     id: '1',
@@ -207,7 +217,7 @@ export default {
     methods: {
         ...mapActions([
             'changeUMSettingStatus',
-            'test'
+            'changeUMConfirmStatus'
         ]),
         toggleCheckAll() {
             this.checkAll = !this.checkAll
@@ -222,11 +232,10 @@ export default {
             }
         },
         toggleSettings() {
-            console.log('toggleSettings')
             this.changeUMSettingStatus()
         },
         removeUser() {
-
+            this.changeUMConfirmStatus()
         }
     }
 }
@@ -239,32 +248,6 @@ export default {
     font-family: $userManagementFF;
     transition: 0.2s ease;
     font-style: normal;
-}
-
-.users_management {
-    background: $userManagementBgColor;
-    padding-top: calc(#{$headerHeight} + 7px);
-    padding-left: calc(#{$navWidth});
-    min-height: 100vh;
-    @media all and (max-width: $breakpoint) {
-        padding-left: 0;
-    }
-
-    label, ul {
-        margin-bottom: 0;
-    }
-
-    label {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-    }
-
-}
-
-.users_management__container {
-    max-width: 1270px;
 }
 
 .search__row {
@@ -306,71 +289,6 @@ export default {
 
     &:hover {
         transform: scale(0.90);
-    }
-}
-
-.users_management__title {
-    background: $userManagementRowBgColor;
-    //box-shadow: $userManagementRowBoxShadow;
-    border-radius: $userManagementRowBorderRadius;
-}
-
-.breadcrumbs {
-    font-weight: 500;
-    font-size: 13px;
-
-    ul {
-        display: flex;
-        flex-wrap: wrap;
-    }
-
-    * {
-        color: $lightColor;
-    }
-
-    .breadcrumbs-item {
-        display: flex;
-        align-items: center;
-
-        a {
-            display: flex;
-            align-items: center;
-            font-weight: 600;
-
-            &:after {
-                content: '';
-                background: url("../../../../images/icons/breadcrumbs_arrow_left.png") no-repeat center / contain;
-                display: block;
-                width: 30px;
-                height: 30px;
-            }
-        }
-
-        &:last-child {
-            a {
-                &:after {
-                    content: none;
-                    display: none;
-                }
-            }
-        }
-    }
-}
-
-.users_management__title {
-    min-height: 110px;
-    justify-content: flex-start;
-    align-items: center;
-    margin-bottom: 15px;
-
-    .title {
-        font-style: normal;
-        font-weight: 300;
-        font-size: 36px;
-        color: #808080;
-        @media all and (max-width: $breakpoint) {
-            font-size: 22px;
-        }
     }
 }
 
@@ -664,19 +582,20 @@ export default {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-.temp_header {
-    height: $headerHeight;
-    width: 100%;
-
-}
-
-.temp_nav {
-    height: 100vh;
-    width: $navWidth;
-    @media all and (max-width: $breakpoint) {
-        display: none;
-    }
-}
+//
+//.temp_header {
+//    height: $headerHeight;
+//    width: 100%;
+//
+//}
+//
+//.temp_nav {
+//    height: 100vh;
+//    width: $navWidth;
+//    @media all and (max-width: $breakpoint) {
+//        display: none;
+//    }
+//}
 
 .edit__action_checkbox {
     flex: none;

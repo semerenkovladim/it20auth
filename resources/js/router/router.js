@@ -1,14 +1,14 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import TheLogin from "../components/pages/auth/TheLogin";
+import TheLogin from "../pages/auth/TheLogin";
 import TheAuth from "../components/layouts/TheAuth";
-import TheRepairPassword from "../components/pages/auth/TheRepairPassword";
-import TheRepairPasswordCode from "../components/pages/auth/TheRepairPasswordCode";
-import TheRepairPasswordNew from "../components/pages/auth/TheRepairPasswordNew";
+import TheRepairPassword from "../pages/auth/TheRepairPassword";
+import TheRepairPasswordCode from "../pages/auth/TheRepairPasswordCode";
+import TheRepairPasswordNew from "../pages/auth/TheRepairPasswordNew";
+import UsersManagementPage from "../pages/UsersManagementPage";
 
 Vue.use(VueRouter);
 
-import UsersManagementPage from "../components/UsersManagement/views/UsersManagementPage";
 
 const router = new VueRouter({
     mode: 'history',
@@ -42,9 +42,9 @@ const router = new VueRouter({
             ]
         },
         {
-             path: '/users-management',
-             component: UsersManagementPage
-        }
+            path: '/users-management',
+            component: UsersManagementPage
+        },
     ]
 });
 

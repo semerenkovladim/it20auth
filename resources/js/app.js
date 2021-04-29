@@ -11,7 +11,7 @@ window.Vue = require('vue').default;
 import router from "./router/router";
 import store from "./vuex/store";
 import Vue from 'vue'
-import TheLayout from "./components/TheLayout";
+import TheLayout from "./components/layouts/TheLayout";
 
 const app = new Vue({
     el: '#app',
