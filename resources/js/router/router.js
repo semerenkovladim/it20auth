@@ -6,6 +6,8 @@ import TheRepairPassword from "../pages/auth/TheRepairPassword";
 import TheRepairPasswordCode from "../pages/auth/TheRepairPasswordCode";
 import TheRepairPasswordNew from "../pages/auth/TheRepairPasswordNew";
 import UsersManagementPage from "../pages/usersManagement/UsersManagementPage";
+import Profile from '../pages/Profile.vue'
+import TitleComponent from '../components/slider/TitleComponent.vue'
 // import * as path from "path";
 
 Vue.use(VueRouter);
@@ -45,6 +47,16 @@ const router = new VueRouter({
         {
             path: '/users-management',
             component: UsersManagementPage,
+        },
+        {
+            path: '/home',
+            name: 'Home',
+            component: TitleComponent,
+        },
+        {
+            path: '/profile',
+            name: 'Profile',
+            component: Profile,
         },
     ]
 });
