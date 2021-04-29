@@ -3087,7 +3087,6 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_3__.default.Store({
       state.usersManagement.settingStatus = !state.usersManagement.settingStatus;
     },
     setUMConfirmStatus: function setUMConfirmStatus(state) {
-      console.log('setUMSettingStatus', state.usersManagement.confirmStatus);
       state.usersManagement.confirmStatus = !state.usersManagement.confirmStatus;
     },
     setUMConfirm: function setUMConfirm(state) {
@@ -3112,10 +3111,9 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_3__.default.Store({
             switch (_context.prev = _context.next) {
               case 0:
                 commit = _ref.commit;
-                console.log('changeUMSettingStatus');
                 commit('setUMSettingStatus');
 
-              case 3:
+              case 2:
               case "end":
                 return _context.stop();
             }
@@ -3131,10 +3129,9 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_3__.default.Store({
             switch (_context2.prev = _context2.next) {
               case 0:
                 commit = _ref2.commit;
-                console.log('changeUMConfirmStatus');
                 commit('setUMConfirmStatus');
 
-              case 3:
+              case 2:
               case "end":
                 return _context2.stop();
             }
@@ -3153,9 +3150,6 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_3__.default.Store({
     saveRefreshFromServer: function saveRefreshFromServer(_ref5, refresh_token) {
       var commit = _ref5.commit;
       commit('setRefreshToken', refresh_token);
-    },
-    test: function test() {
-      console.log('test');
     }
   },
   getters: {
