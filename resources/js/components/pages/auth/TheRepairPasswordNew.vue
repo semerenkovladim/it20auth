@@ -47,7 +47,7 @@
                         </svg>
                     </div>
                     <div class="form-group d-flex flex-row btn-form-group">
-                        <button @click.prevent="newPassword">далее</button>
+                        <button @click.prevent="newPassword">потдвердить</button>
                         <button class="cancel" @click.prevent="clearAll">Отмена</button>
                     </div>
                 </form>
@@ -194,6 +194,7 @@ form button {
 }
 .btn-form-group {
     justify-content: space-around;
+    margin-top: 20px;
 }
 .cancel {
     font-style: normal;
