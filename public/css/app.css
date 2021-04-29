@@ -11013,7 +11013,7 @@ input[type=checkbox] {
 }
 
 input[type=checkbox]:checked {
-  background: url(/images/checked.svg?69d99c6338990a74849af92025ed4a0f) no-repeat center/70%, #1875F0;
+  background: url(/images/checked.svg?65e12a3c91ce20ac96eee4c7dcf71ad3) no-repeat center/70%, #1875F0;
   border: 2px solid #1875F0;
 }
 
