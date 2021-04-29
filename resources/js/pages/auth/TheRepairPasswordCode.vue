@@ -9,7 +9,7 @@
                         <div class="error-msg">Вы ввели неверный код или срок его действия уже истек</div>
                     </div>
                     <div class="form-group">
-                        <div class="row justify-content-between align-items-start">
+                        <div class="row justify-content-between align-items-end">
                             <div class=" col-12 col-lg-7 ">
                                 <label for="inputEmail">Код подтверждения:</label>
                                 <input type="text" class="form-control" id="inputEmail"
