@@ -168,6 +168,8 @@ form button, .btn-resend .active-btn {
 }
 .btn-form-group {
     justify-content: center;
+}
+.btn-form-group button {
     margin: 0 15px;
 }
 .cancel {
