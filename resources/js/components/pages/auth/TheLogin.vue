@@ -48,6 +48,8 @@
 </template>
 
 <script>
+import {mapActions} from "vuex";
+
 export default {
     name: "TheLogin",
     data() {
@@ -56,11 +58,14 @@ export default {
             password: '',
             showIconPassword: false,
             hasError: false,
-            presentPassword: '!@fewfewfFVBRDFG983!',
-            presentEmail: 'john.present@doe.com'
         };
     },
     methods: {
+        ...mapActions([
+            'saveUserFromServer',
+            'saveAccessFromServer',
+            'saveRefreshFromServer'
+        ]),
         showPassword() {
             document.querySelector('input[name=password]').setAttribute('type', 'text');
         },
@@ -73,11 +78,19 @@ export default {
             this.hasError = false;
         },
         login() {
-            if(this.password !== this.presentPassword || this.email !== this.presentEmail) {
-                this.hasError = true;
-            } else {
-                this.$router.push('/');
+            const payload = {
+                'password': this.password.trim(),
+                'email': this.email.trim()
             }
+            axios.post('/api/login', payload).then((response) => {
+                this.hasError = false;
+                this.saveUserFromServer(response.data.user);
+                this.saveAccessFromServer(response.data.token);
+                this.saveRefreshFromServer(response.data.refresh_token);
+                this.$router.push('/');
+            }).catch(() => {
+                this.hasError = true;
+            })
         }
     },
     watch: {
