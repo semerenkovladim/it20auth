@@ -4,27 +4,27 @@
          :class="UM_SETTINGS_STATUS.settingStatus ? 'settings_show' : ''"
          v-if="UM_SETTINGS_STATUS.settingStatus">
         <div class="wrapper">
-            <div class="col">
-                <div class="row title_row">
-                    <div class="col title">Управление столбцами таблицы</div>
-                </div>
-                <ul class="settings">
-                    <li class="row option col_desc">
-                        <div class="col-8 option__col col_name">Столбец:</div>
-                        <div class="col-4 option__col col_name">Отображать:</div>
-                    </li>
-                    <li class="row option"
-                        v-for="option in settings" :key="option.id">
-                        <div class="col-8 option__col col_name">{{ option.name }}</div>
-                        <div class="col-4 option__col option_checkbox ">
-                            <label><input type="checkbox" v-model="option.status"></label>
-                        </div>
-                    </li>
-                </ul>
-                <div class="btn_wrapper">
-                    <confirm-btn :text="confirmBtnText"></confirm-btn>
-                    <cancel-btn></cancel-btn>
-                </div>
+            <div class="row title_row">
+                <div class="col title">Управление столбцами таблицы</div>
+            </div>
+            <ul class="settings">
+                <li class="row option col_desc">
+                    <div class="col-8 option__col col_name">Столбец:</div>
+                    <div class="col-4 option__col col_name">Отображать:</div>
+                </li>
+                <li class="row option"
+                    v-for="option in settings" :key="option.id">
+                    <div class="col-8 option__col col_name">{{ option.name }}</div>
+                    <div class="col-4 option__col option_checkbox ">
+                        <label><input type="checkbox" v-model="option.status"></label>
+                    </div>
+                </li>
+            </ul>
+            <div class="btn_wrapper">
+                <confirm-btn
+                    :text="confirmBtnText"
+                    v-on:confirmEvent="confirm"></confirm-btn>
+                <cancel-btn v-on:cancelEvent="cancel"></cancel-btn>
             </div>
         </div>
     </div>
@@ -32,8 +32,8 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
-import CancelBtn from "../buttons/CancelBtn";
-import ConfirmBtn from "../buttons/ConfirmBtn";
+import CancelBtn from "../../buttons/CancelBtn";
+import ConfirmBtn from "../../buttons/ConfirmBtn";
 
 export default {
     name: "UserManagementSettings",
@@ -99,6 +99,12 @@ export default {
         ]),
         closeSettings(event) {
             if (event.target.classList.contains('users_management__settings')) this.changeUMSettingStatus()
+        },
+        confirm() {
+            this.changeUMSettingStatus()
+        },
+        cancel() {
+            this.changeUMSettingStatus()
         }
     },
     computed: {
