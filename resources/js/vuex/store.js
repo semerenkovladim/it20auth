@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from "vuex";
+import createPersistedState from "vuex-persistedstate";
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -9,7 +10,10 @@ const store = new Vuex.Store({
             settingStatus: false,
             confirmStatus:false,
             confirm:false
-        }
+        },
+        user: {},
+        access_token: '',
+        refresh_token: '',
     },
     mutations: {
         increment(state) {
@@ -24,6 +28,15 @@ const store = new Vuex.Store({
         },
         setUMConfirm(state) {
             state.usersManagement.confirm = !state.usersManagement.confirm
+        },
+        setUser(state, user) {
+            state.user = user;
+        },
+        setAccessToken(state, access_token) {
+            state.access_token = access_token;
+        },
+        setRefreshToken(state, refresh_token) {
+            state.refresh_token = refresh_token;
         }
     },
     actions: {
@@ -35,6 +48,15 @@ const store = new Vuex.Store({
             console.log('changeUMConfirmStatus')
             commit('setUMSettingStatus')
         },
+        saveUserFromServer({commit}, user) {
+            commit('setUser', user);
+        },
+        saveAccessFromServer({commit}, access_token) {
+            commit('setAccessToken', access_token);
+        },
+        saveRefreshFromServer({commit}, refresh_token) {
+            commit('setRefreshToken', refresh_token);
+        },
         test() {
             console.log('test')
         }
@@ -42,8 +64,19 @@ const store = new Vuex.Store({
     getters: {
         UM_SETTINGS_STATUS(state) {
             return state.usersManagement
+        },
+        user(state) {
+            return state.user;
+        },
+        access_token(state) {
+            return state.access_token;
+        },
+        refresh_token(state) {
+            return state.refresh_token;
         }
-    }
+    },
+
+    plugins: [createPersistedState()],
 })
 
 
