@@ -35,11 +35,6 @@
                         <button @click.prevent="newPassword">далее</button>
                         <button class="cancel" @click.prevent="clearAll">Отмена</button>
                     </div>
-                    <vue-recaptcha ref="recaptcha"
-                                   size="invisible"
-                                   sitekey="6LcyCr8aAAAAAPxdtYNSSsIwZz9eSzH766VjeoJw"
-                                   @verify="register"
-                                   @expired="onCaptchaExpired"></vue-recaptcha>
                 </form>
             </div>
         </div>
@@ -47,16 +42,15 @@
 </template>
 
 <script>
-import VueRecaptcha from 'vue-recaptcha';
+import {mapGetters} from "vuex";
+
 export default {
     name: "TheRepairPasswordCode",
-    components: { VueRecaptcha },
     data() {
         return {
             code: '',
             disableButton: true,
             countSecond: 60,
-            presentCode: 'J9875FDS',
             hasError: false,
             hideTextBtn: false,
         };
@@ -66,11 +60,14 @@ export default {
     },
     methods: {
         newPassword() {
-            if(this.code !== this.presentCode) {
-                this.hasError = true;
-            } else {
+            axios.post('/api/login/repair-password/code', {
+                'code': this.code,
+                'email': this.resetPasswordEmail,
+            }).then(() => {
                 this.$router.push('/login/repair-password/new-password')
-            }
+            }).catch(() => {
+                this.hasError = true;
+            })
         },
         startTimer() {
             this.countSecond = 60;
@@ -83,20 +80,10 @@ export default {
                     this.hideTextBtn = true;
                 }
             }, 1000);
-        },
-        register (recaptchaToken) {
-            axios.post('/api/login/repair-password/code', {
-                email: this.email,
-                recaptchaToken: recaptchaToken
-            })
-        },
-        validate () {
-            this.$refs.recaptcha.execute()
-        },
-
-        onCaptchaExpired () {
-            this.$refs.recaptcha.reset()
         }
+    },
+    computed: {
+        ...mapGetters(['resetPasswordEmail']),
     }
 }
 </script>

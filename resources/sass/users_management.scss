@@ -1,5 +1,5 @@
 @import "variables";
-input[type=checkbox] {
+input[type=checkbox], .input_checkbox {
     width: 20px;
     height: 20px;
     background: #FFFFFF;
@@ -19,7 +19,6 @@ input[type=checkbox] {
 .users_management {
     background: $userManagementBgColor;
     padding-top: calc(#{$headerHeight} + 7px);
-    padding-left: calc(#{$navWidth});
     min-height: 100vh;
     @media all and (max-width: $breakpoint) {
         padding-left: 0;

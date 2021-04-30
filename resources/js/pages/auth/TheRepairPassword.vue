@@ -2,10 +2,11 @@
     <div class="row justify-content-center h-100 align-items-center">
         <div class="col-12 col-md-6 col-xl-6 form-col">
             <div class="form-wrapper">
-                <form action="#">
+                <form action="#" :class="{'has-error': hasError}">
                     <div class="title-form">Восстановление доступа</div>
                     <div class="form-group">
                         <div class="subtitle-form">Пожалуйста, укажите email, который Вы использовали для входа в систему.</div>
+                        <div class="error-msg">Вы ввели неверный email</div>
                     </div>
                     <div class="form-group">
                         <label for="inputEmail">E-mail:</label>
@@ -19,9 +20,16 @@
                         <a href="/login/repair-password/secret-code">Установить новый пароль с помощью кодового слова</a>
                     </div>
                     <div class="form-group d-flex flex-row btn-form-group">
-                        <button @click.prevent="repair">далее</button>
+                        <button @click.prevent="validate">далее</button>
                         <button class="cancel" @click.prevent="clearAll">Отмена</button>
                     </div>
+                    <vue-recaptcha
+                        ref="recaptcha"
+                        size="invisible"
+                        sitekey="6LcyCr8aAAAAAPxdtYNSSsIwZz9eSzH766VjeoJw"
+                        @verify="register"
+                        @expired="onCaptchaExpired"
+                    />
                 </form>
             </div>
         </div>
@@ -29,19 +37,47 @@
 </template>
 
 <script>
+import VueRecaptcha from 'vue-recaptcha'
+import {mapActions} from "vuex"
+
 export default {
     name: "TheRepairPassword",
+    components: { VueRecaptcha },
     data() {
         return {
             email: '',
+            hasError: false
         }
     },
     methods: {
+        ...mapActions([
+           'saveResetPasswordEmail',
+        ]),
         clearAll() {
             this.email = '';
         },
-        repair() {
-            this.$router.push('/login/repair-password/code');
+        register (recaptchaToken) {
+            console.log(recaptchaToken);
+            axios.post('/api/login/repair-password', {
+                email: this.email,
+                recaptchaToken: recaptchaToken
+            }).then(() => {
+                this.saveResetPasswordEmail(this.email);
+                this.$router.push('repair-password/code')
+            }).catch(() => {
+                this.hasError = true;
+            })
+        },
+        validate () {
+            if(this.email.length === 0) {
+                this.$refs.recaptcha.reset();
+            } else {
+                this.$refs.recaptcha.execute()
+            }
+        },
+
+        onCaptchaExpired () {
+            this.$refs.recaptcha.reset()
         }
     }
 }
@@ -76,6 +112,16 @@ export default {
     color: #666666;
     margin-bottom: 10px;
 }
+.error-msg {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    text-align: center;
+    color: #FF0000;
+    margin-bottom: 10px;
+    display: none;
+}
 .form-group input {
     background: #FFFFFF;
     border: 2px solid #F5F5F5;
@@ -109,6 +155,15 @@ form button {
     text-align: center;
     text-transform: uppercase;
     color: #FFFFFF;
+}
+.has-error label {
+    color: #FF0000;
+}
+.has-error .error-msg {
+    display: block;
+}
+.has-error .subtitle-form {
+    display: none;
 }
 .reset-password {
     text-align: center;

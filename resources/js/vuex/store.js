@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
+
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -8,12 +9,15 @@ const store = new Vuex.Store({
         count: 0,
         usersManagement: {
             settingStatus: false,
-            confirmStatus:false,
-            confirm:false
+            confirmStatus: false,
+            confirm: false,
+            personalDataStatus: true,
+            personalAccessStatus: false
         },
         user: {},
         access_token: '',
         refresh_token: '',
+        resetPasswordEmail: '',
     },
     mutations: {
         increment(state) {
@@ -28,6 +32,14 @@ const store = new Vuex.Store({
         setUMConfirm(state) {
             state.usersManagement.confirm = !state.usersManagement.confirm
         },
+        setUMPersonalDataStatus(state, status) {
+            state.usersManagement.personalDataStatus = status
+            state.usersManagement.personalAccessStatus = !status
+        },
+        setUMPersonalAccess(state, status) {
+            state.usersManagement.personalAccessStatus = status
+            state.usersManagement.personalDataStatus = !status
+        },
         setUser(state, user) {
             state.user = user;
         },
@@ -36,6 +48,9 @@ const store = new Vuex.Store({
         },
         setRefreshToken(state, refresh_token) {
             state.refresh_token = refresh_token;
+        },
+        setResetPasswordEmail(state, resetPasswordEmail) {
+            state.resetPasswordEmail = resetPasswordEmail;
         }
     },
     actions: {
@@ -45,6 +60,12 @@ const store = new Vuex.Store({
         async changeUMConfirmStatus({commit}) {
             commit('setUMConfirmStatus')
         },
+        changeUMPersonalDataStatus({commit}, status) {
+            commit('setUMPersonalDataStatus', status)
+        },
+        changeUMPersonalAccess({commit}, status) {
+            commit('setUMPersonalAccess', status)
+        },
         saveUserFromServer({commit}, user) {
             commit('setUser', user);
         },
@@ -53,6 +74,9 @@ const store = new Vuex.Store({
         },
         saveRefreshFromServer({commit}, refresh_token) {
             commit('setRefreshToken', refresh_token);
+        },
+        saveResetPasswordEmail({commit}, resetPasswordEmail) {
+            commit('setResetPasswordEmail', resetPasswordEmail);
         }
     },
     getters: {
@@ -67,6 +91,9 @@ const store = new Vuex.Store({
         },
         refresh_token(state) {
             return state.refresh_token;
+        },
+        resetPasswordEmail(state) {
+            return state.resetPasswordEmail;
         }
     },
 

@@ -42,7 +42,7 @@ export default {
         a {
             display: flex;
             align-items: center;
-            font-weight: 600;
+            font-weight: 500;
 
             &:after {
                 content: '';
