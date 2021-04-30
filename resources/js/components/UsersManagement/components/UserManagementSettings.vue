@@ -177,27 +177,6 @@ export default {
         color: $darkColor;
         font-weight: 600;
     }
-
-    .btn_wrapper {
-        display: flex;
-    }
-
-    .settings__btn {
-        font-style: normal;
-        width: 100%;
-        max-width: 120px;
-        min-height: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 900;
-        font-size: 12px;
-        text-align: center;
-        text-transform: uppercase;
-        border-radius: 4px;
-    }
-
-
 }
 
 .settings_show {
