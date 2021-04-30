@@ -2614,6 +2614,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var vue_recaptcha__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-recaptcha */ "./node_modules/vue-recaptcha/dist/vue-recaptcha.es.js");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -2644,21 +2652,50 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "TheRepairPassword",
+  components: {
+    VueRecaptcha: vue_recaptcha__WEBPACK_IMPORTED_MODULE_0__.default
+  },
   data: function data() {
     return {
       email: ''
     };
   },
-  methods: {
+  methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_1__.mapActions)(['saveResetPasswordEmail'])), {}, {
     clearAll: function clearAll() {
       this.email = '';
     },
-    repair: function repair() {
-      this.$router.push('/login/repair-password/code');
+    register: function register(recaptchaToken) {
+      var _this = this;
+
+      axios.post('/api/login/repair-password', {
+        email: this.email,
+        recaptchaToken: recaptchaToken
+      }).then(function () {
+        _this.saveResetPasswordEmail(_this.email);
+      });
+    },
+    validate: function validate() {
+      if (this.email.length === 0) {
+        this.$refs.recaptcha.reset();
+      } else {
+        this.$refs.recaptcha.execute();
+      }
+    },
+    onCaptchaExpired: function onCaptchaExpired() {
+      this.$refs.recaptcha.reset();
     }
-  }
+  })
 });
 
 /***/ }),
@@ -3077,7 +3114,8 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_3__.default.Store({
     },
     user: {},
     access_token: '',
-    refresh_token: ''
+    refresh_token: '',
+    resetPasswordEmail: ''
   },
   mutations: {
     increment: function increment(state) {
@@ -3100,6 +3138,9 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_3__.default.Store({
     },
     setRefreshToken: function setRefreshToken(state, refresh_token) {
       state.refresh_token = refresh_token;
+    },
+    setResetPasswordEmail: function setResetPasswordEmail(state, resetPasswordEmail) {
+      state.resetPasswordEmail = resetPasswordEmail;
     }
   },
   actions: {
@@ -3150,6 +3191,10 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_3__.default.Store({
     saveRefreshFromServer: function saveRefreshFromServer(_ref5, refresh_token) {
       var commit = _ref5.commit;
       commit('setRefreshToken', refresh_token);
+    },
+    saveResetPasswordEmail: function saveResetPasswordEmail(_ref6, resetPasswordEmail) {
+      var commit = _ref6.commit;
+      commit('setResetPasswordEmail', resetPasswordEmail);
     }
   },
   getters: {
@@ -3164,6 +3209,9 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_3__.default.Store({
     },
     refresh_token: function refresh_token(state) {
       return state.refresh_token;
+    },
+    resetPasswordEmail: function resetPasswordEmail(state) {
+      return state.resetPasswordEmail;
     }
   },
   plugins: [(0,vuex_persistedstate__WEBPACK_IMPORTED_MODULE_1__.default)()]
@@ -7834,7 +7882,7 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 var ___CSS_LOADER_URL_REPLACEMENT_0___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_1___default()(_images_login_bg_png__WEBPACK_IMPORTED_MODULE_2__.default);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.background[data-v-7bcb1b18] {\r\n    background: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ");\r\n    background-repeat: no-repeat;\r\n    background-size: cover;\r\n    width: 100vw;\r\n    height: 100vh;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.background[data-v-7bcb1b18] {\n    background: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ");\n    background-repeat: no-repeat;\n    background-size: cover;\n    width: 100vw;\n    height: 100vh;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -7858,7 +7906,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.form-wrapper[data-v-8c7837f4] {\r\n    padding: 23px 129px;\r\n    background: #FFFFFF;\r\n    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);\r\n    border-radius: 6px;\n}\n.title-form[data-v-8c7837f4] {\r\n    font-family: 'Roboto', sans-serif;\r\n    font-style: normal;\r\n    font-weight: 500;\r\n    font-size: 24px;\r\n    line-height: 60px;\r\n    text-align: center;\r\n    color: #606060;\r\n    margin-bottom: 40px;\n}\n.form-group[data-v-8c7837f4] {\r\n    margin-bottom: 10px;\n}\n.password[data-v-8c7837f4] {\r\n    position: relative;\n}\n.password svg[data-v-8c7837f4] {\r\n    position: absolute;\r\n    bottom: 5px;\r\n    right: 10px;\r\n    cursor: pointer;\n}\n.form-group label[data-v-8c7837f4] {\r\n    font-family: Roboto;\r\n    font-style: normal;\r\n    font-weight: 500;\r\n    font-size: 14px;\r\n    line-height: 30px;\r\n    color: #666666;\r\n    margin-bottom: 10px;\n}\n.form-group input[data-v-8c7837f4] {\r\n    background: #FFFFFF;\r\n    border: 2px solid #F5F5F5;\r\n    box-sizing: border-box;\r\n    border-radius: 4px;\r\n    outline: none;\r\n    font-family: Roboto;\r\n    font-style: normal;\r\n    font-weight: bold;\r\n    font-size: 14px;\r\n    line-height: 60px;\r\n    color: #808080;\r\n    padding: 20px 25px;\n}\n.form-group input[data-v-8c7837f4]:focus {\r\n    outline: none;\r\n    border: 2px solid #F5F5F5;\r\n    box-shadow: none;\n}\nform button[data-v-8c7837f4] {\r\n    display: block;\r\n    background: #1875F0;\r\n    border: 2px solid #F5F5F5;\r\n    box-sizing: border-box;\r\n    border-radius: 4px;\r\n    padding: 15px 40px;\r\n    font-family: 'Roboto', sans-serif;\r\n    font-style: normal;\r\n    font-weight: 900;\r\n    font-size: 12px;\r\n    text-align: center;\r\n    text-transform: uppercase;\r\n    color: #FFFFFF;\n}\n.reset-password[data-v-8c7837f4] {\r\n    text-align: center;\r\n    margin-bottom: 20px;\n}\n.reset-password a[data-v-8c7837f4] {\r\n    font-family: Roboto;\r\n    font-style: normal;\r\n    font-weight: 500;\r\n    font-size: 14px;\r\n    line-height: 30px;\r\n    color: #1875F0;\n}\n.error-msg[data-v-8c7837f4] {\r\n    font-family: Roboto;\r\n    font-style: normal;\r\n    font-weight: 500;\r\n    font-size: 14px;\r\n    text-align: center;\r\n    color: #FF0000;\r\n    margin-bottom: 10px;\n}\n.has-error label[data-v-8c7837f4] {\r\n    color: #FF0000;\n}\n.has-error .btn-form-group[data-v-8c7837f4] {\r\n    justify-content: space-around;\n}\n.btn-form-group[data-v-8c7837f4] {\r\n    justify-content: center;\n}\n.cancel[data-v-8c7837f4] {\r\n    font-style: normal;\r\n    font-weight: 900;\r\n    font-size: 12px;\r\n    text-align: center;\r\n    letter-spacing: 1.5px;\r\n    text-transform: uppercase;\r\n    color: #B3B3B3;\r\n    padding: 15px 40px;\r\n    background: #FFFFFF;\r\n    border: 2px solid #F5F5F5;\r\n    box-sizing: border-box;\r\n    border-radius: 4px;\r\n    display: none;\n}\n.has-error .error-wrapper[data-v-8c7837f4] {\r\n    display: block;\n}\n.has-error .cancel[data-v-8c7837f4] {\r\n    display: block;\n}\n.error-wrapper[data-v-8c7837f4] {\r\n    display: none;\n}\n@media screen and (max-width: 1023.99px) {\n.form-wrapper[data-v-8c7837f4] {\r\n        padding: 23px;\n}\n}\n@media screen and (min-width: 1900px) {\n.form-col[data-v-8c7837f4] {\r\n        max-width: 30%;\r\n        flex: 0 0 30%;\n}\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.form-wrapper[data-v-8c7837f4] {\n    padding: 23px 129px;\n    background: #FFFFFF;\n    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);\n    border-radius: 6px;\n}\n.title-form[data-v-8c7837f4] {\n    font-family: 'Roboto', sans-serif;\n    font-style: normal;\n    font-weight: 500;\n    font-size: 24px;\n    line-height: 60px;\n    text-align: center;\n    color: #606060;\n    margin-bottom: 40px;\n}\n.form-group[data-v-8c7837f4] {\n    margin-bottom: 10px;\n}\n.password[data-v-8c7837f4] {\n    position: relative;\n}\n.password svg[data-v-8c7837f4] {\n    position: absolute;\n    bottom: 5px;\n    right: 10px;\n    cursor: pointer;\n}\n.form-group label[data-v-8c7837f4] {\n    font-family: Roboto;\n    font-style: normal;\n    font-weight: 500;\n    font-size: 14px;\n    line-height: 30px;\n    color: #666666;\n    margin-bottom: 10px;\n}\n.form-group input[data-v-8c7837f4] {\n    background: #FFFFFF;\n    border: 2px solid #F5F5F5;\n    box-sizing: border-box;\n    border-radius: 4px;\n    outline: none;\n    font-family: Roboto;\n    font-style: normal;\n    font-weight: bold;\n    font-size: 14px;\n    line-height: 60px;\n    color: #808080;\n    padding: 20px 25px;\n}\n.form-group input[data-v-8c7837f4]:focus {\n    outline: none;\n    border: 2px solid #F5F5F5;\n    box-shadow: none;\n}\nform button[data-v-8c7837f4] {\n    display: block;\n    background: #1875F0;\n    border: 2px solid #F5F5F5;\n    box-sizing: border-box;\n    border-radius: 4px;\n    padding: 15px 40px;\n    font-family: 'Roboto', sans-serif;\n    font-style: normal;\n    font-weight: 900;\n    font-size: 12px;\n    text-align: center;\n    text-transform: uppercase;\n    color: #FFFFFF;\n}\n.reset-password[data-v-8c7837f4] {\n    text-align: center;\n    margin-bottom: 20px;\n}\n.reset-password a[data-v-8c7837f4] {\n    font-family: Roboto;\n    font-style: normal;\n    font-weight: 500;\n    font-size: 14px;\n    line-height: 30px;\n    color: #1875F0;\n}\n.error-msg[data-v-8c7837f4] {\n    font-family: Roboto;\n    font-style: normal;\n    font-weight: 500;\n    font-size: 14px;\n    text-align: center;\n    color: #FF0000;\n    margin-bottom: 10px;\n}\n.has-error label[data-v-8c7837f4] {\n    color: #FF0000;\n}\n.has-error .btn-form-group[data-v-8c7837f4] {\n    justify-content: space-around;\n}\n.btn-form-group[data-v-8c7837f4] {\n    justify-content: center;\n}\n.cancel[data-v-8c7837f4] {\n    font-style: normal;\n    font-weight: 900;\n    font-size: 12px;\n    text-align: center;\n    letter-spacing: 1.5px;\n    text-transform: uppercase;\n    color: #B3B3B3;\n    padding: 15px 40px;\n    background: #FFFFFF;\n    border: 2px solid #F5F5F5;\n    box-sizing: border-box;\n    border-radius: 4px;\n    display: none;\n}\n.has-error .error-wrapper[data-v-8c7837f4] {\n    display: block;\n}\n.has-error .cancel[data-v-8c7837f4] {\n    display: block;\n}\n.error-wrapper[data-v-8c7837f4] {\n    display: none;\n}\n@media screen and (max-width: 1023.99px) {\n.form-wrapper[data-v-8c7837f4] {\n        padding: 23px;\n}\n}\n@media screen and (min-width: 1900px) {\n.form-col[data-v-8c7837f4] {\n        max-width: 30%;\n        flex: 0 0 30%;\n}\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -7882,7 +7930,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.form-wrapper[data-v-6bc196fb] {\r\n    padding: 23px 129px;\r\n    background: #FFFFFF;\r\n    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);\r\n    border-radius: 6px;\n}\n.title-form[data-v-6bc196fb] {\r\n    font-family: 'Roboto', sans-serif;\r\n    font-style: normal;\r\n    font-weight: 500;\r\n    font-size: 24px;\r\n    line-height: 60px;\r\n    text-align: center;\r\n    color: #606060;\r\n    margin-bottom: 40px;\n}\n.form-group[data-v-6bc196fb] {\r\n    margin-bottom: 10px;\n}\n.form-group label[data-v-6bc196fb] {\r\n    font-family: Roboto;\r\n    font-style: normal;\r\n    font-weight: 500;\r\n    font-size: 14px;\r\n    line-height: 30px;\r\n    color: #666666;\r\n    margin-bottom: 10px;\n}\n.form-group input[data-v-6bc196fb] {\r\n    background: #FFFFFF;\r\n    border: 2px solid #F5F5F5;\r\n    box-sizing: border-box;\r\n    border-radius: 4px;\r\n    outline: none;\r\n    font-family: Roboto;\r\n    font-style: normal;\r\n    font-weight: bold;\r\n    font-size: 14px;\r\n    line-height: 60px;\r\n    color: #808080;\r\n    padding: 20px 25px;\n}\n.form-group input[data-v-6bc196fb]:focus {\r\n    outline: none;\r\n    border: 2px solid #F5F5F5;\r\n    box-shadow: none;\n}\nform button[data-v-6bc196fb] {\r\n    display: block;\r\n    background: #1875F0;\r\n    border: 2px solid #F5F5F5;\r\n    box-sizing: border-box;\r\n    border-radius: 4px;\r\n    padding: 15px 40px;\r\n    font-family: 'Roboto', sans-serif;\r\n    font-style: normal;\r\n    font-weight: 900;\r\n    font-size: 12px;\r\n    text-align: center;\r\n    text-transform: uppercase;\r\n    color: #FFFFFF;\n}\n.reset-password[data-v-6bc196fb] {\r\n    text-align: center;\r\n    margin-bottom: 20px;\n}\n.reset-password a[data-v-6bc196fb] {\r\n    font-family: Roboto;\r\n    font-style: normal;\r\n    font-weight: 500;\r\n    font-size: 14px;\r\n    line-height: 30px;\r\n    color: #1875F0;\n}\n.subtitle-form[data-v-6bc196fb] {\r\n    font-family: Roboto;\r\n    font-style: normal;\r\n    font-weight: 500;\r\n    font-size: 14px;\r\n    line-height: 30px;\r\n    text-align: center;\r\n    color: #666666;\n}\n.btn-form-group[data-v-6bc196fb] {\r\n    justify-content: space-around;\n}\n.cancel[data-v-6bc196fb] {\r\n    font-style: normal;\r\n    font-weight: 900;\r\n    font-size: 12px;\r\n    text-align: center;\r\n    letter-spacing: 1.5px;\r\n    text-transform: uppercase;\r\n    color: #B3B3B3;\r\n    padding: 15px 40px;\r\n    background: #FFFFFF;\r\n    border: 2px solid #F5F5F5;\r\n    box-sizing: border-box;\r\n    border-radius: 4px;\r\n    display: block;\n}\n@media screen and (max-width: 1023.99px) {\n.form-wrapper[data-v-6bc196fb] {\r\n        padding: 23px;\n}\n}\n@media screen and (min-width: 1900px) {\n.form-col[data-v-6bc196fb] {\r\n        max-width: 30%;\r\n        flex: 0 0 30%;\n}\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.form-wrapper[data-v-6bc196fb] {\n    padding: 23px 129px;\n    background: #FFFFFF;\n    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);\n    border-radius: 6px;\n}\n.title-form[data-v-6bc196fb] {\n    font-family: 'Roboto', sans-serif;\n    font-style: normal;\n    font-weight: 500;\n    font-size: 24px;\n    line-height: 60px;\n    text-align: center;\n    color: #606060;\n    margin-bottom: 40px;\n}\n.form-group[data-v-6bc196fb] {\n    margin-bottom: 10px;\n}\n.form-group label[data-v-6bc196fb] {\n    font-family: Roboto;\n    font-style: normal;\n    font-weight: 500;\n    font-size: 14px;\n    line-height: 30px;\n    color: #666666;\n    margin-bottom: 10px;\n}\n.form-group input[data-v-6bc196fb] {\n    background: #FFFFFF;\n    border: 2px solid #F5F5F5;\n    box-sizing: border-box;\n    border-radius: 4px;\n    outline: none;\n    font-family: Roboto;\n    font-style: normal;\n    font-weight: bold;\n    font-size: 14px;\n    line-height: 60px;\n    color: #808080;\n    padding: 20px 25px;\n}\n.form-group input[data-v-6bc196fb]:focus {\n    outline: none;\n    border: 2px solid #F5F5F5;\n    box-shadow: none;\n}\nform button[data-v-6bc196fb] {\n    display: block;\n    background: #1875F0;\n    border: 2px solid #F5F5F5;\n    box-sizing: border-box;\n    border-radius: 4px;\n    padding: 15px 40px;\n    font-family: 'Roboto', sans-serif;\n    font-style: normal;\n    font-weight: 900;\n    font-size: 12px;\n    text-align: center;\n    text-transform: uppercase;\n    color: #FFFFFF;\n}\n.reset-password[data-v-6bc196fb] {\n    text-align: center;\n    margin-bottom: 20px;\n}\n.reset-password a[data-v-6bc196fb] {\n    font-family: Roboto;\n    font-style: normal;\n    font-weight: 500;\n    font-size: 14px;\n    line-height: 30px;\n    color: #1875F0;\n}\n.subtitle-form[data-v-6bc196fb] {\n    font-family: Roboto;\n    font-style: normal;\n    font-weight: 500;\n    font-size: 14px;\n    line-height: 30px;\n    text-align: center;\n    color: #666666;\n}\n.btn-form-group[data-v-6bc196fb] {\n    justify-content: space-around;\n}\n.cancel[data-v-6bc196fb] {\n    font-style: normal;\n    font-weight: 900;\n    font-size: 12px;\n    text-align: center;\n    letter-spacing: 1.5px;\n    text-transform: uppercase;\n    color: #B3B3B3;\n    padding: 15px 40px;\n    background: #FFFFFF;\n    border: 2px solid #F5F5F5;\n    box-sizing: border-box;\n    border-radius: 4px;\n    display: block;\n}\n@media screen and (max-width: 1023.99px) {\n.form-wrapper[data-v-6bc196fb] {\n        padding: 23px;\n}\n}\n@media screen and (min-width: 1900px) {\n.form-col[data-v-6bc196fb] {\n        max-width: 30%;\n        flex: 0 0 30%;\n}\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -7906,7 +7954,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.form-wrapper[data-v-2dcdfdf0] {\r\n    padding: 23px 129px;\r\n    background: #FFFFFF;\r\n    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);\r\n    border-radius: 6px;\n}\n.title-form[data-v-2dcdfdf0] {\r\n    font-family: 'Roboto', sans-serif;\r\n    font-style: normal;\r\n    font-weight: 500;\r\n    font-size: 24px;\r\n    line-height: 60px;\r\n    text-align: center;\r\n    color: #606060;\r\n    margin-bottom: 40px;\n}\n.form-group[data-v-2dcdfdf0] {\r\n    margin-bottom: 10px;\n}\n.form-group label[data-v-2dcdfdf0] {\r\n    font-family: Roboto;\r\n    font-style: normal;\r\n    font-weight: 500;\r\n    font-size: 14px;\r\n    line-height: 30px;\r\n    color: #666666;\r\n    margin-bottom: 10px;\n}\n.form-group input[data-v-2dcdfdf0] {\r\n    background: #FFFFFF;\r\n    border: 2px solid #F5F5F5;\r\n    box-sizing: border-box;\r\n    border-radius: 4px;\r\n    outline: none;\r\n    font-family: Roboto;\r\n    font-style: normal;\r\n    font-weight: bold;\r\n    font-size: 14px;\r\n    line-height: 60px;\r\n    color: #808080;\r\n    padding: 20px 25px;\n}\n.form-group input[data-v-2dcdfdf0]:focus {\r\n    outline: none;\r\n    border: 2px solid #F5F5F5;\r\n    box-shadow: none;\n}\nform button[data-v-2dcdfdf0], .btn-resend .active-btn[data-v-2dcdfdf0] {\r\n    display: block;\r\n    background: #1875F0;\r\n    border: 2px solid #F5F5F5;\r\n    box-sizing: border-box;\r\n    border-radius: 4px;\r\n    padding: 15px 40px;\r\n    font-family: 'Roboto', sans-serif;\r\n    font-style: normal;\r\n    font-weight: 900;\r\n    font-size: 12px;\r\n    text-align: center;\r\n    text-transform: uppercase;\r\n    color: #FFFFFF;\n}\n.reset-password[data-v-2dcdfdf0] {\r\n    text-align: left;\r\n    margin-bottom: 20px;\n}\n.reset-password a[data-v-2dcdfdf0] {\r\n    font-family: Roboto;\r\n    font-style: normal;\r\n    font-weight: 500;\r\n    font-size: 14px;\r\n    line-height: 30px;\r\n    color: #1875F0;\n}\n.subtitle-form[data-v-2dcdfdf0] {\r\n    font-family: Roboto;\r\n    font-style: normal;\r\n    font-weight: 500;\r\n    font-size: 14px;\r\n    line-height: 30px;\r\n    text-align: center;\r\n    color: #666666;\n}\n.btn-form-group[data-v-2dcdfdf0] {\r\n    justify-content: center;\n}\n.btn-form-group button[data-v-2dcdfdf0] {\r\n    margin: 0 15px;\n}\n.cancel[data-v-2dcdfdf0] {\r\n    font-style: normal;\r\n    font-weight: 900;\r\n    font-size: 12px;\r\n    text-align: center;\r\n    letter-spacing: 1.5px;\r\n    text-transform: uppercase;\r\n    color: #B3B3B3;\r\n    padding: 15px 40px;\r\n    background: #FFFFFF;\r\n    border: 2px solid #F5F5F5;\r\n    box-sizing: border-box;\r\n    border-radius: 4px;\r\n    display: block;\n}\n.text-resend[data-v-2dcdfdf0] {\r\n    font-family: Roboto;\r\n    font-style: normal;\r\n    font-weight: 500;\r\n    font-size: 10px;\r\n    line-height: 30px;\r\n    text-align: left;\r\n    color: #666666;\n}\n.error-msg[data-v-2dcdfdf0] {\r\n    font-family: Roboto;\r\n    font-style: normal;\r\n    font-weight: 500;\r\n    font-size: 14px;\r\n    text-align: center;\r\n    color: #FF0000;\r\n    margin-bottom: 10px;\r\n    display: none;\n}\n.has-error label[data-v-2dcdfdf0] {\r\n    color: #FF0000;\n}\n.has-error .error-msg[data-v-2dcdfdf0] {\r\n    display: block;\n}\n.has-error .subtitle-form[data-v-2dcdfdf0] {\r\n    display: none;\n}\n@media screen and (max-width: 1023.99px) {\n.form-wrapper[data-v-2dcdfdf0] {\r\n        padding: 23px;\n}\n}\n@media screen and (min-width: 1900px) {\n.form-col[data-v-2dcdfdf0] {\r\n        max-width: 30%;\r\n        flex: 0 0 30%;\n}\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.form-wrapper[data-v-2dcdfdf0] {\n    padding: 23px 129px;\n    background: #FFFFFF;\n    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);\n    border-radius: 6px;\n}\n.title-form[data-v-2dcdfdf0] {\n    font-family: 'Roboto', sans-serif;\n    font-style: normal;\n    font-weight: 500;\n    font-size: 24px;\n    line-height: 60px;\n    text-align: center;\n    color: #606060;\n    margin-bottom: 40px;\n}\n.form-group[data-v-2dcdfdf0] {\n    margin-bottom: 10px;\n}\n.form-group label[data-v-2dcdfdf0] {\n    font-family: Roboto;\n    font-style: normal;\n    font-weight: 500;\n    font-size: 14px;\n    line-height: 30px;\n    color: #666666;\n    margin-bottom: 10px;\n}\n.form-group input[data-v-2dcdfdf0] {\n    background: #FFFFFF;\n    border: 2px solid #F5F5F5;\n    box-sizing: border-box;\n    border-radius: 4px;\n    outline: none;\n    font-family: Roboto;\n    font-style: normal;\n    font-weight: bold;\n    font-size: 14px;\n    line-height: 60px;\n    color: #808080;\n    padding: 20px 25px;\n}\n.form-group input[data-v-2dcdfdf0]:focus {\n    outline: none;\n    border: 2px solid #F5F5F5;\n    box-shadow: none;\n}\nform button[data-v-2dcdfdf0], .btn-resend .active-btn[data-v-2dcdfdf0] {\n    display: block;\n    background: #1875F0;\n    border: 2px solid #F5F5F5;\n    box-sizing: border-box;\n    border-radius: 4px;\n    padding: 15px 40px;\n    font-family: 'Roboto', sans-serif;\n    font-style: normal;\n    font-weight: 900;\n    font-size: 12px;\n    text-align: center;\n    text-transform: uppercase;\n    color: #FFFFFF;\n}\n.reset-password[data-v-2dcdfdf0] {\n    text-align: left;\n    margin-bottom: 20px;\n}\n.reset-password a[data-v-2dcdfdf0] {\n    font-family: Roboto;\n    font-style: normal;\n    font-weight: 500;\n    font-size: 14px;\n    line-height: 30px;\n    color: #1875F0;\n}\n.subtitle-form[data-v-2dcdfdf0] {\n    font-family: Roboto;\n    font-style: normal;\n    font-weight: 500;\n    font-size: 14px;\n    line-height: 30px;\n    text-align: center;\n    color: #666666;\n}\n.btn-form-group[data-v-2dcdfdf0] {\n    justify-content: center;\n}\n.btn-form-group button[data-v-2dcdfdf0] {\n    margin: 0 15px;\n}\n.cancel[data-v-2dcdfdf0] {\n    font-style: normal;\n    font-weight: 900;\n    font-size: 12px;\n    text-align: center;\n    letter-spacing: 1.5px;\n    text-transform: uppercase;\n    color: #B3B3B3;\n    padding: 15px 40px;\n    background: #FFFFFF;\n    border: 2px solid #F5F5F5;\n    box-sizing: border-box;\n    border-radius: 4px;\n    display: block;\n}\n.text-resend[data-v-2dcdfdf0] {\n    font-family: Roboto;\n    font-style: normal;\n    font-weight: 500;\n    font-size: 10px;\n    line-height: 30px;\n    text-align: left;\n    color: #666666;\n}\n.error-msg[data-v-2dcdfdf0] {\n    font-family: Roboto;\n    font-style: normal;\n    font-weight: 500;\n    font-size: 14px;\n    text-align: center;\n    color: #FF0000;\n    margin-bottom: 10px;\n    display: none;\n}\n.has-error label[data-v-2dcdfdf0] {\n    color: #FF0000;\n}\n.has-error .error-msg[data-v-2dcdfdf0] {\n    display: block;\n}\n.has-error .subtitle-form[data-v-2dcdfdf0] {\n    display: none;\n}\n.btn-resend button[data-v-2dcdfdf0], .btn-resend .active-btn[data-v-2dcdfdf0] {\n    width: 170px;\n    height: 50px;\n    display: flex;\n    justify-content: center;\n    align-items: center;\n}\n@media screen and (max-width: 1023.99px) {\n.form-wrapper[data-v-2dcdfdf0] {\n        padding: 23px;\n}\n}\n@media screen and (min-width: 1900px) {\n.form-col[data-v-2dcdfdf0] {\n        max-width: 30%;\n        flex: 0 0 30%;\n}\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -7930,7 +7978,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.form-wrapper[data-v-350ac0d5] {\r\n    padding: 23px 129px;\r\n    background: #FFFFFF;\r\n    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);\r\n    border-radius: 6px;\n}\n.title-form[data-v-350ac0d5] {\r\n    font-family: 'Roboto', sans-serif;\r\n    font-style: normal;\r\n    font-weight: 500;\r\n    font-size: 24px;\r\n    line-height: 60px;\r\n    text-align: center;\r\n    color: #606060;\r\n    margin-bottom: 40px;\n}\n.form-group[data-v-350ac0d5] {\r\n    margin-bottom: 10px;\n}\n.password[data-v-350ac0d5] {\r\n    position: relative;\n}\n.password svg[data-v-350ac0d5] {\r\n    position: absolute;\r\n    bottom: 5px;\r\n    right: 10px;\r\n    cursor: pointer;\n}\n.form-group label[data-v-350ac0d5] {\r\n    font-family: Roboto;\r\n    font-style: normal;\r\n    font-weight: 500;\r\n    font-size: 14px;\r\n    line-height: 30px;\r\n    color: #666666;\r\n    margin-bottom: 10px;\n}\n.form-group input[data-v-350ac0d5] {\r\n    background: #FFFFFF;\r\n    border: 2px solid #F5F5F5;\r\n    box-sizing: border-box;\r\n    border-radius: 4px;\r\n    outline: none;\r\n    font-family: Roboto;\r\n    font-style: normal;\r\n    font-weight: bold;\r\n    font-size: 14px;\r\n    line-height: 60px;\r\n    color: #808080;\r\n    padding: 20px 25px;\n}\n.form-group input[data-v-350ac0d5]:focus {\r\n    outline: none;\r\n    border: 2px solid #F5F5F5;\r\n    box-shadow: none;\n}\nform button[data-v-350ac0d5] {\r\n    display: block;\r\n    background: #1875F0;\r\n    border: 2px solid #F5F5F5;\r\n    box-sizing: border-box;\r\n    border-radius: 4px;\r\n    padding: 15px 40px;\r\n    font-family: 'Roboto', sans-serif;\r\n    font-style: normal;\r\n    font-weight: 900;\r\n    font-size: 12px;\r\n    text-align: center;\r\n    text-transform: uppercase;\r\n    color: #FFFFFF;\n}\n.reset-password a[data-v-350ac0d5] {\r\n    font-family: Roboto;\r\n    font-style: normal;\r\n    font-weight: 500;\r\n    font-size: 14px;\r\n    line-height: 30px;\r\n    color: #1875F0;\n}\n.subtitle-form[data-v-350ac0d5] {\r\n    font-family: Roboto;\r\n    font-style: normal;\r\n    font-weight: 500;\r\n    font-size: 14px;\r\n    line-height: 30px;\r\n    text-align: center;\r\n    color: #666666;\n}\n.btn-form-group[data-v-350ac0d5] {\r\n    justify-content: space-around;\r\n    margin-top: 20px;\n}\n.cancel[data-v-350ac0d5] {\r\n    font-style: normal;\r\n    font-weight: 900;\r\n    font-size: 12px;\r\n    text-align: center;\r\n    letter-spacing: 1.5px;\r\n    text-transform: uppercase;\r\n    color: #B3B3B3;\r\n    padding: 15px 40px;\r\n    background: #FFFFFF;\r\n    border: 2px solid #F5F5F5;\r\n    box-sizing: border-box;\r\n    border-radius: 4px;\r\n    display: block;\n}\n.error-msg[data-v-350ac0d5] {\r\n    font-family: Roboto;\r\n    font-style: normal;\r\n    font-weight: 500;\r\n    font-size: 14px;\r\n    text-align: center;\r\n    color: #FF0000;\r\n    margin-bottom: 10px;\r\n    display: none;\n}\n.has-error label[data-v-350ac0d5] {\r\n    color: #FF0000;\n}\n.has-error .error-msg[data-v-350ac0d5] {\r\n    display: block;\n}\n.has-error .subtitle-form[data-v-350ac0d5] {\r\n    display: none;\n}\n@media screen and (max-width: 1023.99px) {\n.form-wrapper[data-v-350ac0d5] {\r\n        padding: 23px;\n}\n}\n@media screen and (min-width: 1900px) {\n.form-col[data-v-350ac0d5] {\r\n        max-width: 30%;\r\n        flex: 0 0 30%;\n}\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.form-wrapper[data-v-350ac0d5] {\n    padding: 23px 129px;\n    background: #FFFFFF;\n    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);\n    border-radius: 6px;\n}\n.title-form[data-v-350ac0d5] {\n    font-family: 'Roboto', sans-serif;\n    font-style: normal;\n    font-weight: 500;\n    font-size: 24px;\n    line-height: 60px;\n    text-align: center;\n    color: #606060;\n    margin-bottom: 40px;\n}\n.form-group[data-v-350ac0d5] {\n    margin-bottom: 10px;\n}\n.password[data-v-350ac0d5] {\n    position: relative;\n}\n.password svg[data-v-350ac0d5] {\n    position: absolute;\n    bottom: 5px;\n    right: 10px;\n    cursor: pointer;\n}\n.form-group label[data-v-350ac0d5] {\n    font-family: Roboto;\n    font-style: normal;\n    font-weight: 500;\n    font-size: 14px;\n    line-height: 30px;\n    color: #666666;\n    margin-bottom: 10px;\n}\n.form-group input[data-v-350ac0d5] {\n    background: #FFFFFF;\n    border: 2px solid #F5F5F5;\n    box-sizing: border-box;\n    border-radius: 4px;\n    outline: none;\n    font-family: Roboto;\n    font-style: normal;\n    font-weight: bold;\n    font-size: 14px;\n    line-height: 60px;\n    color: #808080;\n    padding: 20px 25px;\n}\n.form-group input[data-v-350ac0d5]:focus {\n    outline: none;\n    border: 2px solid #F5F5F5;\n    box-shadow: none;\n}\nform button[data-v-350ac0d5] {\n    display: block;\n    background: #1875F0;\n    border: 2px solid #F5F5F5;\n    box-sizing: border-box;\n    border-radius: 4px;\n    padding: 15px 40px;\n    font-family: 'Roboto', sans-serif;\n    font-style: normal;\n    font-weight: 900;\n    font-size: 12px;\n    text-align: center;\n    text-transform: uppercase;\n    color: #FFFFFF;\n}\n.reset-password a[data-v-350ac0d5] {\n    font-family: Roboto;\n    font-style: normal;\n    font-weight: 500;\n    font-size: 14px;\n    line-height: 30px;\n    color: #1875F0;\n}\n.subtitle-form[data-v-350ac0d5] {\n    font-family: Roboto;\n    font-style: normal;\n    font-weight: 500;\n    font-size: 14px;\n    line-height: 30px;\n    text-align: center;\n    color: #666666;\n}\n.btn-form-group[data-v-350ac0d5] {\n    justify-content: space-around;\n    margin-top: 20px;\n}\n.cancel[data-v-350ac0d5] {\n    font-style: normal;\n    font-weight: 900;\n    font-size: 12px;\n    text-align: center;\n    letter-spacing: 1.5px;\n    text-transform: uppercase;\n    color: #B3B3B3;\n    padding: 15px 40px;\n    background: #FFFFFF;\n    border: 2px solid #F5F5F5;\n    box-sizing: border-box;\n    border-radius: 4px;\n    display: block;\n}\n.error-msg[data-v-350ac0d5] {\n    font-family: Roboto;\n    font-style: normal;\n    font-weight: 500;\n    font-size: 14px;\n    text-align: center;\n    color: #FF0000;\n    margin-bottom: 10px;\n    display: none;\n}\n.has-error label[data-v-350ac0d5] {\n    color: #FF0000;\n}\n.has-error .error-msg[data-v-350ac0d5] {\n    display: block;\n}\n.has-error .subtitle-form[data-v-350ac0d5] {\n    display: none;\n}\n@media screen and (max-width: 1023.99px) {\n.form-wrapper[data-v-350ac0d5] {\n        padding: 23px;\n}\n}\n@media screen and (min-width: 1900px) {\n.form-col[data-v-350ac0d5] {\n        max-width: 30%;\n        flex: 0 0 30%;\n}\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -8098,7 +8146,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("/images/arrow_down.svg?5530cc7c29361b9965616eb60d1d5626");
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("/images/arrow_down.svg?ac3013075f795a3dd057ea30eab01740");
 
 /***/ }),
 
@@ -42182,82 +42230,96 @@ var render = function() {
     [
       _c("div", { staticClass: "col-12 col-md-6 col-xl-6 form-col" }, [
         _c("div", { staticClass: "form-wrapper" }, [
-          _c("form", { attrs: { action: "#" } }, [
-            _c("div", { staticClass: "title-form" }, [
-              _vm._v("Восстановление доступа")
-            ]),
-            _vm._v(" "),
-            _vm._m(0),
-            _vm._v(" "),
-            _c("div", { staticClass: "form-group" }, [
-              _c("label", { attrs: { for: "inputEmail" } }, [
-                _vm._v("E-mail:")
+          _c(
+            "form",
+            { attrs: { action: "#" } },
+            [
+              _c("div", { staticClass: "title-form" }, [
+                _vm._v("Восстановление доступа")
               ]),
               _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.email,
-                    expression: "email"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: {
-                  type: "email",
-                  id: "inputEmail",
-                  "aria-describedby": "emailHelp",
-                  placeholder: "E-mail:",
-                  name: "email"
-                },
-                domProps: { value: _vm.email },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.email = $event.target.value
-                  }
-                }
-              })
-            ]),
-            _vm._v(" "),
-            _vm._m(1),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "form-group d-flex flex-row btn-form-group" },
-              [
-                _c(
-                  "button",
-                  {
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.repair($event)
-                      }
-                    }
-                  },
-                  [_vm._v("далее")]
-                ),
+              _vm._m(0),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "inputEmail" } }, [
+                  _vm._v("E-mail:")
+                ]),
                 _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "cancel",
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.clearAll($event)
-                      }
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.email,
+                      expression: "email"
                     }
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    type: "email",
+                    id: "inputEmail",
+                    "aria-describedby": "emailHelp",
+                    placeholder: "E-mail:",
+                    name: "email"
                   },
-                  [_vm._v("Отмена")]
-                )
-              ]
-            )
-          ])
+                  domProps: { value: _vm.email },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.email = $event.target.value
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _vm._m(1),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "form-group d-flex flex-row btn-form-group" },
+                [
+                  _c(
+                    "button",
+                    {
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.validate($event)
+                        }
+                      }
+                    },
+                    [_vm._v("далее")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "cancel",
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.clearAll($event)
+                        }
+                      }
+                    },
+                    [_vm._v("Отмена")]
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c("vue-recaptcha", {
+                ref: "recaptcha",
+                attrs: {
+                  size: "invisible",
+                  sitekey: "6LcyCr8aAAAAAPxdtYNSSsIwZz9eSzH766VjeoJw"
+                },
+                on: { verify: _vm.register, expired: _vm.onCaptchaExpired }
+              })
+            ],
+            1
+          )
         ])
       ])
     ]
@@ -42313,7 +42375,7 @@ var render = function() {
     "div",
     { staticClass: "row justify-content-center h-100 align-items-center" },
     [
-      _c("div", { staticClass: "col-12 col-md-6 col-xl-8 form-col" }, [
+      _c("div", { staticClass: "col-12 col-md-6 form-col" }, [
         _c("div", { staticClass: "form-wrapper" }, [
           _c(
             "form",
@@ -42332,7 +42394,7 @@ var render = function() {
                     staticClass: "row justify-content-between align-items-end"
                   },
                   [
-                    _c("div", { staticClass: " col-12 col-lg-6" }, [
+                    _c("div", { staticClass: " col-12 col-lg-8 col-xl-7" }, [
                       _c("label", { attrs: { for: "inputEmail" } }, [
                         _vm._v("Код подтверждения:")
                       ]),
@@ -42366,35 +42428,39 @@ var render = function() {
                       })
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "btn-resend col-12 col-lg-6" }, [
-                      !_vm.hideTextBtn
-                        ? _c("div", { staticClass: "text-resend" }, [
-                            _vm._v(
-                              "Станет доступно через: " +
-                                _vm._s(_vm.countSecond) +
-                                " сек."
-                            )
-                          ])
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _c(
-                        "button",
-                        {
-                          class: {
-                            cancel: true,
-                            "active-btn": !_vm.disableButton
-                          },
-                          attrs: { disabled: _vm.disableButton },
-                          on: {
-                            click: function($event) {
-                              $event.preventDefault()
-                              return _vm.startTimer($event)
+                    _c(
+                      "div",
+                      { staticClass: "btn-resend col-12 col-lg-4 col-xl-5" },
+                      [
+                        !_vm.hideTextBtn
+                          ? _c("div", { staticClass: "text-resend" }, [
+                              _vm._v(
+                                "Станет доступно через: " +
+                                  _vm._s(_vm.countSecond) +
+                                  " сек."
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            class: {
+                              cancel: true,
+                              "active-btn": !_vm.disableButton
+                            },
+                            attrs: { disabled: _vm.disableButton },
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.startTimer($event)
+                              }
                             }
-                          }
-                        },
-                        [_vm._v("Отправить повторно")]
-                      )
-                    ])
+                          },
+                          [_vm._v("Отправить повторно")]
+                        )
+                      ]
+                    )
                   ]
                 )
               ]),
@@ -42927,6 +42993,223 @@ function normalizeComponent (
     options: options
   }
 }
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-recaptcha/dist/vue-recaptcha.es.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/vue-recaptcha/dist/vue-recaptcha.es.js ***!
+  \*************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+function _extends() {
+  _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
+  };
+
+  return _extends.apply(this, arguments);
+}
+
+var defer = function defer() {
+  var state = false; // Resolved or not
+
+  var callbacks = [];
+
+  var resolve = function resolve(val) {
+    if (state) {
+      return;
+    }
+
+    state = true;
+
+    for (var i = 0, len = callbacks.length; i < len; i++) {
+      callbacks[i](val);
+    }
+  };
+
+  var then = function then(cb) {
+    if (!state) {
+      callbacks.push(cb);
+      return;
+    }
+
+    cb();
+  };
+
+  var deferred = {
+    resolved: function resolved() {
+      return state;
+    },
+    resolve: resolve,
+    promise: {
+      then: then
+    }
+  };
+  return deferred;
+};
+
+var ownProp = Object.prototype.hasOwnProperty;
+function createRecaptcha() {
+  var deferred = defer();
+  return {
+    notify: function notify() {
+      deferred.resolve();
+    },
+    wait: function wait() {
+      return deferred.promise;
+    },
+    render: function render(ele, options, cb) {
+      this.wait().then(function () {
+        cb(window.grecaptcha.render(ele, options));
+      });
+    },
+    reset: function reset(widgetId) {
+      if (typeof widgetId === 'undefined') {
+        return;
+      }
+
+      this.assertLoaded();
+      this.wait().then(function () {
+        return window.grecaptcha.reset(widgetId);
+      });
+    },
+    execute: function execute(widgetId) {
+      if (typeof widgetId === 'undefined') {
+        return;
+      }
+
+      this.assertLoaded();
+      this.wait().then(function () {
+        return window.grecaptcha.execute(widgetId);
+      });
+    },
+    checkRecaptchaLoad: function checkRecaptchaLoad() {
+      if (ownProp.call(window, 'grecaptcha') && ownProp.call(window.grecaptcha, 'render')) {
+        this.notify();
+      }
+    },
+    assertLoaded: function assertLoaded() {
+      if (!deferred.resolved()) {
+        throw new Error('ReCAPTCHA has not been loaded');
+      }
+    }
+  };
+}
+var recaptcha = createRecaptcha();
+
+if (typeof window !== 'undefined') {
+  window.vueRecaptchaApiLoaded = recaptcha.notify;
+}
+
+var VueRecaptcha = {
+  name: 'VueRecaptcha',
+  props: {
+    sitekey: {
+      type: String,
+      required: true
+    },
+    theme: {
+      type: String
+    },
+    badge: {
+      type: String
+    },
+    type: {
+      type: String
+    },
+    size: {
+      type: String
+    },
+    tabindex: {
+      type: String
+    },
+    loadRecaptchaScript: {
+      type: Boolean,
+      "default": false
+    },
+    recaptchaScriptId: {
+      type: String,
+      "default": '__RECAPTCHA_SCRIPT'
+    },
+    recaptchaHost: {
+      type: String,
+      "default": 'www.google.com'
+    },
+    language: {
+      type: String,
+      "default": ''
+    }
+  },
+  beforeMount: function beforeMount() {
+    if (this.loadRecaptchaScript) {
+      if (!document.getElementById(this.recaptchaScriptId)) {
+        // Note: vueRecaptchaApiLoaded load callback name is per the latest documentation
+        var script = document.createElement('script');
+        script.id = this.recaptchaScriptId;
+        script.src = "https://" + this.recaptchaHost + "/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit&hl=" + this.language;
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+      }
+    }
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    recaptcha.checkRecaptchaLoad();
+
+    var opts = _extends({}, this.$props, {
+      callback: this.emitVerify,
+      'expired-callback': this.emitExpired,
+      'error-callback': this.emitError
+    });
+
+    var container = this.$slots["default"] ? this.$el.children[0] : this.$el;
+    recaptcha.render(container, opts, function (id) {
+      _this.$widgetId = id;
+
+      _this.$emit('render', id);
+    });
+  },
+  methods: {
+    reset: function reset() {
+      recaptcha.reset(this.$widgetId);
+    },
+    execute: function execute() {
+      recaptcha.execute(this.$widgetId);
+    },
+    emitVerify: function emitVerify(response) {
+      this.$emit('verify', response);
+    },
+    emitExpired: function emitExpired() {
+      this.$emit('expired');
+    },
+    emitError: function emitError() {
+      this.$emit('error');
+    }
+  },
+  render: function render(h) {
+    return h('div', {}, this.$slots["default"]);
+  }
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (VueRecaptcha);
 
 
 /***/ }),
