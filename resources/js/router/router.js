@@ -45,18 +45,40 @@ const router = new VueRouter({
             ]
         },
         {
-            path: '/users-management',
-            component: UsersManagementPage,
-        },
-        {
-            path: '/home',
-            name: 'Home',
-            component: TitleComponent,
-        },
-        {
-            path: '/profile',
-            name: 'Profile',
-            component: Profile,
+            path: '/',
+            name: 'base',
+            component: MainLayout,
+            children: [
+                {
+                    path: '/home',
+                    component: Home
+                },
+                {
+                    path: '/profile',
+                    component: Profile
+                },
+                {
+                    path: '/users-management',
+                    component: UsersManagementPage,
+                },
+                {
+                    path: '/users-management/user-edit',
+                    component: UserEditPage
+                },
+                {
+                    path: '/users-management/new-user',
+                    component: NewUserPage
+                },
+                {
+                    path: '/departments-management',
+                    component: DepartmentsManagementList,
+                },
+                {
+                    path: '/departments-create',
+                    component: DepartmentCreate,
+                },
+
+            ]
         },
     ]
 });
