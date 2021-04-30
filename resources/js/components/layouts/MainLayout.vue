@@ -11,15 +11,17 @@
                 </div>
             </div>
         </div>
+        <footer-component/>
     </main>
 </template>
 
 <script>
 import HeaderComponent from "../Header";
 import Sidebar from "../Sidebar";
+import FooterComponent from "../Footer";
 export default {
     name: "MainLayout",
-    components: {Sidebar, HeaderComponent}
+    components: {Sidebar, HeaderComponent, FooterComponent}
 }
 </script>
 
