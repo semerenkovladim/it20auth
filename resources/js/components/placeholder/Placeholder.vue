@@ -6,10 +6,14 @@
             <nav>
                 <ul>
                     <li class="placeholder_nav__item"
-                        :class="item.active ? 'placeholder_nav__item-active':''"
-                        v-for="item in placeholderNav"
-                        :key="item.id">
-                        {{ item.name }}
+                        :class="UM_SETTINGS_STATUS.personalDataStatus ? 'placeholder_nav__item-active':''"
+                        @click="showPersonalData">
+                        Персональные данные
+                    </li>
+                    <li class="placeholder_nav__item"
+                        :class="UM_SETTINGS_STATUS.personalAccessStatus ? 'placeholder_nav__item-active':''"
+                        @click="showAccess">
+                        Доступы
                     </li>
                 </ul>
             </nav>
@@ -19,12 +23,38 @@
 
 <script>
 import Breadcrumbs from "../breadcrumbs/Breadcrumbs";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
     name: "Placeholder",
     props: ['text', 'links', 'placeholderNav'],
     components: {
         'breadcrumbs': Breadcrumbs
+    },
+    data() {
+        return {
+            data: true,
+            access: false
+        }
+    },
+    methods: {
+        ...mapActions([
+            'changeUMPersonalDataStatus',
+            'changeUMPersonalAccess'
+        ]),
+        showPersonalData() {
+            this.changeUMPersonalDataStatus(true)
+            console.log('showPersonalData')
+        },
+        showAccess() {
+            this.changeUMPersonalAccess(true)
+            console.log('showAccess')
+        }
+    },
+    computed: {
+        ...mapGetters([
+            'UM_SETTINGS_STATUS'
+        ])
     }
 }
 </script>
@@ -57,6 +87,7 @@ export default {
 
 .placeholder_nav {
     padding-top: 15px;
+
     ul {
         display: flex;
 

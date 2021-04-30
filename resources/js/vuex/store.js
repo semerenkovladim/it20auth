@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
+
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -8,8 +9,10 @@ const store = new Vuex.Store({
         count: 0,
         usersManagement: {
             settingStatus: false,
-            confirmStatus:false,
-            confirm:false
+            confirmStatus: false,
+            confirm: false,
+            personalDataStatus: true,
+            personalAccessStatus: false
         },
         user: {},
         access_token: '',
@@ -28,6 +31,14 @@ const store = new Vuex.Store({
         },
         setUMConfirm(state) {
             state.usersManagement.confirm = !state.usersManagement.confirm
+        },
+        setUMPersonalDataStatus(state, status) {
+            state.usersManagement.personalDataStatus = status
+            state.usersManagement.personalAccessStatus = !status
+        },
+        setUMPersonalAccess(state, status) {
+            state.usersManagement.personalAccessStatus = status
+            state.usersManagement.personalDataStatus = !status
         },
         setUser(state, user) {
             state.user = user;
@@ -48,6 +59,12 @@ const store = new Vuex.Store({
         },
         async changeUMConfirmStatus({commit}) {
             commit('setUMConfirmStatus')
+        },
+        changeUMPersonalDataStatus({commit}, status) {
+            commit('setUMPersonalDataStatus', status)
+        },
+        changeUMPersonalAccess({commit}, status) {
+            commit('setUMPersonalAccess', status)
         },
         saveUserFromServer({commit}, user) {
             commit('setUser', user);
