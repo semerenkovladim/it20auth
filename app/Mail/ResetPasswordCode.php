@@ -22,6 +22,7 @@ class ResetPasswordCode extends Mailable
     {
         $this->code = $code;
         $this->name = $name;
+        $this->subject = "Восстановление доступа";
     }
 
     /**

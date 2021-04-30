@@ -8,6 +8,12 @@ import TheRepairPasswordNew from "../pages/auth/TheRepairPasswordNew";
 import UsersManagementPage from "../pages/usersManagement/UsersManagementPage";
 import UserEditPage from "../pages/userEdit/UserEditPage";
 import NewUserPage from "../pages/newUser/NewUserPage";
+import DepartmentsManagementList from "../pages/Department/DepartmentsManagementList";
+import DepartmentCreate from "../pages/Department/DepartmentCreate";
+import MainLayout from "../components/layouts/MainLayout";
+import Home from "../pages/home/Home";
+import Profile from "../pages/profile/Profile";
+
 // import * as path from "path";
 
 Vue.use(VueRouter);
@@ -45,8 +51,31 @@ const router = new VueRouter({
             ]
         },
         {
-            path: '/users-management',
-            component: UsersManagementPage,
+            path: '/',
+            name: 'base',
+            component: MainLayout,
+            children: [
+                {
+                    path: '/home',
+                    component: Home
+                },
+                {
+                    path: '/profile',
+                    component: Profile
+                },
+                {
+                    path: '/users-management',
+                    component: UsersManagementPage,
+                },
+                {
+                    path: '/departments-management',
+                    component: DepartmentsManagementList,
+                },
+                {
+                    path: '/departments-create',
+                    component: DepartmentCreate,
+                },
+            ]
         },
         {
             path: '/users-management/user-edit',
@@ -56,6 +85,7 @@ const router = new VueRouter({
             path: '/users-management/new-user',
             component: NewUserPage
         }
+
     ]
 });
 

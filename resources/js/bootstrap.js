@@ -1,4 +1,5 @@
 window._ = require('lodash');
+require("slick-slider/slick/slick");
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
