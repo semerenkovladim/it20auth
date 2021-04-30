@@ -6,14 +6,8 @@ import TheRepairPassword from "../pages/auth/TheRepairPassword";
 import TheRepairPasswordCode from "../pages/auth/TheRepairPasswordCode";
 import TheRepairPasswordNew from "../pages/auth/TheRepairPasswordNew";
 import UsersManagementPage from "../pages/usersManagement/UsersManagementPage";
-import UserEditPage from "../pages/userEdit/UserEditPage";
-import NewUserPage from "../pages/newUser/NewUserPage";
-import DepartmentsManagementList from "../pages/Department/DepartmentsManagementList";
-import DepartmentCreate from "../pages/Department/DepartmentCreate";
-import MainLayout from "../components/layouts/MainLayout";
-import Home from "../pages/home/Home";
-import Profile from "../pages/profile/Profile";
-
+import Profile from '../pages/Profile.vue'
+import TitleComponent from '../components/slider/TitleComponent.vue'
 // import * as path from "path";
 
 Vue.use(VueRouter);
@@ -86,7 +80,6 @@ const router = new VueRouter({
 
             ]
         },
-
     ]
 });
 
