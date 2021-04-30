@@ -3,10 +3,10 @@
         <header-component/>
         <div class="container-fluid">
             <div class="row">
-                <div class="col-2">
+                <div class="col-2 sidebar">
                     <sidebar/>
                 </div>
-                <div class="col-10">
+                <div class="col-10 main_home">
                     <router-view></router-view>
                 </div>
             </div>

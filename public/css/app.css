@@ -3,7 +3,7 @@
 
 500;700;900&display=swap);
 *{
-    font-family: 'Roboto', sans-serif;
+    font-family: Roboto, sans-serif;
     padding: 0;
     margin:0;
 }
@@ -22,8 +22,26 @@
     justify-content: center;
     align-items: center;
 }
+.drop_links{
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    color: #808080;
+}
+.user_name{
+    font-family:Roboto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 90px;
+    text-align: right;
+    padding-right: 20px;
+    color: #999999;
+}
+/*sidebar*/
 .wiget{
-    font-family: 'Roboto';
+    font-family: Roboto;
     font-style: normal;
     font-weight: 500;
     font-size: 13px;
@@ -33,7 +51,6 @@
     padding-bottom: 25px;
 }
 .link{
-
     padding-top: 15px;
     margin:0 auto;
 }
@@ -49,46 +66,56 @@ nav ul{
 .dropdown-toggle{
     background: url(/images/ic_keyboard_arrow_down.png?c2d8e1d6797e20c4c726edd0dd424ed3) no-repeat;
 }
+.sidebar{
+    text-align: center;
+}
 .home{
     background: url(/images/ic_home.png?4a8c101743f4d29f4e080e132854999b) no-repeat;
     padding-bottom: 30px;
-    margin-left: 40px;
+    margin-left: 80px;
+}
+.sidebar_link{
+    margin: 0 auto;
+    text-align: center;
 }
 .dick{
     background: url(/images/ic_cloud_dick.png?a0fd61d4a6e9a0ce5cc26c5811da32c7) no-repeat;
     padding-bottom: 30px;
-    margin-left: 40px;
+    margin-left: 80px;
 }
 .post{
     background: url(/images/ic_email.png?f9b295d765c75b6e01e4dbcaa8c9a762) no-repeat;
     padding-bottom: 30px;
-    margin-left: 40px;
+    margin-left: 80px;
 }
 .calendar{
     background: url(/images/ic_today.png?c962276659e152c21c29bec9d9055379) no-repeat;
     padding-bottom: 30px;
-    margin-left: 40px;
+    margin-left: 80px;
 }
 .photo{
     background: url(/images/ic_camera_alt.png?ff69ded5a07b2aa9c4c832431c495268) no-repeat;
     padding-bottom: 30px;
     display: block;
-    margin-left: 40px;
+    margin-left: 80px;
 }
 .contact{
     background: url(/images/ic_people.png?6b40b12dc15f5288bccfd4bda0b49ab7) no-repeat;
     padding-bottom: 30px;
-    margin-left: 40px;
+    margin-left: 80px;
+}
+.main_home{
+    background: #f1eeee;
 }
 .control{
     background: url(/images/ic_business_center.png?16bd534389f6bd670fc021de2124554c) no-repeat;
     padding-bottom: 30px;
-    margin-left: 40px;
+    margin-left: 80px;
 }
 .location{
     background: url(/images/ic_location_city.png?58dfd9f80112ec5e456ceea7f13e10b3) no-repeat;
     padding-bottom: 30px;
-    margin-left: 40px;
+    margin-left: 80px;
 }
 .content{
     background-color: #E5E5E5;
@@ -122,7 +149,7 @@ ul {
     line-height: 30px;
 }
 .policy_photo{
-    background: url(/images/logo_foot2.svg?b0291a4bfa97e6b95b2682befcb3af65) no-repeat;
+    background: url(/images/logo_foot2.svg?96d2ccd8dffd3cb32e5424aa7fc50913) no-repeat;
     padding-bottom: 80px;
     width: 200px;
 }
@@ -137,7 +164,7 @@ ul {
     color: #9B9B9B;
 }
 .title_menu{
-    font-family: 'Roboto';
+    font-family: Roboto;
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
@@ -149,7 +176,7 @@ ul {
     padding-bottom: 15px;
 }
 .title_contact{
-    font-family: 'Roboto';
+    font-family: Roboto;
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
@@ -164,7 +191,7 @@ ul {
     padding-bottom: 28px;
 }
 .contact_f a{
-    font-family: 'Roboto';
+    font-family: Roboto;
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
@@ -182,16 +209,13 @@ ul {
     position: relative;
     box-shadow: 0 0 3px 3px #f1e9e9;
     border-radius: 4px;
-    margin: 0 auto;
-    bottom: 15px;
-    left: 15px;
+    bottom: 80px;
+    margin: 0 50px;
+    padding-top: 25px;
     padding-bottom: 25px;
 }
-.cards{
-    top: 500px;
-}
 .title{
-    font-family: 'Roboto';
+    font-family: Roboto;
     font-style: normal;
     font-weight: 300;
     font-size: 36px;
@@ -201,7 +225,7 @@ ul {
     padding-bottom: 5px;
 }
 .hello_description{
-    font-family: 'Roboto';
+    font-family: Roboto;
     font-style: normal;
     font-weight: normal;
     font-size: 24px;
@@ -221,7 +245,7 @@ ul {
     margin-bottom: 30px;
 }
 .font_text{
-    font-family: 'Roboto';
+    font-family: Roboto;
     font-style: normal;
     font-weight: 300;
     font-size: 160px;
@@ -239,7 +263,7 @@ ul {
     position: absolute;
 }
 .offset_calendar{
-    font-family: 'Roboto';
+    font-family: Roboto;
     font-style: normal;
     font-weight: 500;
     font-size: 12px;
@@ -247,7 +271,7 @@ ul {
     color: #B3B3B3;
 }
 .offers_title{
-    font-family: 'Roboto';
+    font-family: Roboto;
     font-style: normal;
     font-weight: 500;
     font-size: 18px;
@@ -289,7 +313,7 @@ ul {
 /* Profile*/
 
 .profile{
-    font-family: 'Roboto';
+    font-family: Roboto;
     font-style: normal;
     font-weight: 500;
     font-size: 14px;
@@ -305,7 +329,7 @@ ul {
     padding-bottom: 10px;
 }
 .profile_title{
-    font-family: 'Roboto';
+    font-family: Roboto;
     font-style: normal;
     font-weight: 300;
     font-size: 36px;
@@ -321,7 +345,7 @@ ul {
     margin-bottom: 62px;
 }
 .inform_title{
-    font-family: 'Roboto';
+    font-family: Roboto;
     font-style: normal;
     font-weight: 500;
     font-size: 18px;
@@ -347,6 +371,24 @@ ul {
     background: #bbb5b5;
 }
 /* Profile*/
+
+/*Footer*/
+.icon_social a{
+    padding-right: 25px;
+}
+.facebook{
+    background: url(/images/ic_facebook.png?8f11fb3ba53ba9fb22f7af66891f63b8) no-repeat;
+    padding-top: 70px;
+}
+.instagram{
+    background: url(/images/ic_instagram.png?9e82df03b89b76da77e3f5c8872d66c6) no-repeat;
+    padding-top: 70px;
+}
+.twitter{
+    background: url(/images/ic_twitter.png?8db69948f2a69360153ccfc356e3c72f) no-repeat;
+    padding-top: 70px;
+}
+/*Footer*/
 
 @charset "UTF-8";
 
@@ -11359,7 +11401,7 @@ input[type=checkbox] {
 }
 
 input[type=checkbox]:checked {
-  background: url(/images/checked.svg?69d99c6338990a74849af92025ed4a0f) no-repeat center/70%, #1875F0;
+  background: url(/images/checked.svg?65e12a3c91ce20ac96eee4c7dcf71ad3) no-repeat center/70%, #1875F0;
   border: 2px solid #1875F0;
 }
 

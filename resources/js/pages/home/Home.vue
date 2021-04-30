@@ -12,17 +12,9 @@
                     <img src="images/03.png" class="d-block w-100" alt="slide1">
                 </div>
             </div>
-            <a class="carousel-control-prev" href="#carouselExampleInterval" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#carouselExampleInterval" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
         </div>
 
-        <div class="container title_hello">
+        <div class="title_hello">
             <div class="title">Рады снова Вас приветствовать!</div>
             <div class="hello_description">
                 Пожалуйста, обратите внимание на новый функционал:
