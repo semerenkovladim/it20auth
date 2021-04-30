@@ -30,7 +30,7 @@
                                 <div class="col-1 edit__action edit__action_checkbox">
                                     <label>
                                         <input type="checkbox"
-                                               class="select_all"
+                                               class="select_all input_checkbox"
                                                @click="toggleCheckAll"
                                                :checked="checkStatus">
                                     </label>
@@ -89,7 +89,7 @@
                                         <li class="col-1 user_info__item user_checkbox">
                                             <label>
                                                 <input type="checkbox"
-                                                       class="user_check"
+                                                       class="user_check input_checkbox"
                                                        :checked="checkAll"
                                                        @click="toggleCheck">
                                             </label>
