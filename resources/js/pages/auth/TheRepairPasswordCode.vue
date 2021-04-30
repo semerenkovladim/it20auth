@@ -42,6 +42,8 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     name: "TheRepairPasswordCode",
     data() {
@@ -49,7 +51,6 @@ export default {
             code: '',
             disableButton: true,
             countSecond: 60,
-            presentCode: 'J9875FDS',
             hasError: false,
             hideTextBtn: false,
         };
@@ -59,11 +60,14 @@ export default {
     },
     methods: {
         newPassword() {
-            if(this.code !== this.presentCode) {
-                this.hasError = true;
-            } else {
+            axios.post('/api/login/repair-password/code', {
+                'code': this.code,
+                'email': this.resetPasswordEmail,
+            }).then(() => {
                 this.$router.push('/login/repair-password/new-password')
-            }
+            }).catch(() => {
+                this.hasError = true;
+            })
         },
         startTimer() {
             this.countSecond = 60;
@@ -77,6 +81,9 @@ export default {
                 }
             }, 1000);
         }
+    },
+    computed: {
+        ...mapGetters(['resetPasswordEmail']),
     }
 }
 </script>
