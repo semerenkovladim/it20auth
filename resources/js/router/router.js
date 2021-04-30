@@ -5,7 +5,13 @@ import TheAuth from "../components/layouts/TheAuth";
 import TheRepairPassword from "../pages/auth/TheRepairPassword";
 import TheRepairPasswordCode from "../pages/auth/TheRepairPasswordCode";
 import TheRepairPasswordNew from "../pages/auth/TheRepairPasswordNew";
-import UsersManagementPage from "../pages/UsersManagementPage";
+import UsersManagementPage from "../pages/usersManagement/UsersManagementPage";
+import DepartmentsManagementList from "../pages/Department/DepartmentsManagementList";
+import DepartmentCreate from "../pages/Department/DepartmentCreate";
+import MainLayout from "../components/layouts/MainLayout";
+import Home from "../pages/home/Home";
+import Profile from "../pages/profile/Profile";
+// import * as path from "path";
 
 Vue.use(VueRouter);
 
@@ -42,9 +48,34 @@ const router = new VueRouter({
             ]
         },
         {
-            path: '/users-management',
-            component: UsersManagementPage
+            path: '/',
+            name: 'base',
+            component: MainLayout,
+            children: [
+                {
+                    path: '/home',
+                    component: Home
+                },
+                {
+                    path: '/profile',
+                    component: Profile
+                },
+                {
+                    path: '/users-management',
+                    component: UsersManagementPage,
+                },
+                {
+                    path: '/departments-management',
+                    component: DepartmentsManagementList,
+                },
+                {
+                    path: '/departments-create',
+                    component: DepartmentCreate,
+                },
+            ]
         },
+
+
     ]
 });
 

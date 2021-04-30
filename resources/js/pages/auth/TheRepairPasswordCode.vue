@@ -1,6 +1,6 @@
 <template>
     <div class="row justify-content-center h-100 align-items-center">
-        <div class="col-12 col-md-6 col-xl-8 form-col">
+        <div class="col-12 col-md-6 form-col">
             <div class="form-wrapper">
                 <form action="#" :class="{'has-error': hasError}">
                     <div class="title-form">Восстановление доступа</div>
@@ -10,7 +10,7 @@
                     </div>
                     <div class="form-group">
                         <div class="row justify-content-between align-items-end">
-                            <div class=" col-12 col-lg-6">
+                            <div class=" col-12 col-lg-8 col-xl-7">
                                 <label for="inputEmail">Код подтверждения:</label>
                                 <input type="text" class="form-control" id="inputEmail"
                                        aria-describedby="emailHelp"
@@ -18,7 +18,7 @@
                                        name="code"
                                        v-model="code">
                             </div>
-                            <div class="btn-resend col-12 col-lg-6">
+                            <div class="btn-resend col-12 col-lg-4 col-xl-5">
                                 <div class="text-resend" v-if="!hideTextBtn">Станет доступно через: {{ countSecond }} сек.</div>
                                 <button :class="{cancel: true, 'active-btn': !disableButton}" @click.prevent="startTimer" :disabled="disableButton">Отправить повторно</button>
                             </div>
@@ -214,6 +214,13 @@ form button, .btn-resend .active-btn {
 }
 .has-error .subtitle-form {
     display: none;
+}
+.btn-resend button, .btn-resend .active-btn {
+    width: 170px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 @media screen and (max-width: 1023.99px) {
     .form-wrapper {

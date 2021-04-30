@@ -14,6 +14,7 @@ const store = new Vuex.Store({
         user: {},
         access_token: '',
         refresh_token: '',
+        resetPasswordEmail: '',
     },
     mutations: {
         increment(state) {
@@ -23,7 +24,6 @@ const store = new Vuex.Store({
             state.usersManagement.settingStatus = !state.usersManagement.settingStatus
         },
         setUMConfirmStatus(state) {
-            console.log('setUMSettingStatus', state.usersManagement.confirmStatus)
             state.usersManagement.confirmStatus = !state.usersManagement.confirmStatus
         },
         setUMConfirm(state) {
@@ -37,16 +37,17 @@ const store = new Vuex.Store({
         },
         setRefreshToken(state, refresh_token) {
             state.refresh_token = refresh_token;
+        },
+        setResetPasswordEmail(state, resetPasswordEmail) {
+            state.resetPasswordEmail = resetPasswordEmail;
         }
     },
     actions: {
         async changeUMSettingStatus({commit}) {
-            console.log('changeUMSettingStatus')
             commit('setUMSettingStatus')
         },
         async changeUMConfirmStatus({commit}) {
-            console.log('changeUMConfirmStatus')
-            commit('setUMSettingStatus')
+            commit('setUMConfirmStatus')
         },
         saveUserFromServer({commit}, user) {
             commit('setUser', user);
@@ -57,8 +58,8 @@ const store = new Vuex.Store({
         saveRefreshFromServer({commit}, refresh_token) {
             commit('setRefreshToken', refresh_token);
         },
-        test() {
-            console.log('test')
+        saveResetPasswordEmail({commit}, resetPasswordEmail) {
+            commit('setResetPasswordEmail', resetPasswordEmail);
         }
     },
     getters: {
@@ -73,6 +74,9 @@ const store = new Vuex.Store({
         },
         refresh_token(state) {
             return state.refresh_token;
+        },
+        resetPasswordEmail(state) {
+            return state.resetPasswordEmail;
         }
     },
 
