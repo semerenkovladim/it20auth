@@ -11345,7 +11345,8 @@ input[type=search]::-webkit-search-results-decoration {
   display: none;
 }
 
-input[type=checkbox] {
+input[type=checkbox],
+.input_checkbox {
   width: 20px;
   height: 20px;
   background: #FFFFFF;
@@ -11358,7 +11359,8 @@ input[type=checkbox] {
   justify-content: center;
 }
 
-input[type=checkbox]:checked {
+input[type=checkbox]:checked,
+.input_checkbox:checked {
   background: url(/images/checked.svg?69d99c6338990a74849af92025ed4a0f) no-repeat center/70%, #1875F0;
   border: 2px solid #1875F0;
 }

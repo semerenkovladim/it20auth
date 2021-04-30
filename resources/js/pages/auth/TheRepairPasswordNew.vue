@@ -2,7 +2,7 @@
     <div class="row justify-content-center h-100 align-items-center">
         <div class="col-12 col-md-6 col-xl-6 form-col">
             <div class="form-wrapper">
-                <form action="#" :class="{'has-error': hasError}">
+                <form action="#" :class="{'has-error': hasError, 'incorrect-password': incorrectPassword}">
                     <div class="title-form">Назначение нового пароля</div>
                     <div class="form-group">
                         <div class="subtitle-form">Ввведите, пожалуйста, новый пароль:</div>
@@ -27,6 +27,7 @@
                             </g>
                         </svg>
                     </div>
+                    <small class="incorrect-password-msg">Пароль должен содержать не менее 6 латинских символов, цифр, букв и знаков препинания</small>
                     <div class="form-group password">
                         <label for="inputPasswordRepeate">Подтвердите пароль:</label>
                         <input type="password" class="form-control" id="inputPasswordRepeate" aria-describedby="emailHelp"
@@ -53,10 +54,22 @@
                 </form>
             </div>
         </div>
+        <div class="position-fixed notification" style="z-index: 5; right: 0; bottom: 0;">
+            <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000" data-autohide="false">
+                <div class="toast-body">
+                    <div class="text-toast">Пароль успешно изменен</div>
+                    <div class="form-group d-flex flex-row btn-form-group">
+                        <button @click.prevent="redirectToLogin">ок</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     name: "TheRepairPasswordNew",
     data() {
@@ -66,6 +79,7 @@ export default {
             showIconPassword: false,
             showIconPasswordRepeate: false,
             hasError: false,
+            incorrectPassword: false,
         };
     },
     methods: {
@@ -82,13 +96,31 @@ export default {
             document.querySelector('input[name=repeate]').setAttribute('type', 'password');
         },
         newPassword() {
-            if(this.password !== this.passwordRepeate) {
+            $('.toast').toast('show');
+            const regExp = new RegExp('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,}$');
+            if(this.password.search(regExp) === -1) {
+                this.incorrectPassword = true;
+            } else if(this.password !== this.passwordRepeate) {
                 this.hasError = true;
+                this.incorrectPassword = false;
+            } else {
+                this.hasError = false;
+                this.incorrectPassword = false;
+                axios.post('/api/login/repair-password/new-password', {
+                    'password': this.password,
+                    'email': this.resetPasswordEmail
+                }).then(() => {
+                    $('.toast').toast('show');
+                })
             }
         },
         clearAll() {
             this.password = '';
             this.passwordRepeate = '';
+        },
+        redirectToLogin() {
+            $('.toast').toast('hide');
+            this.$router.push('/login');
         }
     },
     watch: {
@@ -98,6 +130,9 @@ export default {
         passwordRepeate() {
             this.showIconPasswordRepeate = this.passwordRepeate.length > 0;
         },
+    },
+    computed: {
+        ...mapGetters(['resetPasswordEmail']),
     }
 }
 </script>
@@ -121,6 +156,27 @@ export default {
 }
 .form-group {
     margin-bottom: 10px;
+}
+.notification {
+    top: 10px;
+    right: 40vw;
+    left: 40vw;
+    height: 100px;
+}
+.notification button {
+    display: block;
+    background: #1875F0;
+    border: 2px solid #F5F5F5;
+    box-sizing: border-box;
+    border-radius: 4px;
+    padding: 15px 40px;
+    font-family: 'Roboto', sans-serif;
+    font-style: normal;
+    font-weight: 900;
+    font-size: 12px;
+    text-align: center;
+    text-transform: uppercase;
+    color: #FFFFFF;
 }
 .password {
     position: relative;
@@ -221,8 +277,14 @@ form button {
     margin-bottom: 10px;
     display: none;
 }
-.has-error label {
+.has-error label, .incorrect-password label[for=inputPassword] {
     color: #FF0000;
+}
+.incorrect-password .incorrect-password-msg {
+    display: block;
+}
+.incorrect-password-msg {
+    display: none;
 }
 .has-error .error-msg {
     display: block;

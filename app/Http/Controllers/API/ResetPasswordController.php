@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\ClearCodeReset;
 use App\Mail\ResetPasswordCode;
 use App\Models\User;
+use Carbon\Carbon;
+use Carbon\Traits\Date;
 use Illuminate\Http\Request;
+use Illuminate\Queue\Queue;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
@@ -50,6 +54,7 @@ class ResetPasswordController extends Controller
         $user->code = $code;
         $user->save();
 
+        ClearCodeReset::dispatch($user)->delay(now()->addMinutes(20));
         return response()->json([], 200);
     }
 
@@ -68,6 +73,7 @@ class ResetPasswordController extends Controller
         }
 
         $user->allow_reset = true;
+        $user->save();
 
         return response()->json([], 200);
     }

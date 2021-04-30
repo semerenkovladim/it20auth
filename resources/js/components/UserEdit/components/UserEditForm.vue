@@ -270,7 +270,11 @@ export default {
             transition: 0.2s ease;
             color: transparent;
             opacity: 1;
+<<<<<<< HEAD
+            // background: url('../../../../images/icons/date_icon.png') no-repeat center;
+=======
             background: url('../../../../images/icons/ic_today.png') no-repeat center;
+>>>>>>> 939b2f6e2d777ae9e62424052642c74c8e50deea
             background-size: 26px 26px;
             cursor: pointer;
             padding: 5px 0 5px 5px;
