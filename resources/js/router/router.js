@@ -68,6 +68,14 @@ const router = new VueRouter({
                     component: UsersManagementPage,
                 },
                 {
+                    path: '/users-management/user-edit',
+                    component: UserEditPage
+                },
+                {
+                    path: '/users-management/new-user',
+                    component: NewUserPage
+                },
+                {
                     path: '/departments-management',
                     component: DepartmentsManagementList,
                 },
@@ -75,16 +83,9 @@ const router = new VueRouter({
                     path: '/departments-create',
                     component: DepartmentCreate,
                 },
+
             ]
         },
-        {
-            path: '/users-management/user-edit',
-            component: UserEditPage
-        },
-        {
-            path: '/users-management/new-user',
-            component: NewUserPage
-        }
 
     ]
 });
