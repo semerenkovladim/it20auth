@@ -87,7 +87,7 @@ export default {
                 this.saveUserFromServer(response.data.user);
                 this.saveAccessFromServer(response.data.token);
                 this.saveRefreshFromServer(response.data.refresh_token);
-                this.$router.push('/');
+                this.$router.push('/home');
             }).catch(() => {
                 this.hasError = true;
             })
