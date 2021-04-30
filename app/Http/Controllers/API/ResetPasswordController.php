@@ -6,14 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Mail\ResetPasswordCode;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use phpseclib3\Crypt\Random;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
+Session::start();
 
 class ResetPasswordController extends Controller
 {
-    private $email;
-    private $code;
-    private $allowReset;
 
     protected function checkRecaptcha($token, $ip)
     {
@@ -26,8 +26,7 @@ class ResetPasswordController extends Controller
         ];
         $request = Request::create('https://www.google.com/recaptcha/api/siteverify', 'POST', $data);
         $response = app()->handle($request);
-        $response = json_decode((string)$response->getBody(), true);
-        return $response['success'];
+        return $response;
     }
 
     public function sendCode(Request $request)
@@ -36,7 +35,6 @@ class ResetPasswordController extends Controller
             'email' => 'required|exists:users',
             'recaptchaToken' => 'required'
         ]);
-
         if(!$this->checkRecaptcha($validated['recaptchaToken'], $request->ip()))
         {
             return response()->json([
@@ -44,11 +42,13 @@ class ResetPasswordController extends Controller
             ], 401);
         }
 
-        $this->email = $validated['email'];
-        $this->code = Random::string('6');
-        $user = User::whereEmail($this->email)->first();
+        $code = Str::random('6');
+        $user = User::whereEmail($validated['email'])->first();
 
-        Mail::to($request->user())->send(new ResetPasswordCode($this->code, $user->name));
+        Mail::to($user->email)->send(new ResetPasswordCode($code, $user->name));
+
+        $user->code = $code;
+        $user->save();
 
         return response()->json([], 200);
     }
@@ -56,15 +56,18 @@ class ResetPasswordController extends Controller
     public function resetPasswordCode(Request $request)
     {
         $validated = $request->validate([
-            'code' => 'required'
+            'code' => 'required',
+            'email' => 'required|exists:users'
         ]);
 
-        if($validated['code'] !== $this->code)
+        $user = User::whereEmail($validated['email'])->first();
+
+        if($validated['code'] !== $user->code)
         {
-            $this->allowReset = false;
             return response()->json([], 404);
         }
-        $this->allowReset = false;
+
+        $user->allow_reset = true;
 
         return response()->json([], 200);
     }
@@ -76,13 +79,13 @@ class ResetPasswordController extends Controller
             'email' => 'required|exists:users'
         ]);
 
-        if($validated['email'] !== $this->email) {
+        $user = User::whereEmail($validated['email'])->first();
+        if(!$user->allow_reset) {
             return response()->json([], 404);
         }
-
-        $user = User::whereEmail($validated['email'])->first();
-
-        $user->password = $validated['password'];
+        $user->password = Hash::make($validated['password']);
+        $user->code = null;
+        $user->allow_reset = false;
         $user->save();
 
         return response()->json([], 200);
