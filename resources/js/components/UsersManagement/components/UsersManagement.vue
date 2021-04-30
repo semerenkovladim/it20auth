@@ -13,7 +13,7 @@
                 <div class="row users_management__row users_management__wrapper">
                     <div class="col-md-3 users_management__col">
                         <div class="users_management__add_user">
-                            <button class="add_user__btn" type="button">Добавить пользователя</button>
+                            <button class="add_user__btn" type="button" @click="$router.push('/users-management/new-user')">Добавить пользователя</button>
                         </div>
                         <div class="users_management__users_filter">
                             <ul class="row users_management__filter_list">
@@ -40,7 +40,7 @@
                                         <li class="edit__action">
                                             <button class="edit_btn"
                                                     type="button"
-                                                    @click="$router.push('/personal-data')">
+                                                    @click="$router.push('/users-management/user-edit')">
                                             </button>
                                         </li>
                                         <li class="edit__action">
