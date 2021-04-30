@@ -16,7 +16,7 @@
                     v-for="option in settings" :key="option.id">
                     <div class="col-8 option__col col_name">{{ option.name }}</div>
                     <div class="col-4 option__col option_checkbox ">
-                        <label><input type="checkbox" v-model="option.status"></label>
+                        <label><input type="checkbox" class="input_checkbox" v-model="option.status"></label>
                     </div>
                 </li>
             </ul>
