@@ -7,6 +7,12 @@ import TheRepairPasswordCode from "../pages/auth/TheRepairPasswordCode";
 import TheRepairPasswordNew from "../pages/auth/TheRepairPasswordNew";
 import UsersManagementPage from "../pages/usersManagement/UsersManagementPage";
 import Profile from '../pages/Profile.vue'
+import Home from "../pages/home/Home";
+import MainLayout from "../components/layouts/MainLayout";
+import UserEditPage from "../pages/userEdit/UserEditPage";
+import NewUserPage from "../pages/newUser/NewUserPage";
+import DepartmentsManagementList from "../pages/Department/DepartmentsManagementList";
+import DepartmentCreate from "../pages/Department/DepartmentCreate";
 import TitleComponent from '../components/slider/TitleComponent.vue'
 // import * as path from "path";
 
