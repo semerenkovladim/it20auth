@@ -14,7 +14,7 @@
             <div class="row">
                 <div class="col-3 rb">
                     <div class="btn-box">
-                        <router-link to="#" class="btn-createDep">Добавить отдел</router-link>
+                        <router-link to="/departments-create" class="btn-createDep">Добавить отдел</router-link>
                     </div>
                 </div>
                 <div class="col-2">

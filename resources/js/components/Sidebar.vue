@@ -12,7 +12,7 @@
                 <span>Управление</span>
             </div>
         </li>
-        <li class="link" v-if="showMenu"><router-link to="/" class="wiget"> <div class="location"></div> <span>Отделы</span></router-link></li>
+        <li class="link" v-if="showMenu"><router-link to="/departments-management" class="wiget"> <div class="location"></div> <span>Отделы</span></router-link></li>
         <li class="link" v-if="showMenu"><router-link to="/users-management" class="wiget"> <div class="contact"></div> <span>Пользователи</span></router-link></li>
     </ul>
 </template>
