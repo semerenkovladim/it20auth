@@ -18,3 +18,4 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', \App\Http\Controllers\API\AuthController::class);
 Route::post('/login/repair-password', [\App\Http\Controllers\API\ResetPasswordController::class, 'sendCode']);
 Route::post('/login/repair-password/code', [\App\Http\Controllers\API\ResetPasswordController::class, 'resetPasswordCode']);
+Route::post('/login/repair-password/new-password', [\App\Http\Controllers\API\ResetPasswordController::class, 'resetPassword']);
