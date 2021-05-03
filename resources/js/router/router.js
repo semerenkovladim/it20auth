@@ -14,6 +14,9 @@ import NewUserPage from "../pages/newUser/NewUserPage";
 import DepartmentsManagementList from "../pages/Department/DepartmentsManagementList";
 import DepartmentCreate from "../pages/Department/DepartmentCreate";
 import TitleComponent from '../components/slider/TitleComponent.vue'
+import SettingsSecure from "../pages/settings-secure/SettingsSecure";
+import AccountLogin from "../pages/settings-secure/components/AccountLogin";
+import HistoryList from "../pages/settings-secure/components/HistoryList";
 // import * as path from "path";
 
 Vue.use(VueRouter);
@@ -83,7 +86,22 @@ const router = new VueRouter({
                     path: '/departments-create',
                     component: DepartmentCreate,
                 },
-
+                {
+                    path: '/settings-secure',
+                    component: SettingsSecure,
+                    children: [
+                        {
+                            path: 'account-login',
+                            name: 'settings.login',
+                            component: AccountLogin,
+                        },
+                        {
+                            path: 'history',
+                            name: 'settings.history',
+                            component: HistoryList,
+                        }
+                    ]
+                }
             ]
         },
     ]
