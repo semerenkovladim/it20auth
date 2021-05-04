@@ -57,7 +57,6 @@ export default {
             this.email = '';
         },
         register (recaptchaToken) {
-            console.log(recaptchaToken);
             axios.post('/api/login/repair-password', {
                 email: this.email,
                 recaptchaToken: recaptchaToken
