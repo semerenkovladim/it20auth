@@ -30,7 +30,6 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'avatar' => 'image|nullable|size:2048|mimes:jpg,bmp,png,jpeg,webp',
             'surname' => 'required|max:255',
             'name' => 'required|max:255',
             'middle_name' => 'nullable|max:255',
@@ -40,10 +39,9 @@ class UserController extends Controller
             'date_start' => 'date|nullable',
             'is_admin' => 'boolean',
             'email' => 'email|required|max:255|unique:users',
-            'mobile_phone' => 'max:12|int|nullable',
-            'work_phone' => 'max:12|int|nullable',
-            'skype' => 'max:255|nullable',
-            'password' => 'min:6|max:255',
+            'mobile_phone' => 'numeric|digits_between:8,12|nullable',
+            'work_phone' => 'numeric|digits_between:8,12|nullable',
+            'skype' => 'max:255|nullable|unique:users'
         ]);
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 402);
@@ -72,7 +70,6 @@ class UserController extends Controller
         $user = User::find($id);
 
         $validator = Validator::make($request->all(), [
-            'avatar' => 'image|nullable|size:2048|mimes:jpg,bmp,png,jpeg,webp',
             'surname' => 'required|max:255',
             'name' => 'required|max:255',
             'middle_name' => 'nullable|max:255',
@@ -82,10 +79,9 @@ class UserController extends Controller
             'date_start' => 'date|nullable',
             'is_admin' => 'boolean',
             'email' => 'email|required|max:255|unique:users',
-            'mobile_phone' => 'max:12|int|nullable',
-            'work_phone' => 'max:12|int|nullable',
-            'skype' => 'max:255|nullable',
-            'password' => 'min:6|max:255',
+            'mobile_phone' => 'numeric|digits_between:8,12|nullable',
+            'work_phone' => 'numeric|digits_between:8,12|nullable',
+            'skype' => 'max:255|nullable|unique:users'
         ]);
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 402);
