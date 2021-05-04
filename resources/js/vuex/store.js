@@ -5,6 +5,7 @@ import createPersistedState from "vuex-persistedstate";
 Vue.use(Vuex)
 
 const API_LINK = 'http://it20auth/api'
+
 const USERS_LINK = API_LINK + '/users'
 
 const store = new Vuex.Store({
@@ -22,6 +23,7 @@ const store = new Vuex.Store({
         access_token: '',
         refresh_token: '',
         resetPasswordEmail: '',
+        apiLink: API_LINK
     },
     mutations: {
         increment(state) {
@@ -71,19 +73,19 @@ const store = new Vuex.Store({
             commit('setUMConfirmStatus')
         },
         async getUMAllUsers({commit}, page = 1) {
-            console.log('getUMAllUsers page', page)
+            // console.log('getUMAllUsers page', page)
             axios.get(USERS_LINK, {
                 params: {
                     page: page.page
                 }
             })
                 .then(value => {
-                        console.log(value.data)
+                        // console.log(value.data)
                         commit('setUMUsers', value.data.data)
                     }
                 )
                 .catch(reason => {
-                        console.log('getUMAllUsers', reason)
+                        // console.log('getUMAllUsers', reason)
                     }
                 )
         },
