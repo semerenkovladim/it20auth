@@ -22,7 +22,7 @@ export default {
     color: #B2B2B2;
     border: 2px solid #F5F5F5;
     background: #FFFFFF;
-    //box-shadow: 0 5px 30px rgba(0, 0, 0, 0.07);
+    margin-left: 0;
 }
 .btn_wrapper {
     display: flex;

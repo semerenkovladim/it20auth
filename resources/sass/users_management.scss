@@ -19,7 +19,8 @@
 }
 .users_management {
     background: $userManagementBgColor;
-    padding-top: calc(#{$headerHeight} + 7px);
+    //padding-top: calc(#{$headerHeight} + 7px);
+    padding-top: 7px;
     min-height: 100vh;
     @media all and (max-width: $breakpoint) {
         padding-left: 0;
