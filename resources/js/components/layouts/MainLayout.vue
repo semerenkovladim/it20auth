@@ -21,7 +21,7 @@ import Sidebar from "../Sidebar";
 import FooterComponent from "../Footer";
 export default {
     name: "MainLayout",
-    components: {Sidebar, HeaderComponent, FooterComponent}
+    components: {Sidebar, HeaderComponent, FooterComponent},
 }
 </script>
 

@@ -1,6 +1,7 @@
 <template>
     <div class="flex_header">
-        <div class="logo"><img src="images/logo_foot2.svg" alt="logo"></div>
+        <div class="logo"><img src="images/logo_foot2.svg" alt="logo">
+        </div>
         <div class="accoun_flex">
             <div class="user_name">Анна Кононенко</div>
             <div><img src="images/placeholder.png" alt=""></div>
@@ -21,7 +22,12 @@
 
 <script>
 export default {
-    name: "Header"
+    name: "Header",
+    data() {
+        return{
+            show:false
+        }
+    }
 }
 </script>
 

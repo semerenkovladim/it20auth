@@ -10,12 +10,31 @@
 .flex{
     display: flex;
 }
-
 .flex_header{
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin:10px 10px 5px 5px;
+}
+
+.new_style{
+    padding-bottom: 20px;
+    padding-right: 20px;
+    background: url(/images/ic_keyboard_arrow_left.png?3afcf08c209b7e25dc864a41a6fe2084) no-repeat;
+    position: relative;
+    bottom: 80px;
+    left: 95px;
+    z-index: 2;
+}
+.old_style{
+    padding-bottom: 20px;
+    padding-right: 20px;
+    background: url(/images/ic_keyboard_arrow_left.png?3afcf08c209b7e25dc864a41a6fe2084) no-repeat;
+    transform: rotateY(180deg);
+    position: relative;
+    bottom: 80px;
+    left: 95px;
+    z-index: 2;
 }
 .accoun_flex{
     display: flex;
@@ -54,6 +73,11 @@
     padding-top: 15px;
     margin:0 auto;
 }
+.linkss{
+    border-bottom: 2px solid #F5F5F5;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
 .link:hover{
     border-left: 2px solid #1875F0;
 }
@@ -74,6 +98,13 @@ nav ul{
     padding-bottom: 30px;
     margin-left: 80px;
 }
+.home2{
+    background: url(/images/ic_home.png?4a8c101743f4d29f4e080e132854999b) no-repeat;
+    padding-bottom: 30px;
+    padding-right: 25px;
+    padding-left: 22px;
+
+}
 .sidebar_link{
     margin: 0 auto;
     text-align: center;
@@ -83,26 +114,55 @@ nav ul{
     padding-bottom: 30px;
     margin-left: 80px;
 }
+.dick2{
+    background: url(/images/ic_cloud_dick.png?a0fd61d4a6e9a0ce5cc26c5811da32c7) no-repeat;
+    padding-bottom: 30px;
+    padding-right: 25px;
+    padding-left: 22px;
+}
 .post{
     background: url(/images/ic_email.png?f9b295d765c75b6e01e4dbcaa8c9a762) no-repeat;
     padding-bottom: 30px;
     margin-left: 80px;
+}
+.post2{
+    background: url(/images/ic_email.png?f9b295d765c75b6e01e4dbcaa8c9a762) no-repeat;
+    padding-bottom: 30px;
+    padding-right: 25px;
+    padding-left: 22px;
 }
 .calendar{
     background: url(/images/ic_today.png?c962276659e152c21c29bec9d9055379) no-repeat;
     padding-bottom: 30px;
     margin-left: 80px;
 }
+.calendar2{
+    background: url(/images/ic_today.png?c962276659e152c21c29bec9d9055379) no-repeat;
+    padding-bottom: 30px;
+    padding-right: 25px;
+    padding-left: 22px;
+}
 .photo{
     background: url(/images/ic_camera_alt.png?ff69ded5a07b2aa9c4c832431c495268) no-repeat;
     padding-bottom: 30px;
-    display: block;
     margin-left: 80px;
+}
+.photo2{
+    background: url(/images/ic_camera_alt.png?ff69ded5a07b2aa9c4c832431c495268) no-repeat;
+    padding-bottom: 30px;
+    padding-right: 25px;
+    padding-left: 22px;
 }
 .contact{
     background: url(/images/ic_people.png?6b40b12dc15f5288bccfd4bda0b49ab7) no-repeat;
     padding-bottom: 30px;
     margin-left: 80px;
+}
+.contact2{
+    background: url(/images/ic_people.png?6b40b12dc15f5288bccfd4bda0b49ab7) no-repeat;
+    padding-bottom: 30px;
+    padding-right: 25px;
+    padding-left: 22px;
 }
 .main_home{
     background: #f1eeee;
@@ -112,10 +172,22 @@ nav ul{
     padding-bottom: 30px;
     margin-left: 80px;
 }
+.control2{
+    background: url(/images/ic_business_center.png?16bd534389f6bd670fc021de2124554c) no-repeat;
+    padding-bottom: 30px;
+    padding-right: 25px;
+    padding-left: 22px;
+}
 .location{
     background: url(/images/ic_location_city.png?58dfd9f80112ec5e456ceea7f13e10b3) no-repeat;
     padding-bottom: 30px;
     margin-left: 80px;
+}
+.location2{
+    background: url(/images/ic_location_city.png?58dfd9f80112ec5e456ceea7f13e10b3) no-repeat;
+    padding-bottom: 30px;
+    padding-right: 25px;
+    padding-left: 22px;
 }
 .content{
     background-color: #E5E5E5;
@@ -185,7 +257,7 @@ ul {
     padding-bottom: 30px;
 }
 .slider{
-    position: absolute;
+    width: 1050px;
 }
 .contact_f{
     padding-bottom: 28px;
@@ -207,6 +279,7 @@ ul {
 .title_hello{
     background: #FFFFFF;
     position: relative;
+    z-index: 3;
     box-shadow: 0 0 3px 3px #f1e9e9;
     border-radius: 4px;
     bottom: 80px;
@@ -323,10 +396,32 @@ ul {
 }
 .profile input{
     width: 400px;
+    height: 60px;
+    margin-bottom: 30px;
+}
+.profile label{
+    margin-bottom: 10px;
+}
+.profile select{
+    width: 400px;
+    height: 60px;
+    margin-bottom: 30px;
+}
+.profile_input{
+    padding-left: 88px;
+    padding-top: 20px;
+}
+.row_date{
+    padding-top: 55px;
 }
 .profile_photo{
     margin-top: 25px;
     padding-bottom: 10px;
+    padding-left: 250px;
+}
+.profile_photo img{
+    width: 151px;
+    height: 151px;
 }
 .profile_title{
     font-family: Roboto;
@@ -338,6 +433,7 @@ ul {
     border-radius: 4px;
     background: #FFFFFF;
     margin-top: 15px;
+    padding-left: 14px;
     color: #808080;
 }
 .profile_form{
@@ -360,12 +456,18 @@ ul {
     margin-top: 30px;
     padding-bottom: 36px
 }
+.save_btn{
+    width: 120px;
+    height: 50px;
+}
 .cancel_btn{
     background: #FFFFFF;
     border: 2px solid #F5F5F5;
     box-sizing: border-box;
     border-radius: 4px;
     margin-left: 31px;
+    width: 120px;
+    height: 50px;
 }
 .cancel_btn:hover{
     background: #bbb5b5;
