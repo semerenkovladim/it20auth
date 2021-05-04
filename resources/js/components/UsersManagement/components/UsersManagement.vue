@@ -223,7 +223,7 @@ export default {
             this.changeUMConfirmStatus()
         },
         getUsers(data) {
-            console.log('getUsers', data)
+            // console.log('getUsers', data)
             this.getUMAllUsers(data)
         }
     },

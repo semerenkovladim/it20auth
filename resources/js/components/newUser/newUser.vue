@@ -52,7 +52,9 @@ export default {
                     href: '#'
                 },
             ],
-            userData: ''
+            userData: {
+                position: 'developer'
+            }
         }
     },
     computed: {
