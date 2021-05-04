@@ -71,6 +71,8 @@ export default {
         },
         startTimer() {
             this.countSecond = 60;
+            this.disableButton = true;
+            this.hideTextBtn = false;
             const timer = setInterval(() => {
                 if(this.countSecond > 0) {
                     this.countSecond--
@@ -82,12 +84,10 @@ export default {
             }, 1000);
         },
         resendCode() {
-            console.log('WE HERE');
             axios.post('/api/login/resend-code', {
                 email: this.resetPasswordEmail,
-            }).then(() => {
-                this.startTimer()
             });
+            this.startTimer();
         }
     },
     computed: {
