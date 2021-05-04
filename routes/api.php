@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\SendUserController;
+use App\Http\Controllers\API\ImageUploadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,5 +28,7 @@ Route::get('/users', [UserController::class, 'index'])->name('users');
 Route::get('/user', [UserController::class, 'show'])->name('user');
 Route::post('/user/create', [UserController::class, 'store'])->name('userCreate');
 Route::patch('/user/update', [UserController::class, 'update'])->name('userUpdate');
+
+Route::post('/image/upload/avatar', [ImageUploadController::class, 'upload_avatar'])->name('userAvatar');
 
 Route::post('/send/user-password', [SendUserController::class, 'send'])->name('sendUserPassword');
