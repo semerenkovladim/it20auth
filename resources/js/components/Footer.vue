@@ -27,9 +27,9 @@
                     </div>
                     <div class="background_line"></div>
                     <div class="col-12 col-md-6  text-center text-md-left flex icon_social">
-                        <a href="https://vk.com"><img src="images/icons/ic_facebook.png" alt="facebook"></a>
-                        <a href="https://www.facebook.com/"><img src="images/icons/ic_twitter.png" alt="twitter"></a>
-                        <a href="https://www.instagram.com"><img src="images/icons/ic_instagram.png" alt="instagram.png"></a>
+                        <a href="https://www.facebook.com/" class="facebook"></a>
+                        <a href="https://www.facebook.com/" class="twitter"></a>
+                        <a href="https://www.instagram.com" class="instagram"></a>
                     </div>
                 </div>
             </div>

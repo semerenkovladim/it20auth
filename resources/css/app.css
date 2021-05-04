@@ -1,25 +1,62 @@
 *{
-    font-family: 'Roboto', sans-serif;
+    font-family: Roboto, sans-serif;
     padding: 0;
     margin:0;
 }
 .flex{
     display: flex;
 }
-
 .flex_header{
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin:10px 10px 5px 5px;
 }
+
+.new_style{
+    padding-bottom: 20px;
+    padding-right: 20px;
+    background: url(../images/icons/ic_keyboard_arrow_left.png) no-repeat;
+    position: relative;
+    bottom: 80px;
+    left: 95px;
+    z-index: 2;
+}
+.old_style{
+    padding-bottom: 20px;
+    padding-right: 20px;
+    background: url(../images/icons/ic_keyboard_arrow_left.png) no-repeat;
+    transform: rotateY(180deg);
+    position: relative;
+    bottom: 80px;
+    left: 95px;
+    z-index: 2;
+}
 .accoun_flex{
     display: flex;
     justify-content: center;
     align-items: center;
 }
+.drop_links{
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    color: #808080;
+}
+.user_name{
+    font-family:Roboto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 90px;
+    text-align: right;
+    padding-right: 20px;
+    color: #999999;
+}
+/*sidebar*/
 .wiget{
-    font-family: 'Roboto';
+    font-family: Roboto;
     font-style: normal;
     font-weight: 500;
     font-size: 13px;
@@ -29,9 +66,13 @@
     padding-bottom: 25px;
 }
 .link{
-
     padding-top: 15px;
     margin:0 auto;
+}
+.linkss{
+    border-bottom: 2px solid #F5F5F5;
+    padding-top: 15px;
+    padding-bottom: 15px;
 }
 .link:hover{
     border-left: 2px solid #1875F0;
@@ -45,46 +86,104 @@ nav ul{
 .dropdown-toggle{
     background: url(../images/icons/ic_keyboard_arrow_down.png) no-repeat;
 }
+.sidebar{
+    text-align: center;
+}
 .home{
     background: url(../images/icons/ic_home.png) no-repeat;
     padding-bottom: 30px;
-    margin-left: 40px;
+    margin-left: 80px;
+}
+.home2{
+    background: url(../images/icons/ic_home.png) no-repeat;
+    padding-bottom: 30px;
+    padding-right: 25px;
+    padding-left: 22px;
+
+}
+.sidebar_link{
+    margin: 0 auto;
+    text-align: center;
 }
 .dick{
     background: url(../images/icons/ic_cloud_dick.png) no-repeat;
     padding-bottom: 30px;
-    margin-left: 40px;
+    margin-left: 80px;
+}
+.dick2{
+    background: url(../images/icons/ic_cloud_dick.png) no-repeat;
+    padding-bottom: 30px;
+    padding-right: 25px;
+    padding-left: 22px;
 }
 .post{
     background: url(../images/icons/ic_email.png) no-repeat;
     padding-bottom: 30px;
-    margin-left: 40px;
+    margin-left: 80px;
+}
+.post2{
+    background: url(../images/icons/ic_email.png) no-repeat;
+    padding-bottom: 30px;
+    padding-right: 25px;
+    padding-left: 22px;
 }
 .calendar{
     background: url(../images/icons/ic_today.png) no-repeat;
     padding-bottom: 30px;
-    margin-left: 40px;
+    margin-left: 80px;
+}
+.calendar2{
+    background: url(../images/icons/ic_today.png) no-repeat;
+    padding-bottom: 30px;
+    padding-right: 25px;
+    padding-left: 22px;
 }
 .photo{
     background: url(../images/icons/ic_camera_alt.png) no-repeat;
     padding-bottom: 30px;
-    display: block;
-    margin-left: 40px;
+    margin-left: 80px;
+}
+.photo2{
+    background: url(../images/icons/ic_camera_alt.png) no-repeat;
+    padding-bottom: 30px;
+    padding-right: 25px;
+    padding-left: 22px;
 }
 .contact{
     background: url(../images/icons/ic_people.png) no-repeat;
     padding-bottom: 30px;
-    margin-left: 40px;
+    margin-left: 80px;
+}
+.contact2{
+    background: url(../images/icons/ic_people.png) no-repeat;
+    padding-bottom: 30px;
+    padding-right: 25px;
+    padding-left: 22px;
+}
+.main_home{
+    background: #f1eeee;
 }
 .control{
     background: url(../images/icons/ic_business_center.png) no-repeat;
     padding-bottom: 30px;
-    margin-left: 40px;
+    margin-left: 80px;
+}
+.control2{
+    background: url(../images/icons/ic_business_center.png) no-repeat;
+    padding-bottom: 30px;
+    padding-right: 25px;
+    padding-left: 22px;
 }
 .location{
     background: url(../images/icons/ic_location_city.png) no-repeat;
     padding-bottom: 30px;
-    margin-left: 40px;
+    margin-left: 80px;
+}
+.location2{
+    background: url(../images/icons/ic_location_city.png) no-repeat;
+    padding-bottom: 30px;
+    padding-right: 25px;
+    padding-left: 22px;
 }
 .content{
     background-color: #E5E5E5;
@@ -133,7 +232,7 @@ ul {
     color: #9B9B9B;
 }
 .title_menu{
-    font-family: 'Roboto';
+    font-family: Roboto;
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
@@ -145,7 +244,7 @@ ul {
     padding-bottom: 15px;
 }
 .title_contact{
-    font-family: 'Roboto';
+    font-family: Roboto;
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
@@ -154,13 +253,13 @@ ul {
     padding-bottom: 30px;
 }
 .slider{
-    position: absolute;
+    width: 1050px;
 }
 .contact_f{
     padding-bottom: 28px;
 }
 .contact_f a{
-    font-family: 'Roboto';
+    font-family: Roboto;
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
@@ -176,18 +275,16 @@ ul {
 .title_hello{
     background: #FFFFFF;
     position: relative;
+    z-index: 3;
     box-shadow: 0 0 3px 3px #f1e9e9;
     border-radius: 4px;
-    margin: 0 auto;
-    bottom: 15px;
-    left: 15px;
+    bottom: 80px;
+    margin: 0 50px;
+    padding-top: 25px;
     padding-bottom: 25px;
 }
-.cards{
-    top: 500px;
-}
 .title{
-    font-family: 'Roboto';
+    font-family: Roboto;
     font-style: normal;
     font-weight: 300;
     font-size: 36px;
@@ -197,7 +294,7 @@ ul {
     padding-bottom: 5px;
 }
 .hello_description{
-    font-family: 'Roboto';
+    font-family: Roboto;
     font-style: normal;
     font-weight: normal;
     font-size: 24px;
@@ -217,7 +314,7 @@ ul {
     margin-bottom: 30px;
 }
 .font_text{
-    font-family: 'Roboto';
+    font-family: Roboto;
     font-style: normal;
     font-weight: 300;
     font-size: 160px;
@@ -235,7 +332,7 @@ ul {
     position: absolute;
 }
 .offset_calendar{
-    font-family: 'Roboto';
+    font-family: Roboto;
     font-style: normal;
     font-weight: 500;
     font-size: 12px;
@@ -243,7 +340,7 @@ ul {
     color: #B3B3B3;
 }
 .offers_title{
-    font-family: 'Roboto';
+    font-family: Roboto;
     font-style: normal;
     font-weight: 500;
     font-size: 18px;
@@ -285,7 +382,7 @@ ul {
 /* Profile*/
 
 .profile{
-    font-family: 'Roboto';
+    font-family: Roboto;
     font-style: normal;
     font-weight: 500;
     font-size: 14px;
@@ -295,13 +392,35 @@ ul {
 }
 .profile input{
     width: 400px;
+    height: 60px;
+    margin-bottom: 30px;
+}
+.profile label{
+    margin-bottom: 10px;
+}
+.profile select{
+    width: 400px;
+    height: 60px;
+    margin-bottom: 30px;
+}
+.profile_input{
+    padding-left: 88px;
+    padding-top: 20px;
+}
+.row_date{
+    padding-top: 55px;
 }
 .profile_photo{
     margin-top: 25px;
     padding-bottom: 10px;
+    padding-left: 250px;
+}
+.profile_photo img{
+    width: 151px;
+    height: 151px;
 }
 .profile_title{
-    font-family: 'Roboto';
+    font-family: Roboto;
     font-style: normal;
     font-weight: 300;
     font-size: 36px;
@@ -310,6 +429,7 @@ ul {
     border-radius: 4px;
     background: #FFFFFF;
     margin-top: 15px;
+    padding-left: 14px;
     color: #808080;
 }
 .profile_form{
@@ -317,7 +437,7 @@ ul {
     margin-bottom: 62px;
 }
 .inform_title{
-    font-family: 'Roboto';
+    font-family: Roboto;
     font-style: normal;
     font-weight: 500;
     font-size: 18px;
@@ -332,14 +452,38 @@ ul {
     margin-top: 30px;
     padding-bottom: 36px
 }
+.save_btn{
+    width: 120px;
+    height: 50px;
+}
 .cancel_btn{
     background: #FFFFFF;
     border: 2px solid #F5F5F5;
     box-sizing: border-box;
     border-radius: 4px;
     margin-left: 31px;
+    width: 120px;
+    height: 50px;
 }
 .cancel_btn:hover{
     background: #bbb5b5;
 }
 /* Profile*/
+
+/*Footer*/
+.icon_social a{
+    padding-right: 25px;
+}
+.facebook{
+    background: url("../images/icons/ic_facebook.png") no-repeat;
+    padding-top: 70px;
+}
+.instagram{
+    background: url("../images/icons/ic_instagram.png") no-repeat;
+    padding-top: 70px;
+}
+.twitter{
+    background: url("../images/icons/ic_twitter.png") no-repeat;
+    padding-top: 70px;
+}
+/*Footer*/
