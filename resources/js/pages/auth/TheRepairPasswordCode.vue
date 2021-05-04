@@ -20,7 +20,7 @@
                             </div>
                             <div class="btn-resend col-12 col-lg-4 col-xl-5">
                                 <div class="text-resend" v-if="!hideTextBtn">Станет доступно через: {{ countSecond }} сек.</div>
-                                <button :class="{cancel: true, 'active-btn': !disableButton}" @click.prevent="startTimer" :disabled="disableButton">Отправить повторно</button>
+                                <button :class="{cancel: true, 'active-btn': !disableButton}" @click.prevent="resendCode" :disabled="disableButton">Отправить повторно</button>
                             </div>
                         </div>
 
@@ -80,6 +80,14 @@ export default {
                     this.hideTextBtn = true;
                 }
             }, 1000);
+        },
+        resendCode() {
+            console.log('WE HERE');
+            axios.post('/api/login/resend-code', {
+                email: this.resetPasswordEmail,
+            }).then(() => {
+                this.startTimer()
+            });
         }
     },
     computed: {
