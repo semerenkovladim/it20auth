@@ -4,6 +4,9 @@ import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex)
 
+const API_LINK = 'http://it20auth/api'
+const USERS_LINK = API_LINK + '/users'
+
 const store = new Vuex.Store({
     state: {
         count: 0,
@@ -14,6 +17,7 @@ const store = new Vuex.Store({
             personalDataStatus: true,
             personalAccessStatus: false
         },
+        usersList: [],
         user: {},
         access_token: '',
         refresh_token: '',
@@ -23,6 +27,7 @@ const store = new Vuex.Store({
         increment(state) {
             state.count++
         },
+        //управление пользователями
         setUMSettingStatus(state) {
             state.usersManagement.settingStatus = !state.usersManagement.settingStatus
         },
@@ -40,9 +45,13 @@ const store = new Vuex.Store({
             state.usersManagement.personalAccessStatus = status
             state.usersManagement.personalDataStatus = !status
         },
+        setUMUsers(state, users) {
+            state.usersList = users
+        },
         setUser(state, user) {
             state.user = user;
         },
+        //
         setAccessToken(state, access_token) {
             state.access_token = access_token;
         },
@@ -54,11 +63,29 @@ const store = new Vuex.Store({
         }
     },
     actions: {
+        //управление пользователями
         async changeUMSettingStatus({commit}) {
             commit('setUMSettingStatus')
         },
         async changeUMConfirmStatus({commit}) {
             commit('setUMConfirmStatus')
+        },
+        async getUMAllUsers({commit}, page = 1) {
+            console.log('getUMAllUsers page', page)
+            axios.get(USERS_LINK, {
+                params: {
+                    page: page.page
+                }
+            })
+                .then(value => {
+                        console.log(value.data)
+                        commit('setUMUsers', value.data.data)
+                    }
+                )
+                .catch(reason => {
+                        console.log('getUMAllUsers', reason)
+                    }
+                )
         },
         changeUMPersonalDataStatus({commit}, status) {
             commit('setUMPersonalDataStatus', status)
@@ -66,6 +93,7 @@ const store = new Vuex.Store({
         changeUMPersonalAccess({commit}, status) {
             commit('setUMPersonalAccess', status)
         },
+        //
         saveUserFromServer({commit}, user) {
             commit('setUser', user);
         },
@@ -80,9 +108,14 @@ const store = new Vuex.Store({
         }
     },
     getters: {
+        //управление пользователями
         UM_SETTINGS_STATUS(state) {
             return state.usersManagement
         },
+        UM_USERS(state) {
+            return state.usersList
+        },
+        //
         user(state) {
             return state.user;
         },
