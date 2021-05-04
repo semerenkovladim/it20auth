@@ -38,11 +38,11 @@ class ResetPasswordController extends Controller
         $user = User::whereEmail($email)->first();
 
         Mail::to($user->email)->send(new ResetPasswordCode($code, $user->name));
-
         $user->code = $code;
-        $user->save();
 
         ClearCodeReset::dispatch($user)->delay(now()->addMinutes(20));
+
+        return $user;
     }
 
     public function sendCode(Request $request)
@@ -58,7 +58,9 @@ class ResetPasswordController extends Controller
             ], 401);
         }
 
-        $this->createCode($validated['email']);
+        $user = $this->createCode($validated['email']);
+
+        $user->save();
 
         return response()->json([], 200);
     }
@@ -107,7 +109,9 @@ class ResetPasswordController extends Controller
             'email' => 'required|exists:users',
         ]);
 
-        $this->createCode($validated['email']);
+        $user = $this->createCode($validated['email']);
+
+        $user->save();
 
         return response()->json([], 200);
     }
