@@ -33,6 +33,18 @@ class ResetPasswordController extends Controller
         return $response;
     }
 
+    public function createCode($email) {
+        $code = Str::random('6');
+        $user = User::whereEmail($email)->first();
+
+        Mail::to($user->email)->send(new ResetPasswordCode($code, $user->name));
+
+        $user->code = $code;
+        $user->save();
+
+        ClearCodeReset::dispatch($user)->delay(now()->addMinutes(20));
+    }
+
     public function sendCode(Request $request)
     {
         $validated = $request->validate([
@@ -46,15 +58,8 @@ class ResetPasswordController extends Controller
             ], 401);
         }
 
-        $code = Str::random('6');
-        $user = User::whereEmail($validated['email'])->first();
+        $this->createCode($validated['email']);
 
-        Mail::to($user->email)->send(new ResetPasswordCode($code, $user->name));
-
-        $user->code = $code;
-        $user->save();
-
-        ClearCodeReset::dispatch($user)->delay(now()->addMinutes(20));
         return response()->json([], 200);
     }
 
@@ -97,5 +102,13 @@ class ResetPasswordController extends Controller
         return response()->json([], 200);
     }
 
+    public function resendPasswordCode(Request $request) {
+        $validated = $request->validate([
+            'email' => 'required|exists:users',
+        ]);
 
+        $this->createCode($validated['email']);
+
+        return response()->json([], 200);
+    }
 }
