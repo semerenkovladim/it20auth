@@ -5,20 +5,22 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function __invoke(Request $request)
+    public function baseAuth(Request $request)
     {
-        // TODO: Implement __invoke() method.
         $validated = $request->validate([
             'email' => 'required|exists:users',
             'password' => 'required',
+            'reservedPassword' => 'min:6|max:16',
+            'code' => ''
         ]);
 
-        $user = User::whereEmail($validated['email'])->with(['department', 'access_level', 'backup_date'])->first();
+        $user = User::whereEmail($validated['email'])->with(['department', 'access_level', 'backup_date', 'setting'])->first();
 
         if (!$user) {
             return response()->json([], 422);
@@ -28,6 +30,10 @@ class AuthController extends Controller
         // ли его пароль с указанным
         if (!Hash::check($validated['password'], $user->password)) {
             return response()->json([], 422);
+        }
+
+        if($user->setting->useTwoStepAuth) {
+            return response()->json([], 403);
         }
 
         $client = DB::table('oauth_clients')

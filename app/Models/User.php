@@ -50,6 +50,11 @@ class User extends Authenticatable
         return $this->belongsTo(Department::class);
     }
 
+    public function setting(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Setting::class);
+    }
+
     public function access_level(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(AccessLevel::class);

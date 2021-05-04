@@ -88,7 +88,10 @@ export default {
                 this.saveAccessFromServer(response.data.token);
                 this.saveRefreshFromServer(response.data.refresh_token);
                 this.$router.push('/home');
-            }).catch(() => {
+            }).catch((e) => {
+                if(e.response.status === 403) {
+                    this.$router.push({ name: 'login.two-step', params: { email: this.email, password: this.password } });
+                }
                 this.hasError = true;
             })
         }

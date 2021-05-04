@@ -90,8 +90,8 @@
                         <div class="title-list">Двухэтапная аутентификация</div>
                         <div class="subaction">
                             <label>
-                                <span class="checkbox checkbox-active" @click="toogleCheckbox">Включена</span>
-                                <input type="checkbox" hidden>
+                                <span :class="{'checkbox': true, 'checkbox-active': twofactor}" @click="toogleCheckbox">{{ twofactor ? 'Включено' : 'Выключено' }}</span>
+                                <input type="checkbox" v-model="twofactor" hidden>
                             </label>
                         </div>
                         <div class="tooltip-icon">
@@ -343,6 +343,8 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     name: "AccountLogin",
     data() {
@@ -351,11 +353,12 @@ export default {
             showIconPasswordRepeate: false,
             password: '',
             passwordRepeate: '',
+            twofactor: false,
         }
     },
     methods: {
         toogleCheckbox(event) {
-            if(event.target.classList.contains('checkbox-active')) {
+            if(this.twofactor) {
                 event.target.innerText = 'Выключено'
             } else {
                 event.target.innerText = 'Включено'
@@ -380,6 +383,21 @@ export default {
         hidePasswordRepeate() {
             document.querySelector('input[name=repeate]').setAttribute('type', 'password');
         },
+        save() {
+            const data = {
+                twoFactor: this.twofactor
+            }
+            axios.post('/api/settings', data, {
+                headers: {
+                    'Authorization': `Bearer ` + this.access_token
+                }
+            });
+        }
+    },
+    computed: {
+        ...mapGetters([
+            'access_token'
+        ]),
     },
     watch: {
         password() {

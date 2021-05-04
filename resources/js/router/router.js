@@ -37,6 +37,10 @@ const router = new VueRouter({
                     component: TheLogin
                 },
                 {
+                    path: 'two-step',
+                    name: 'login.two-step'
+                },
+                {
                     path: 'repair-password',
                     name: 'login.repair',
                     component: TheRepairPassword

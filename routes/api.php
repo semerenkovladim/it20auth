@@ -1,7 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\ResetPasswordController;
+use App\Http\Controllers\API\UserSettingsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,8 +16,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/login', \App\Http\Controllers\API\AuthController::class);
-Route::post('/login/repair-password', [\App\Http\Controllers\API\ResetPasswordController::class, 'sendCode']);
-Route::post('/login/repair-password/code', [\App\Http\Controllers\API\ResetPasswordController::class, 'resetPasswordCode']);
-Route::post('/login/resend-code', [\App\Http\Controllers\API\ResetPasswordController::class, 'resendPasswordCode']);
-Route::post('/login/repair-password/new-password', [\App\Http\Controllers\API\ResetPasswordController::class, 'resetPassword']);
+Route::post('/login', [AuthController::class, 'baseAuth']);
+Route::post('/login/repair-password', [ResetPasswordController::class, 'sendCode']);
+Route::post('/login/repair-password/code', [ResetPasswordController::class, 'resetPasswordCode']);
+Route::post('/login/resend-code', [ResetPasswordController::class, 'resendPasswordCode']);
+Route::post('/login/repair-password/new-password', [ResetPasswordController::class, 'resetPassword']);
+
+Route::middleware('auth:api')->group(function () {
+    Route::post('settings', [UserSettingsController::class, 'update']);
+});
