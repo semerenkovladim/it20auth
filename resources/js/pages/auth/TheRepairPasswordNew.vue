@@ -96,7 +96,6 @@ export default {
             document.querySelector('input[name=repeate]').setAttribute('type', 'password');
         },
         newPassword() {
-            $('.toast').toast('show');
             const regExp = new RegExp('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,}$');
             if(this.password.search(regExp) === -1) {
                 this.incorrectPassword = true;
