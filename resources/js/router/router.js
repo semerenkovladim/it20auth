@@ -17,6 +17,8 @@ import TitleComponent from '../components/slider/TitleComponent.vue'
 import SettingsSecure from "../pages/settings-secure/SettingsSecure";
 import AccountLogin from "../pages/settings-secure/components/AccountLogin";
 import HistoryList from "../pages/settings-secure/components/HistoryList";
+import TheLoginTwoFactor from "../pages/auth/TheLoginTwoFactor";
+import TheLoginCode from "../pages/auth/TheLoginCode";
 // import * as path from "path";
 
 Vue.use(VueRouter);
@@ -38,7 +40,13 @@ const router = new VueRouter({
                 },
                 {
                     path: 'two-step',
-                    name: 'login.two-step'
+                    name: 'login.two-step',
+                    component: TheLoginTwoFactor
+                },
+                {
+                    path: 'code',
+                    name: 'login.code',
+                    component: TheLoginCode
                 },
                 {
                     path: 'repair-password',

@@ -43,6 +43,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'twostep_code',
+        'code'
     ];
 
     public function department(): \Illuminate\Database\Eloquent\Relations\BelongsTo

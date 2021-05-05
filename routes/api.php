@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/login', [AuthController::class, 'baseAuth']);
+Route::post('/login/get-code', [AuthController::class, 'createAuthCode']);
+Route::post('/login/login-code', [AuthController::class, 'loginWithCode']);
+Route::post('/login/resend-code', [AuthController::class, 'loginWithCode']);
 Route::post('/login/repair-password', [ResetPasswordController::class, 'sendCode']);
 Route::post('/login/repair-password/code', [ResetPasswordController::class, 'resetPasswordCode']);
 Route::post('/login/resend-code', [ResetPasswordController::class, 'resendPasswordCode']);
