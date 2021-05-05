@@ -57,27 +57,29 @@ export default {
             ],
             text: 'Редактирование пользователя',
             placeholderNav: true,
-            userData: {
-                img: 'user_demo_img.png',
-                firstName: 'Николай',
-                lastName: 'Попутько',
-                patronymic: 'Иванович',
-                dateOfBirth: '1994-05-17',
-                department: 'Разработки проектов',
-                position: 'Разработчик',
-                dateOfCommencementOfWork: '2019-04-19',
-                admin: true,
-                email: 'poputkoNik@yahoo.com',
-                phone: '+38(066)-356-43-12',
-                wPhone: '+38(066)-356-43-12',
-                skype: 'NikPoputko'
-            }
+            userData: {}
+        }
+    },
+    methods: {
+        getUser() {
+            return axios.get('/api/user/' + this.$route.query.id)
+                .then(value => {
+                    this.userData = value.data.data
+                    console.log(value)
+                    console.log('this.userData', this.userData)
+                })
+                .catch(reason => {
+                    console.log(reason)
+                })
         }
     },
     computed: {
         ...mapGetters([
             'UM_SETTINGS_STATUS'
         ])
+    },
+    mounted() {
+        this.getUser()
     }
 }
 </script>

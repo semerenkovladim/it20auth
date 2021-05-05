@@ -84,7 +84,9 @@ const router = new VueRouter({
                 },
                 {
                     path: '/users-management/user-edit',
-                    component: UserEditPage
+                    component: UserEditPage,
+                    name:'users-management/user-edit',
+                    params: true
                 },
                 {
                     path: '/users-management/new-user',

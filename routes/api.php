@@ -4,6 +4,9 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ResetPasswordController;
 use App\Http\Controllers\API\UserSettingsController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\ImageUploadController;
+use App\Http\Controllers\API\AccessLevelController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 Route::post('/login', [AuthController::class, 'baseAuth']);
 Route::post('/login/get-code', [AuthController::class, 'createAuthCode']);
 Route::post('/login/login-code', [AuthController::class, 'loginWithCode']);
@@ -25,6 +29,16 @@ Route::post('/login/repair-password/code', [ResetPasswordController::class, 'res
 Route::post('/login/resend-code', [ResetPasswordController::class, 'resendPasswordCode']);
 Route::post('/login/repair-password/new-password', [ResetPasswordController::class, 'resetPassword']);
 
+Route::get('/users', [UserController::class, 'index'])->name('users');
+Route::get('/user/{id}', [UserController::class, 'show'])->name('user');
+Route::post('/user/create', [UserController::class, 'store'])->name('userCreate');
+Route::put('/user/update/{id}', [UserController::class, 'update'])->name('userUpdate');
+Route::post('/user/permission/create', [AccessLevelController::class, 'store'])->name('userPermission');
+Route::get('/user/permission', [AccessLevelController::class, 'show'])->name('userPermissionShow');
+Route::get('/user/permission/update', [AccessLevelController::class, 'update'])->name('userPermissionUpdate');
+Route::post('/image/upload/avatar', [ImageUploadController::class, 'upload_avatar'])->name('userAvatar');
+
 Route::middleware('auth:api')->group(function () {
     Route::post('settings', [UserSettingsController::class, 'update']);
 });
+

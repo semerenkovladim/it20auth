@@ -4,6 +4,9 @@ import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex)
 
+const API_LINK = '/api'
+const USERS_LINK = API_LINK + '/users'
+
 const store = new Vuex.Store({
     state: {
         count: 0,
@@ -14,15 +17,23 @@ const store = new Vuex.Store({
             personalDataStatus: true,
             personalAccessStatus: false
         },
+        UMMessage: {
+            data: '',
+            status: false,
+            show: false
+        },
+        usersList: [],
         user: {},
         access_token: '',
         refresh_token: '',
-        resetPasswordEmail: '',
+        resetPasswordEmail: ''
+
     },
     mutations: {
         increment(state) {
             state.count++
         },
+        //управление пользователями
         setUMSettingStatus(state) {
             state.usersManagement.settingStatus = !state.usersManagement.settingStatus
         },
@@ -40,6 +51,18 @@ const store = new Vuex.Store({
             state.usersManagement.personalAccessStatus = status
             state.usersManagement.personalDataStatus = !status
         },
+        setUMUsers(state, users) {
+            state.usersList = users
+        },
+        setUMMessage(state, message) {
+            state.UMMessage.data = message.data.error
+            state.UMMessage.status = message.data.status
+            state.UMMessage.show = true
+        },
+        hideUMMessage(state) {
+            state.UMMessage.show = false
+        },
+        //
         setUser(state, user) {
             state.user = user;
         },
@@ -54,11 +77,34 @@ const store = new Vuex.Store({
         }
     },
     actions: {
+        //управление пользователями
+        getUMMessage({commit}, message) {
+            console.log('getUMMessage', message)
+            commit('setUMMessage', message)
+        },
+        hideUMMessage({commit}) {
+            commit('hideUMMessage')
+        },
         async changeUMSettingStatus({commit}) {
             commit('setUMSettingStatus')
         },
         async changeUMConfirmStatus({commit}) {
             commit('setUMConfirmStatus')
+        },
+        async getUMAllUsers({commit}, page = 1) {
+            axios.get(USERS_LINK, {
+                params: {
+                    page: page.page
+                }
+            })
+                .then(value => {
+                        commit('setUMUsers', value.data.data)
+                    }
+                )
+                .catch(reason => {
+                        this.getUMMessage(reason)
+                    }
+                )
         },
         changeUMPersonalDataStatus({commit}, status) {
             commit('setUMPersonalDataStatus', status)
@@ -66,6 +112,7 @@ const store = new Vuex.Store({
         changeUMPersonalAccess({commit}, status) {
             commit('setUMPersonalAccess', status)
         },
+        //
         saveUserFromServer({commit}, user) {
             commit('setUser', user);
         },
@@ -80,9 +127,17 @@ const store = new Vuex.Store({
         }
     },
     getters: {
+        //управление пользователями
+        UM_MESSAGE(state) {
+            return state.UMMessage
+        },
         UM_SETTINGS_STATUS(state) {
             return state.usersManagement
         },
+        UM_USERS(state) {
+            return state.usersList
+        },
+        //
         user(state) {
             return state.user;
         },

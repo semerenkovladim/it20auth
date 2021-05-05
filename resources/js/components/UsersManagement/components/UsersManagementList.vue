@@ -1,0 +1,240 @@
+<template>
+    <div class="wrapper">
+        <div class="users_management__sort">
+            <ul class="row users_management__sort_list">
+                <li class="col-1 sort_item"></li>
+                <li class="col-2 sort_item"><span>Фамилия</span></li>
+                <li class="col-2 sort_item"><span>Имя</span></li>
+                <li class="col-2 sort_item"><span>Отчество</span></li>
+                <li class="col-3 sort_item"><span>E-mail</span></li>
+                <li class="col-2 sort_item"><span>Должность</span></li>
+            </ul>
+        </div>
+        <ul class="users_management__user_list">
+            <li class="user"
+                v-for="user in userData"
+                :key="user.id">
+                <ul class="row user__info">
+                    <li class="col-1 user_info__item user_checkbox">
+                        <label>
+                            <input type="checkbox"
+                                   class="user_check input_checkbox"
+                                   v-model="user.checked"
+                                   @change="test"
+                            >
+                        </label>
+                    </li>
+                    <li class="col-2 user_info__item">{{ user.surname }}</li>
+                    <li class="col-2 user_info__item">{{ user.name }}</li>
+                    <li class="col-2 user_info__item">{{ user.middle_name }}</li>
+                    <li class="col-3 user_info__item">
+                        <a :href="'mailto:' + user.email">{{ user.email }}</a>
+                    </li>
+                    <li class="col-2 user_info__item">{{ user.position }}</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</template>
+
+<script>
+export default {
+    name: "UsersManagementList",
+    props: ['data', 'checkStatus'],
+    data() {
+        return {
+            userData: this.$props.data,
+            status: this.$props.checkStatus,
+            selectUsers: []
+        }
+    },
+    methods: {
+        test() {
+            let status = true
+            for (let item of this.userData) {
+                if (item.checked === undefined || !item.checked) {
+                    item.checked = false
+                }
+                let index = this.selectUsers.findIndex(x => x.id === item.id)
+
+                if (item.checked) {
+                    if (index === -1) {
+                        this.selectUsers.push(item)
+                    }
+                } else {
+                    this.$emit('allChecked', {status: false})
+                    status = false
+
+                    if (index > -1) {
+                        this.selectUsers.splice(index, 1)
+                    }
+                }
+            }
+
+            if (status) {
+                this.$emit('allChecked', {status: true})
+            }
+        },
+        selectAll() {
+            this.userData.map(function (el) {
+                el.checked = true
+            })
+            console.log(this.userData)
+        },
+        unselectAll() {
+            for (let item of this.userData) {
+                item.checked = false
+                console.log('unselectAll', item.checked)
+            }
+            console.log(this.userData)
+        }
+    },
+    computed: {
+        watchCheckStatus() {
+            return this.status
+        },
+        selectUsersLength() {
+            return this.selectUsers.length
+        }
+    },
+    watch: {
+        selectUsersLength() {
+            this.$emit('changeUsersLength', {
+                length: this.selectUsers.length,
+                data: this.selectUsers
+            })
+            console.log(this.selectUsers.length)
+        },
+        watchCheckStatus() {
+
+            console.log('watchCheckStatus', this.status)
+            if (this.status) {
+                this.selectAll()
+            } else {
+                this.unselectAll()
+            }
+        }
+    }
+}
+</script>
+
+<style lang="scss">
+@import "resources/sass/variables";
+
+.users_management__user_list {
+    min-height: 55px;
+
+    .user {
+        &:last-child {
+            border-bottom: none;
+
+            .user__info {
+                border-bottom: none;
+            }
+        }
+    }
+
+    .user__info {
+        font-size: $userManagementUserFz;
+        min-height: 55px;
+
+    }
+
+    .user_info__item {
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+        word-break: break-all;
+
+        a {
+            color: $lightColor;
+        }
+    }
+}
+
+.users_management__sort .sort_item, .users_management__user_list .user__info {
+    color: $userManagementUserColor;
+    border-bottom: 2px solid #F5F5F5;
+    font-style: normal;
+    font-weight: 500;
+}
+
+.users_management__list {
+    display: flex;
+    flex-direction: column;
+
+    .wrapper {
+        padding: 0 15px;
+        margin-right: -15px;
+        margin-left: -15px;
+        overflow-x: auto;
+        margin-bottom: 4px;
+        border-left: 2px solid #F5F5F5;
+
+        > * {
+            min-width: 800px;
+        }
+    }
+
+    .not_found {
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 100%;
+        font-weight: 600;
+        font-size: 18px;
+        color: $lightColor;
+    }
+
+    .search_user {
+        padding: 0 15px;
+        flex: 1 1 66%;
+
+    }
+
+    .edit__actions_list {
+        justify-content: space-between;
+        padding: 0 15px;
+        flex: 1 1 10%;
+
+        .row {
+            padding-right: 10px;
+            justify-content: space-between;
+            flex-wrap: nowrap;
+        }
+    }
+}
+
+.users_management__sort {
+    .users_management__sort_list {
+        border-top: 2px solid #F5F5F5;
+        min-height: 55px;
+    }
+
+    .sort_item {
+        font-size: 13px;
+        color: $darkColor;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+
+        span {
+            min-height: 26px;
+            align-items: center;
+            display: flex;
+            padding-right: 33px;
+            background: url("../../../../images/icons/arrow_down.svg") no-repeat top right / contain;
+
+        }
+
+        &:first-child {
+            span {
+                background: none;
+            }
+        }
+    }
+
+}
+</style>

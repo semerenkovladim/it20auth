@@ -159,6 +159,7 @@ export default {
         font-size: 18px;
         color: $darkColor;
         font-weight: 600;
+        text-align: left;
     }
 
     .option {
@@ -176,6 +177,12 @@ export default {
         font-size: 14px;
         color: $darkColor;
         font-weight: 600;
+    }
+    .input_checkbox {
+        margin-left: 0;
+    }
+    .btn_wrapper {
+        justify-content: flex-start;
     }
 }
 

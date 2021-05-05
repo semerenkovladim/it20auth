@@ -1,46 +1,52 @@
 <template>
     <div class="user_edit_form user_access col-12">
+        <Message></Message>
         <form action="#" method="post" class="row user_edit_form__form">
             <div class="col-12">
-                <label class="edit_form__label">
-                    <span class="input_title">Диск:</span>
-                    <select name="position" class="styled">
-                        <option :value="userData.position ">{{ userData.disk }}</option>
-                        <option value="Разрешен">Разрешен</option>
+                <label class="edit_form__label"
+                       v-for="setting in settings"
+                       :key="setting.id">
+                    <span class="input_title">{{ setting.title }}:</span>
+                    <select name="position"
+                            class="styled"
+                            v-model="setting.status">
+                        <option value="0">Запрещен</option>
+                        <option value="1">Разрешен</option>
                     </select>
                 </label>
-                <label class="edit_form__label">
-                    <span class="input_title">Почта:</span>
-                    <select name="position" class="styled">
-                        <option :value="userData.position ">{{ userData.email }}</option>
-                        <option value="Разрешен">Разрешен</option>
-                    </select>
-                </label>
-                <label class="edit_form__label">
-                    <span class="input_title">Календарь:</span>
-                    <select name="position" class="styled">
-                        <option :value="userData.position ">{{ userData.calendar }}</option>
-                        <option value="Разрешен">Разрешен</option>
-                    </select>
-                </label>
-                <label class="edit_form__label">
-                    <span class="input_title">Фотографии:</span>
-                    <select name="position" class="styled">
-                        <option :value="userData.position ">{{ userData.photo }}</option>
-                        <option value="Разрешен">Разрешен</option>
-                    </select>
-                </label>
-                <label class="edit_form__label">
-                    <span class="input_title">Контакты:</span>
-                    <select name="position" class="styled">
-                        <option :value="userData.position ">{{ userData.contacts }}</option>
-                        <option value="Разрешен">Разрешен</option>
-                    </select>
-                </label>
+                <!--                <label class="edit_form__label">
+                                    <span class="input_title">Почта:</span>
+                                    <select name="position" class="styled">
+                                        <option value="0">{{ userData.email }}</option>
+                                        <option value="1">Разрешен</option>
+                                    </select>
+                                </label>
+                                <label class="edit_form__label">
+                                    <span class="input_title">Календарь:</span>
+                                    <select name="position" class="styled">
+                                        <option value="0">{{ userData.calendar }}</option>
+                                        <option value="1">Разрешен</option>
+                                    </select>
+                                </label>
+                                <label class="edit_form__label">
+                                    <span class="input_title">Фотографии:</span>
+                                    <select name="position" class="styled">
+                                        <option :value="userData.position ">{{ userData.photo }}</option>
+                                        <option value="Разрешен">Разрешен</option>
+                                    </select>
+                                </label>
+                                <label class="edit_form__label">
+                                    <span class="input_title">Контакты:</span>
+                                    <select name="position" class="styled">
+                                        <option :value="userData.position ">{{ userData.contacts }}</option>
+                                        <option value="Разрешен">Разрешен</option>
+                                    </select>
+                                </label>-->
             </div>
             <div class="col-12">
                 <div class="btn_wrapper">
-                    <ConfirmBtn :text="confirm"></ConfirmBtn>
+                    <ConfirmBtn :text="confirm"
+                                @confirmEvent=""></ConfirmBtn>
                     <CancelBtn></CancelBtn>
                 </div>
             </div>
@@ -51,24 +57,45 @@
 <script>
 import ConfirmBtn from "../buttons/ConfirmBtn";
 import CancelBtn from "../buttons/CancelBtn";
+import Message from "../message/Message";
 
 export default {
     name: "UserAccess",
     components: {
-        ConfirmBtn, CancelBtn
+        ConfirmBtn, CancelBtn, Message
     },
     data() {
         return {
             confirm: 'Подтвердить',
-            userData: {
-                disk: 'Запрещён',
-                email: 'Запрещён',
-                contacts: 'Запрещён',
-                photo: 'Запрещён',
-                calendar: 'Запрещён'
-            }
+            settings: [
+                {
+                    id: 1,
+                    title: 'Диск',
+                    status: 0
+                },
+                {
+                    id: 2,
+                    title: 'Почта',
+                    status: 0
+                },
+                {
+                    id: 3,
+                    title: 'Календарь',
+                    status: 0
+                },
+                {
+                    id: 4,
+                    title: 'Фотографии',
+                    status: 0
+                },
+                {
+                    id: 5,
+                    title: 'Контакты',
+                    status: 0
+                },
+            ],
         }
-    }
+    },
 }
 </script>
 
@@ -83,7 +110,8 @@ export default {
         max-width: 377px;
         margin-left: auto;
         margin-right: auto;
-        &:last-child{
+
+        &:last-child {
             margin-bottom: 0;
         }
     }
@@ -91,6 +119,7 @@ export default {
     .input_title {
         margin-bottom: 20px;
     }
+
     .confirm_btn, .cancel_btn {
         width: 213px;
     }

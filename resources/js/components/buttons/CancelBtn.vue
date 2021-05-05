@@ -1,15 +1,16 @@
 <template>
     <button class="settings__btn cancel_btn"
             type="button"
-            @click="cancel">Отмена</button>
+            @click="cancel">Отмена
+    </button>
 </template>
 
 <script>
 
 export default {
     name: "CancelBtn",
-    methods:{
-        cancel(){
+    methods: {
+        cancel() {
             this.$emit('cancelEvent')
         }
     }
@@ -18,12 +19,19 @@ export default {
 
 <style lang="scss">
 @import "../../../sass/variables";
+
 .cancel_btn {
     color: #B2B2B2;
     border: 2px solid #F5F5F5;
     background: #FFFFFF;
-    //box-shadow: 0 5px 30px rgba(0, 0, 0, 0.07);
+    margin-left: 0;
+
+    &:hover {
+        background: #FFFFFF;
+        color: darken(#B2B2B2, 5%);
+    }
 }
+
 .btn_wrapper {
     display: flex;
 }
