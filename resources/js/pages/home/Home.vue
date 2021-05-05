@@ -1,36 +1,23 @@
 <template>
     <div>
-        <div id="carouselExampleInterval" class="carousel slide" data-ride="carousel">
-            <div class="carousel-inner">
-                <div class="carousel-item active" data-interval="30000">
-                    <img src="images/01.png" class="d-block w-100" alt="slide1">
-                </div>
-                <div class="carousel-item" data-interval="30000">
-                    <img src="images/02.png" class="d-block w-100" alt="slide1">
-                </div>
-                <div class="carousel-item" data-interval="30000">
-                    <img src="images/03.png" class="d-block w-100" alt="slide1">
-                </div>
-            </div>
-            <a class="carousel-control-prev" href="#carouselExampleInterval" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#carouselExampleInterval" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
+
+            <div class="slider">
+            <carousel :autoplay="true" :items="1" :dots="false" :autoplayTimeout="30000" :nav="false">
+                <img src="images/01.png" alt="slide1">
+                <img src="images/02.png" alt="slide1">
+                <img src="images/03.png" alt="slide1">
+            </carousel>
         </div>
 
-        <div class="container title_hello">
+        <div class="title_hello">
             <div class="title">Рады снова Вас приветствовать!</div>
             <div class="hello_description">
                 Пожалуйста, обратите внимание на новый функционал:
             </div>
         </div>
+
         <div class="cards">
             <div class="row">
-
                 <div class="card mb-3 hello contact_item">
                     <div class="row g-0">
                         <div class="col-md-4 left_cards">
@@ -136,8 +123,12 @@
 </template>
 
 <script>
+import carousel from 'vue-owl-carousel2'
 export default {
-    name: "Home"
+    name: "Home",
+    components: {
+        carousel
+        }
 }
 </script>
 

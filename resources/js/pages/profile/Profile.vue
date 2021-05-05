@@ -5,7 +5,7 @@
             <div class="inform_title">Общая информация</div>
             <form action="">
                 <div class="container">
-                    <div class="row">
+                    <div class="row profile_input">
                         <div class="col-6">
                             <div class="profile_photo"><img src="images/placeholder.png" alt=""></div>
                             <label>Фамилия:</label>
@@ -17,10 +17,8 @@
                             <label>Отчество:</label>
                             <input type="text" class="form-control">
 
-                            <label>Имя</label>
-                            <input type="text" class="form-control">
                         </div>
-                        <div class="col-6">
+                        <div class="col-6 row_date">
                             <label>Дата рождения:</label>
                             <input type="date" class="form-control">
 
@@ -37,7 +35,7 @@
                         </div>
                     </div>
                     <div class="inform_title">Контактная информация</div>
-                    <div class="row">
+                    <div class="row profile_input">
                         <div class="col-6">
                             <label>E-mail</label>
                             <input type="text" class="form-control">
@@ -54,7 +52,7 @@
                         </div>
                     </div>
                     <div class="form_button">
-                        <button class="btn btn-primary">СОХРАНИТЬ</button>
+                        <button class="btn btn-primary save_btn">СОХРАНИТЬ</button>
                         <button class="btn cancel_btn">ОТМЕНИТЬ</button>
                     </div>
                 </div>
