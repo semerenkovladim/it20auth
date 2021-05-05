@@ -12,13 +12,16 @@
         </div>
         <ul class="users_management__user_list">
             <li class="user"
-                v-for="user in data"
+                v-for="user in userData"
                 :key="user.id">
                 <ul class="row user__info">
                     <li class="col-1 user_info__item user_checkbox">
                         <label>
                             <input type="checkbox"
-                                   class="user_check input_checkbox">
+                                   class="user_check input_checkbox"
+                                   v-model="user.checked"
+                                   @change="test"
+                            >
                         </label>
                     </li>
                     <li class="col-2 user_info__item">{{ user.surname }}</li>
@@ -37,12 +40,87 @@
 <script>
 export default {
     name: "UsersManagementList",
-    props: ['data']
+    props: ['data', 'checkStatus'],
+    data() {
+        return {
+            userData: this.$props.data,
+            status: this.$props.checkStatus,
+            selectUsers: []
+        }
+    },
+    methods: {
+        test() {
+            let status = true
+            for (let item of this.userData) {
+                if (item.checked === undefined || !item.checked) {
+                    item.checked = false
+                }
+                let index = this.selectUsers.findIndex(x => x.id === item.id)
+
+                if (item.checked) {
+                    if (index === -1) {
+                        this.selectUsers.push(item)
+                    }
+                } else {
+                    this.$emit('allChecked', {status: false})
+                    status = false
+
+                    if (index > -1) {
+                        this.selectUsers.splice(index, 1)
+                    }
+                }
+            }
+
+            if (status) {
+                this.$emit('allChecked', {status: true})
+            }
+        },
+        selectAll() {
+            this.userData.map(function (el) {
+                el.checked = true
+            })
+            console.log(this.userData)
+        },
+        unselectAll() {
+            for (let item of this.userData) {
+                item.checked = false
+                console.log('unselectAll', item.checked)
+            }
+            console.log(this.userData)
+        }
+    },
+    computed: {
+        watchCheckStatus() {
+            return this.status
+        },
+        selectUsersLength() {
+            return this.selectUsers.length
+        }
+    },
+    watch: {
+        selectUsersLength() {
+            this.$emit('changeUsersLength', {
+                length: this.selectUsers.length,
+                data: this.selectUsers
+            })
+            console.log(this.selectUsers.length)
+        },
+        watchCheckStatus() {
+
+            console.log('watchCheckStatus', this.status)
+            if (this.status) {
+                this.selectAll()
+            } else {
+                this.unselectAll()
+            }
+        }
+    }
 }
 </script>
 
 <style lang="scss">
 @import "resources/sass/variables";
+
 .users_management__user_list {
     min-height: 55px;
 
@@ -73,6 +151,7 @@ export default {
         }
     }
 }
+
 .users_management__sort .sort_item, .users_management__user_list .user__info {
     color: $userManagementUserColor;
     border-bottom: 2px solid #F5F5F5;

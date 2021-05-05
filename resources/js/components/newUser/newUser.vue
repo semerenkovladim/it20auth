@@ -44,12 +44,12 @@ export default {
                 {
                     id: 2,
                     name: 'Пользователи',
-                    href: '#'
+                    href: '/users-management'
                 },
                 {
                     id: 3,
                     name: 'Новый пользователь',
-                    href: '#'
+                    href: '/users-management/new-user'
                 },
             ],
             userData: {

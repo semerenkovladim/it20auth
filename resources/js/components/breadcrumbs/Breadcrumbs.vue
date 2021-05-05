@@ -5,7 +5,7 @@
                 <li class="breadcrumbs-item"
                     v-for="link in links"
                     :key="link.id">
-                    <a :href="link.href">{{link.name}}</a>
+                    <router-link :to="link.href">{{link.name}}</router-link>
                 </li>
             </ul>
         </nav>

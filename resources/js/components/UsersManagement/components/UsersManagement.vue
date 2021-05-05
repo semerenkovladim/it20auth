@@ -25,8 +25,8 @@
                                     <label>
                                         <input type="checkbox"
                                                class="select_all input_checkbox"
-                                               @click="toggleCheckAll"
-                                               :checked="checkStatus">
+                                               @change="checkStatus = !checkStatus"
+                                               v-model="checkAll">
                                     </label>
                                 </div>
                                 <div class="edit__actions_list">
@@ -34,7 +34,11 @@
                                         <li class="edit__action">
                                             <button class="edit_btn"
                                                     type="button"
-                                                    @click="$router.push('/users-management/user-edit')">
+                                                    @click="$router.push({
+                                                        path:'/users-management/user-edit',
+                                                        query:{id:selectUsers[0].id}
+                                                    })"
+                                                    :disabled="usersCount !==1">
                                             </button>
                                         </li>
                                         <li class="edit__action">
@@ -64,19 +68,24 @@
                             </div>
                         </div>
                         <users-management-list
-                            v-if="users.length"
-                            :data="UM_USERS.data">
+                            v-if="UM_USERS.data.length"
+                            :data="UM_USERS.data"
+                            :checkStatus="checkStatus"
+                            @allChecked="setAllCheck"
+                            @changeUsersLength="userCount">
                         </users-management-list>
                         <div class="not_found" v-else>Пользователи не найдены</div>
                     </div>
                 </div>
                 <div class="row users_management__paginator_row"
-                     v-if="users.length">
+                     v-if="UM_USERS.data.length">
                     <div class="col-md-3"></div>
                     <div class="col-md-9">
                         <div class="row paginator_row">
                             <paginator :data="UM_USERS"
-                                       @toPage="getUsers"></paginator>
+                                       @toPage="getUsers">
+
+                            </paginator>
                         </div>
                     </div>
                 </div>
@@ -117,7 +126,7 @@ export default {
                 {
                     id: 2,
                     name: 'Пользователи',
-                    href: '#'
+                    href: '/users-management'
                 },
             ],
             departments: [
@@ -142,59 +151,10 @@ export default {
                     status: false
                 },
             ],
-            users: [
-                {
-                    id: '1',
-                    lastName: 'Макаров',
-                    firstName: 'Сергей',
-                    patronymic: 'Александрович',
-                    email: 'makarov4@gmail.com',
-                    position: 'Разработчик'
-                },
-                {
-                    id: '2',
-                    lastName: 'Попутько',
-                    firstName: 'Николай',
-                    patronymic: 'Иванович',
-                    email: 'poputkoNik@yahoo.com',
-                    position: 'Разработчик'
-                },
-                {
-                    id: '3',
-                    lastName: 'Сергеенко',
-                    firstName: 'Илья',
-                    patronymic: 'Павлович',
-                    email: 'effie-guz@yahoo.com',
-                    position: 'Верстальщик'
-                },
-                {
-                    id: '4',
-                    lastName: 'Зимина',
-                    firstName: 'Анна',
-                    patronymic: 'Владимировна',
-                    email: 'zim@lind.co.uk',
-                    position: 'Дизайнер'
-                },
-                {
-                    id: '5',
-                    lastName: 'Власова',
-                    firstName: 'Оксана',
-                    patronymic: 'Николаевна',
-                    email: 'barbara-maxwell@hotmail.com',
-                    position: 'Менеджер'
-                },
-                {
-                    id: '6',
-                    lastName: 'Каширина',
-                    firstName: 'Мария',
-                    patronymic: 'Алексеева',
-                    email: 'thornton@crooks.com',
-                    position: 'Аналитик'
-                }
-            ],
             checkAll: false,
             checkStatus: false,
-            paginator: ''
+            usersCount: '',
+            selectUsers: []
         }
     },
     methods: {
@@ -204,17 +164,14 @@ export default {
             'getUMAllUsers'
 
         ]),
-        toggleCheckAll() {
-            this.checkAll = !this.checkAll
+        userCount(data) {
+            this.usersCount = data.length
+            this.selectUsers = data.data
         },
-        toggleCheck() {
-            let checkboxes = document.querySelectorAll('.user_check')
-            for (let item of checkboxes) {
-                if (!item.checked) {
-                    this.checkStatus = false
-                    return
-                }
-            }
+        setAllCheck(data) {
+            console.log(data)
+            this.checkAll = data.status
+            console.log('setAllCheck', this.checkAll)
         },
         toggleSettings() {
             this.changeUMSettingStatus()
@@ -223,14 +180,24 @@ export default {
             this.changeUMConfirmStatus()
         },
         getUsers(data) {
-            // console.log('getUsers', data)
             this.getUMAllUsers(data)
-        }
+        },
     },
     computed: {
         ...mapGetters([
             'UM_USERS'
-        ])
+        ]),
+        checkSelectAll() {
+            return this.checkAll
+        },
+        setStatus() {
+            return this.setStatus
+        }
+    },
+    watch: {
+        checkSelectAll() {
+            if (this.checkAll) this.checkStatus = this.checkAll
+        }
     },
     created() {
         this.getUMAllUsers()
@@ -367,6 +334,10 @@ export default {
 
 .edit_btn {
     background: url("../../../../images/icons/edit_img.png") no-repeat center / contain;
+
+    &[disabled] {
+        opacity: 0.5;
+    }
 }
 
 .remove_btn {
