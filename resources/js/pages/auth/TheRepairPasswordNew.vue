@@ -103,6 +103,7 @@ export default {
                 this.hasError = true;
                 this.incorrectPassword = false;
             } else {
+                console.log('WE HERE');
                 this.hasError = false;
                 this.incorrectPassword = false;
                 axios.post('/api/login/repair-password/new-password', {
