@@ -138,21 +138,17 @@
                 </label>
             </div>
             <div class="col-12">
-                <div class="btn_wrapper">
+                <div class="btn_wrapper" v-if="$route.path === '/users-management/user-edit'">
                     <ConfirmBtn :text="confirm2"
-                                v-if="$route.query"
                                 @confirmEvent="updateUser(userData)">
                     </ConfirmBtn>
+                    <CancelBtn @cancelEvent="$router.push('/users-management')"></CancelBtn>
+                </div>
+                <div class="btn_wrapper" v-if="$route.path === '/users-management/new-user'">
                     <ConfirmBtn :text="confirm"
-                                v-else
                                 @confirmEvent="createUser(userData)">
                     </ConfirmBtn>
-                    <CancelBtn @cancelEvent="$router.push('/users-management')"
-                               v-if="$route.query">
-                    </CancelBtn>
-                    <CancelBtn @cancelEvent="cancelUser(userData)"
-                               v-else>
-                    </CancelBtn>
+                    <CancelBtn @cancelEvent="cancelUser(userData)"></CancelBtn>
                 </div>
             </div>
         </form>
@@ -177,7 +173,7 @@ export default {
     data() {
         return {
             confirm: 'Сохранить',
-            confirm2: 'edit',
+            confirm2: 'Изменить',
             imgChange: false,
             userData: this.$props,
             userId: 0
@@ -188,27 +184,22 @@ export default {
             'getUMMessage'
         ]),
         createUser(data) {
-            return axios.post('/api/user/create', data)
+            console.log('data',data)
+            return axios.post('/api/user/create', data.data)
                 .then(value => {
-                    console.log('value', value.data.data.id)
+                    console.log('value', value.data)
                     this.getUMMessage(value)
-                    if (value.status) {
+                    if (value.data.status) {
                         this.userId = value.data.data.id
                         axios.post('/api/user/permission/create', {
                             user_id: value.data.data.id
                         })
-                            .then(value1 => {
-                                console.log(value1)
-                            })
-                            .catch(reason1 => {
-                                console.log(reason1)
-                            })
                     }
                 })
-                .catch(reason => {
-                    let error = 'error'
-                    this.getUMMessage(error)
-                })
+                // .catch(reason => {
+                //     let error = 'error'
+                //     this.getUMMessage(error)
+                // })
 
         },
         updateUser(data) {
@@ -223,18 +214,18 @@ export default {
                 })
         },
         cancelUser(data) {
-            console.log('cancelUser')
-            for (let key of Object.keys(data)) {
-                data[key] = ''
-            }
+            // console.log('cancelUser',data)
+            // for (let key of Object.keys(data)) {
+            //     data[key] = ''
+            // }
         },
         handleFileUpload(data) {
             console.log('data', data)
             console.log('handleFileUpload', this.$refs.file.files[0])
-            if (data.avatar !== this.$refs.file.files[0] && this.$refs.file.files[0]) {
+            if (data.data.avatar !== this.$refs.file.files[0] && this.$refs.file.files[0]) {
                 this.imgChange = true
-                data.avatar = this.$refs.file.files[0];
-                this.saveImg(data.avatar, data)
+                data.data.avatar = this.$refs.file.files[0];
+                this.saveImg(data.data.avatar, data)
             }
         },
         saveImg(image, data) {
