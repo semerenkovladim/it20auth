@@ -4,10 +4,11 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Validator;
 
 class UserController extends Controller
 {
@@ -33,25 +34,26 @@ class UserController extends Controller
             'surname' => 'required|max:255',
             'name' => 'required|max:255',
             'middle_name' => 'nullable|max:255',
-            'birth' => 'date|required',
+            'birth' => 'date|required|before:today',
             'department_id' => 'int|nullable',
             'position' => 'required|max:225',
             'date_start' => 'date|nullable',
-            'is_admin' => 'boolean',
+            'is_admin' => 'boolean|nullable',
             'email' => 'email|required|max:255|unique:users',
             'mobile_phone' => 'numeric|digits_between:8,12|nullable',
             'work_phone' => 'numeric|digits_between:8,12|nullable',
             'skype' => 'max:255|nullable|unique:users'
         ]);
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 402);
+            return response()->json(['error' => $validator->errors(), 'status' => false]);
         }
         $user = User::make($request->all());
-        $user->password = Str::random(8);
+        $password = Str::random(8);
+        $user->password = Hash::make($password);
 
         $user->save();
 
-        return response()->json(['data' => $user, 'password' => $user->password, 'status' => 200]);
+        return response()->json(['data' => $user, 'password' => $password, 'status' => true]);
     }
 
     public function show($id)
@@ -65,11 +67,20 @@ class UserController extends Controller
         return response()->json(['data' => $user, 'status' => $status]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
+        $id = $request->id;
         $user = User::find($id);
+        $data = $request->all();
 
-        $validator = Validator::make($request->all(), [
+
+        if ($user->email === $data['email']) {
+            unset($data['email']);
+        }
+        if ($user->skype === $data['skype']) {
+            unset($data['skype']);
+        }
+        $validator = Validator::make($data, [
             'surname' => 'required|max:255',
             'name' => 'required|max:255',
             'middle_name' => 'nullable|max:255',
@@ -77,19 +88,19 @@ class UserController extends Controller
             'department_id' => 'int|nullable',
             'position' => 'required|max:225',
             'date_start' => 'date|nullable',
-            'is_admin' => 'boolean',
-            'email' => 'email|required|max:255|unique:users',
+            'is_admin' => 'boolean|nullable',
+            'email' => 'email|unique:users|max:255',
             'mobile_phone' => 'numeric|digits_between:8,12|nullable',
             'work_phone' => 'numeric|digits_between:8,12|nullable',
             'skype' => 'max:255|nullable|unique:users'
         ]);
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 402);
+            return response()->json(['error' => $validator->errors(), 'status' => false]);
         }
+        $user->fill($data)->save();
 
-        $user->update($request->all());
+        return response()->json(['data' => $data, 'status' => true]);
 
-        return response()->json(['data' => $user, 'status' => 200]);
     }
 
     public function destroy($id)
