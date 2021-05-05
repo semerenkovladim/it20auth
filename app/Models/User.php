@@ -32,6 +32,7 @@ class User extends Authenticatable
         'is_admin',
         'department_id',
         'password',
+        'code'
     ];
 
     /**
@@ -42,11 +43,18 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'twostep_code',
+        'code'
     ];
 
     public function department(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Department::class);
+    }
+
+    public function setting(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Setting::class);
     }
 
     public function access_level(): \Illuminate\Database\Eloquent\Relations\HasOne

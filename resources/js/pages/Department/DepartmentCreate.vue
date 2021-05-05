@@ -1,48 +1,61 @@
 <template>
-    <div class="container">
-        <div class="row box-header">
-            <nav aria-label="breadcrumb" class="col-12 bg-white">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <router-link to="#">Управление</router-link>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <router-link to="#">Отделы</router-link>
-                    </li>
-                    <li class="breadcrumb-item" aria-current="page">Отдел разработки проектов</li>
-                </ol>
-            </nav>
-            <div class="container-title col-12 bg-white">Редактирование отдела</div>
+    <main class="departments_management">
+        <div class="container-fluid departments_management__container">
+            <div class="col">
+                <div class="row departments_management__header">
+                    <div class="col-12 breadcrumbs">
+                        <nav>
+                            <ul>
+                                <li>
+                                    <a href="#">Управление</a>
+                                </li>
+                                <li>
+                                    <a href="#">Отделы</a>
+                                </li>
+                                <li>
+                                    <a href="#">Отдел разработки проектов</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="col-12 departments_management__header-title">
+                        Редактирование отдела
+                    </div>
+                </div>
+                    <div class="row departments_create__container">
+                        <div class="col-12 box-form">
+                            <form action="#" method="post">
+                                <ul>
+                                    <li>
+                                        <label for="name">Название:</label>
+                                        <input type="text" id="name">
+                                    </li>
+                                    <li>
+                                        <label for="lead">Руководитель:</label>
+                                        <select type="text" id="lead">
+                                            <option value="1"></option>
+                                            <option value="2">Иванов Сергей Андреевич</option>
+                                            <option value="3">Петров Ивано Сергеевич</option>
+                                            <option value="4">Сергеев Петр Иванович</option>
+                                        </select>
+                                    </li>
+                                    <li class="anchor_Modal">
+                                        <label for="workersCtr">Количество сотрудников:</label>
+                                        <input type="text" id="workersCtr" class="workersCtr" placeholder="16" readonly @click="showWorkers">
+                                        <department-workers-list v-if="isActiveWorkersList" @close="isActiveWorkersList = false"/>
+                                    </li>
+                                    <li class="form-btns">
+                                        <button type="submit" class="btnSave">Сохранить</button>
+                                        <button type="reset" class="btnCancel">Отмена</button>
+                                    </li>
+                                </ul>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="box-form bg-white">
-            <form action="#" method="post">
-                <ul>
-                    <li>
-                        <label for="name">Название:</label>
-                        <input type="text" id="name">
-                    </li>
-                    <li>
-                        <label for="lead">Руководитель:</label>
-                        <select type="text" id="lead">
-                            <option value="1"></option>
-                            <option value="2">Иванов Сергей Андреевич</option>
-                            <option value="3">Петров Ивано Сергеевич</option>
-                            <option value="4">Сергеев Петр Иванович</option>
-                        </select>
-                    </li>
-                    <li>
-                        <label for="workersCtr">Количество сотрудников:</label>
-                        <input type="text" id="workersCtr" class="workersCtr" placeholder="16" readonly @click="showWorkers">
-                    </li>
-                    <li class="form-btns">
-                        <button type="submit" class="btnSave">Сохранить</button>
-                        <button type="reset" class="btnCancel">Отмена</button>
-                    </li>
-                </ul>
-            </form>
-        </div>
-        <department-workers-list v-if="isActiveWorkersList" @close="isActiveWorkersList = false"/>
-    </div>
+    </main>
 </template>
 
 <script>
@@ -66,59 +79,71 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import "resources/sass/variables";
+
 * {
-    font-family: 'Roboto', sans-serif;
-    font-weight: bold;
+    font-family: $depManagementFF;
+    transition: 0.4s ease;
+    font-style: normal;
 }
-.container {
-    background-color: #F5F5F5;
-    padding: 7px 18px 10px 10px;
+
+.departments_management {
+    background-color: #fafafa;
+    padding-top: 7px;
+    min-height: 100vh;
 }
-.box-header {
-    padding: 5px 0 7px 15px;
-    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+
+.departments_management__header {
+    align-items: center;
+    min-height: 103px;
+    margin-bottom: 10px;
+    padding: 14px 7px;
     border-radius: 6px;
-}
-.breadcrumb{
-    border-radius: 6px 6px 0 0;
-}
-.breadcrumb,
-.breadcrumb a {
-    padding-left: 0;
+    box-shadow: $depBoxShadow;
     background-color: #FFFFFF;
-    color: #CCCCCC;
-    font-size: 13px;
 }
-.breadcrumb-item + .breadcrumb-item::before {
-    border-style: solid;
-    border-width: 2px 2px 0 0;
-    content: '';
-    display: inline-block;
-    height: 8px;
-    left: -5px;
-    position: relative;
-    top: 7px;
-    transform: rotate(45deg);
-    width: 8px;
-    color: #D8D8D8;
-    padding: 0;
+
+.breadcrumbs {
+    nav {
+        margin-left: 0;
+    }
+
+    li {
+        &::after {
+            content: '';
+            display: inline-block;
+            position: relative;
+            height: 10px;
+            width: 10px;
+            top: 1px;
+            left: -5px;
+            transform: rotate(45deg);
+            padding: 0;
+            margin: 0 13px;
+            border-style: solid;
+            border-width: 2px 2px 0 0;
+            color: #D8D8D8;
+        }
+
+        &:last-child::after {
+            display: none;
+        }
+    }
 }
-.breadcrumb li {
-    padding: 0 0 0 5px;
-}
-.breadcrumb li:first-child {
-    padding: 0 5px 0 0;
-}
-.container-title {
-    color: #808080;
+
+.departments_management__header-title {
+    display: flex;
+    align-items: center;
+    min-height: 90px;
     font-weight: 300;
     font-size: 36px;
-    padding-left: 13px;
-    border-radius: 0 0 6px 6px;
+    color: #808080;
 }
+
 .box-form {
     margin-top: 53px;
+    background: #FFFFFF;
 }
 form {
     font-family: 'Roboto', sans-serif;
@@ -149,9 +174,12 @@ form select{
     width: 377px;
     margin-bottom: 30px;
 }
+.anchor_Modal {
+    position: relative;
+}
 .workersCtr {
     padding-left: 25px;
-    background: url("/resources/images/icons/ic_remove_red_eye.svg") no-repeat top 50% right 25px;
+    background: url("/images/eye.svg") no-repeat center right 15px;
     cursor: pointer;
 }
 .form-btns {

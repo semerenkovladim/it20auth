@@ -34,10 +34,32 @@
                             </g>
                         </svg>
                     </div>
-                    <div class="reset-password">
-                        <a href="/login/repair-password">Забыли пароль?</a>
+                    <div class="form-group">
+                        <div class="subtitle">Воспользуйтесь одним из двух вариантов подтверждения:</div>
+                        <div class="flex justify-content-between align-items-end">
+                            <button class="give-code" @click.prevent="getEmailCode">ПОЛУЧИТЬ КОД</button>
+                            <div class="reserved-password password">
+                                <label for="inputReservedPassword">Ввести резервный пароль:</label>
+                                <input type="password" class="form-control" id="inputReservedPassword" aria-describedby="emailHelp"
+                                       placeholder="Резервный пароль:"
+                                       v-model="reservedPassword"
+                                       name="reservedPassword">
+                                <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                     @mousedown.prevent="showReservedPassword"
+                                     @mouseup.prevent="hideReservedPassword"
+                                     @touchstart.prevent="showReservedPassword"
+                                     @touchend.prevent="hideReservedPassword" v-if="showIconReservedPassword">
+                                    <mask id="mask0" mask-type="alpha" maskUnits="userSpaceOnUse" x="4" y="7" width="22" height="16">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M15 7.5C10 7.5 5.73 10.61 4 15C5.73 19.39 10 22.5 15 22.5C20 22.5 24.27 19.39 26 15C24.27 10.61 20 7.5 15 7.5ZM15 20C12.24 20 10 17.76 10 15C10 12.24 12.24 10 15 10C17.76 10 20 12.24 20 15C20 17.76 17.76 20 15 20ZM15 12C13.34 12 12 13.34 12 15C12 16.66 13.34 18 15 18C16.66 18 18 16.66 18 15C18 13.34 16.66 12 15 12Z" fill="white"/>
+                                    </mask>
+                                    <g mask="url(#mask0)">
+                                        <rect x="2" y="2" width="26" height="26" fill="#D8D8D8"/>
+                                    </g>
+                                </svg>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group d-flex flex-row btn-form-group">
+                    <div class="form-group flex btn-form-group">
                         <button @click.prevent="login">Войти</button>
                         <button class="cancel" @click.prevent="clearAll">Отмена</button>
                     </div>
@@ -51,12 +73,14 @@
 import {mapActions} from "vuex";
 
 export default {
-    name: "TheLogin",
+    name: "TheLoginTwoFactor",
     data() {
         return {
             email: '',
             password: '',
-            showIconPassword: false,
+            reservedPassword: '',
+            showIconPassword: true,
+            showIconReservedPassword: false,
             hasError: false,
         };
     },
@@ -72,29 +96,51 @@ export default {
         hidePassword() {
             document.querySelector('input[name=password]').setAttribute('type', 'password');
         },
+        showReservedPassword() {
+            document.querySelector('input[name=reservedPassword]').setAttribute('type', 'text');
+        },
+        hideReservedPassword() {
+            document.querySelector('input[name=reservedPassword]').setAttribute('type', 'password');
+        },
         clearAll() {
             this.email = '';
             this.password = '';
             this.hasError = false;
+            this.reservedPassword = '';
         },
         login() {
             const payload = {
                 'password': this.password.trim(),
-                'email': this.email.trim()
+                'email': this.email.trim(),
+                'reservedPassword': this.reservedPassword.trim(),
             }
-            axios.post('/api/login', payload).then((response) => {
+            axios.post('/api/login/reserved-password', payload).then((response) => {
                 this.hasError = false;
                 this.saveUserFromServer(response.data.user);
                 this.saveAccessFromServer(response.data.token);
                 this.saveRefreshFromServer(response.data.refresh_token);
                 this.$router.push('/home');
             }).catch((e) => {
-                if(e.response.status === 403) {
-                    this.$router.push({ name: 'login.two-step', params: { email: this.email, password: this.password } });
-                }
+                this.hasError = true;
+            })
+        },
+        getEmailCode() {
+            const payload = {
+                'password': this.password.trim(),
+                'email': this.email.trim(),
+            }
+            axios.post('/api/login/get-code', payload).then((response) => {
+                this.hasError = false;
+                this.$router.push({ name: 'login.code', params: { email: this.email, password: this.password } });
+            }).catch((e) => {
                 this.hasError = true;
             })
         }
+    },
+    created() {
+        this.email = this.$route.params.email;
+        this.password = this.$route.params.password;
+        this.showIconPassword = true;
     },
     watch: {
         password() {
@@ -162,12 +208,16 @@ export default {
     box-shadow: none;
 }
 form button {
-    display: block;
     background: #1875F0;
     border: 2px solid #F5F5F5;
     box-sizing: border-box;
     border-radius: 4px;
-    padding: 15px 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    width: 170px;
+    height: 50px;
     font-family: 'Roboto', sans-serif;
     font-style: normal;
     font-weight: 900;
@@ -200,11 +250,12 @@ form button {
 .has-error label {
     color: #FF0000;
 }
-.has-error .btn-form-group {
-    justify-content: space-around;
-}
 .btn-form-group {
     justify-content: center;
+    margin-top: 40px;
+}
+.btn-form-group button {
+    margin: 0 13px;
 }
 .cancel {
     font-style: normal;
@@ -214,21 +265,46 @@ form button {
     letter-spacing: 1.5px;
     text-transform: uppercase;
     color: #B3B3B3;
-    padding: 15px 40px;
     background: #FFFFFF;
     border: 2px solid #F5F5F5;
     box-sizing: border-box;
     border-radius: 4px;
-    display: none;
+    display: flex;
+}
+.give-code {
+    font-style: normal;
+    font-weight: 900;
+    font-size: 12px;
+    text-align: center;
+    text-transform: uppercase;
+    color: #B3B3B3;
+    background: #FFFFFF;
+    border: 2px solid #F5F5F5;
+    box-sizing: border-box;
+    border-radius: 4px;
 }
 .has-error .error-wrapper {
     display: block;
 }
 .has-error .cancel {
-    display: block;
+    display: flex;
 }
 .error-wrapper {
     display: none;
+}
+.reserved-password {
+    flex: 60% 0 0;
+}
+.reserved-password input {
+    width: 100%;
+}
+.subtitle {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    text-align: center;
+    color: #666666;
+    margin: 20px 0;
 }
 @media screen and (max-width: 1023.99px) {
     .form-wrapper {

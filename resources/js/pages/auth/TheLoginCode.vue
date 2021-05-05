@@ -34,8 +34,22 @@
                             </g>
                         </svg>
                     </div>
-                    <div class="reset-password">
-                        <a href="/login/repair-password">Забыли пароль?</a>
+                    <div :class="{'form-group': true, 'incorrect-code': incorrectCode}">
+                        <div class="row justify-content-between align-items-end">
+                            <div class=" col-12 col-lg-8 col-xl-7">
+                                <label for="inputCode">Код подтверждения:</label>
+                                <div class="error-msg">Вы ввели неверный код или срок его действия уже истек</div>
+                                <input type="text" class="form-control" id="inputCode"
+                                       aria-describedby="emailHelp"
+                                       placeholder="Код подтверждения:"
+                                       name="code"
+                                       v-model="twostep_code">
+                            </div>
+                            <div class="btn-resend col-12 col-lg-4 col-xl-5">
+                                <div class="text-resend" v-if="!hideTextBtn">Станет доступно через: {{ countSecond }} сек.</div>
+                                <button :class="{cancel: true, 'active-btn': !disableButton}" @click.prevent="resendCode" :disabled="disableButton">Отправить повторно</button>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group d-flex flex-row btn-form-group">
                         <button @click.prevent="login">Войти</button>
@@ -51,13 +65,18 @@
 import {mapActions} from "vuex";
 
 export default {
-    name: "TheLogin",
+    name: "TheLoginCode",
     data() {
         return {
+            disableButton: true,
+            countSecond: 60,
+            hasError: false,
+            hideTextBtn: false,
             email: '',
             password: '',
-            showIconPassword: false,
-            hasError: false,
+            showIconPassword: true,
+            twostep_code: '',
+            incorrectCode: false,
         };
     },
     methods: {
@@ -66,6 +85,20 @@ export default {
             'saveAccessFromServer',
             'saveRefreshFromServer'
         ]),
+        startTimer() {
+            this.countSecond = 60;
+            this.disableButton = true;
+            this.hideTextBtn = false;
+            const timer = setInterval(() => {
+                if(this.countSecond > 0) {
+                    this.countSecond--
+                } else {
+                    clearInterval(timer)
+                    this.disableButton = false;
+                    this.hideTextBtn = true;
+                }
+            }, 1000);
+        },
         showPassword() {
             document.querySelector('input[name=password]').setAttribute('type', 'text');
         },
@@ -76,31 +109,59 @@ export default {
             this.email = '';
             this.password = '';
             this.hasError = false;
+            this.countSecond = 60;
+            this.disableButton = true;
+            this.hideTextBtn = false;
+            this.code = '';
         },
         login() {
             const payload = {
-                'password': this.password.trim(),
-                'email': this.email.trim()
+                email: this.email.trim(),
+                password: this.password.trim(),
+                twostep_code: this.twostep_code,
             }
-            axios.post('/api/login', payload).then((response) => {
+
+            axios.post('/api/login/login-code', payload).then((response) => {
                 this.hasError = false;
                 this.saveUserFromServer(response.data.user);
                 this.saveAccessFromServer(response.data.token);
                 this.saveRefreshFromServer(response.data.refresh_token);
                 this.$router.push('/home');
             }).catch((e) => {
-                if(e.response.status === 403) {
-                    this.$router.push({ name: 'login.two-step', params: { email: this.email, password: this.password } });
+                this.incorrectCode = true;
+            })
+        },
+        resendCode() {
+            const payload = {
+                'password': this.password.trim(),
+                'email': this.email.trim(),
+            }
+
+            axios.post('/api/login/get-code', payload).then((response) => {
+                this.hasError = false;
+                this.startTimer();
+            }).catch((e) => {
+                if(e.response.code === 403) {
+                    this.incorrectCode = true;
+                } else {
+                    this.hasError = true;
                 }
-                this.hasError = true;
             })
         }
+    },
+    mounted() {
+        this.startTimer()
     },
     watch: {
         password() {
             this.showIconPassword = this.password.length > 0;
         }
-    }
+    },
+    created() {
+        this.email = this.$route.params.email;
+        this.password = this.$route.params.password;
+        this.showIconPassword = true;
+    },
 }
 </script>
 
@@ -161,13 +222,16 @@ export default {
     border: 2px solid #F5F5F5;
     box-shadow: none;
 }
-form button {
-    display: block;
+form button, .btn-resend .active-btn {
     background: #1875F0;
     border: 2px solid #F5F5F5;
     box-sizing: border-box;
     border-radius: 4px;
-    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 170px;
+    height: 50px;
     font-family: 'Roboto', sans-serif;
     font-style: normal;
     font-weight: 900;
@@ -196,6 +260,10 @@ form button {
     text-align: center;
     color: #FF0000;
     margin-bottom: 10px;
+    display: none;
+}
+.incorrect-code .error-msg {
+    display: block;
 }
 .has-error label {
     color: #FF0000;
@@ -229,6 +297,35 @@ form button {
 }
 .error-wrapper {
     display: none;
+}
+.subtitle-form {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 30px;
+    text-align: center;
+    color: #666666;
+
+}
+.has-error .subtitle-form {
+    display: none;
+}
+.btn-resend button, .btn-resend .active-btn {
+    width: 170px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.text-resend {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 30px;
+    text-align: left;
+    color: #666666;
 }
 @media screen and (max-width: 1023.99px) {
     .form-wrapper {
