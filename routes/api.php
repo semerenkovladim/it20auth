@@ -22,6 +22,7 @@ use App\Http\Controllers\API\AccessLevelController;
 
 Route::post('/login', [AuthController::class, 'baseAuth']);
 Route::post('/login/get-code', [AuthController::class, 'createAuthCode']);
+Route::post('/login/reserved-password', [AuthController::class, 'loginWithPassword']);
 Route::post('/login/login-code', [AuthController::class, 'loginWithCode']);
 Route::post('/login/resend-code', [AuthController::class, 'loginWithCode']);
 Route::post('/login/repair-password', [ResetPasswordController::class, 'sendCode']);

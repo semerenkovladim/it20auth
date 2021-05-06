@@ -345,6 +345,30 @@
             <button class="cancel" @click.prevent="clearAll">Отмена</button>
         </div>
     </form>
+    <!-- Modal -->
+    <div class="modal fade" id="saveSettings" data-bs-keyboard="false" tabindex="-1" aria-labelledby="saveSettingsLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="saveSettingsLabel">Изменение настроект</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <mask id="mask13" mask-type="alpha" maskUnits="userSpaceOnUse" x="8" y="8" width="14" height="14">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M22 9.41L20.59 8L15 13.59L9.41 8L8 9.41L13.59 15L8 20.59L9.41 22L15 16.41L20.59 22L22 20.59L16.41 15L22 9.41Z" fill="white"/>
+                            </mask>
+                            <g mask="url(#mask13)">
+                                <rect x="2" y="2" width="26" height="26" fill="#D8D8D8"/>
+                            </g>
+                        </svg>
+
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Ваши настройки успешно сохранены
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </template>
 
@@ -402,6 +426,7 @@ export default {
             }).then((response) => {
                 console.log(response.data);
                 this.saveUserFromServer(response.data);
+                this.openModal('saveSettings');
             });
         },
         clearAll() {
