@@ -1,14 +1,28 @@
 <template>
     <div class="user_edit_form col-12">
-        <form action="#" method="post" class="row user_edit_form__form">
+        <Message @confirmEvent="cancelUser(userData)"></Message>
+        <form action="#"
+              method="post"
+              class="row user_edit_form__form"
+              enctype="multipart/form-data">
             <div class="col-12 edit_form__title">Общая информация</div>
             <div class="col-12">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="label_wrapper">
                             <label class="edit_form__label img_input_label">
-                                <input type="file" accept="image/*" class="d-none">
-<!--                                <img src="#" :alt="userData.lastName + ' ' + userData.firstName + ' фото'">-->
+                                <input type="file"
+                                       accept="image/*"
+                                       name="image"
+                                       ref="file"
+                                       class="d-none"
+                                       @change="handleFileUpload(userData)">
+                                <img :src="userData.data.avatar"
+                                     :alt="userData.data.surname + ' ' + userData.data.name + ' фото'"
+                                     v-if="userData.data.avatar">
+                                <span class="short-fio" v-else>{{
+                                        shortFio(userData.data.surname, userData.data.name)
+                                    }}</span>
                             </label>
                         </div>
                     </div>
@@ -16,7 +30,8 @@
                         <label class="edit_form__label">
                             <span class="input_title">Дата рождения:</span>
                             <input type="date" class="styled"
-                                   v-model="userData.dateOfBirth">
+                                   v-model="userData.data.birth"
+                                   required>
                         </label>
                     </div>
                 </div>
@@ -25,38 +40,41 @@
                 <label class="edit_form__label">
                     <span class="input_title">Фамилия:</span>
                     <input type="text" class="styled"
-                           v-model="userData.lastName">
+                           v-model="userData.data.surname"
+                           maxlength="100">
                 </label>
                 <label class="edit_form__label">
                     <span class="input_title">Имя:</span>
                     <input type="text" class="styled"
-                           v-model="userData.firstName">
+                           v-model="userData.data.name"
+                           maxlength="100">
                 </label>
                 <label class="edit_form__label">
                     <span class="input_title">Отчество:</span>
                     <input type="text" class="styled"
-                           v-model="userData.patronymic">
+                           v-model="userData.data.middle_name"
+                           maxlength="100">
                 </label>
             </div>
             <div class="col-md-6">
                 <label class="edit_form__label">
                     <span class="input_title">Отдел:</span>
                     <select name="department" class="styled">
-                        <option :value="userData.department">{{ userData.department }}</option>
+                        <option value="1">{{ userData.data.department_id }}</option>
                         <option value="...">...</option>
                     </select>
                 </label>
                 <label class="edit_form__label">
                     <span class="input_title">Должность:</span>
-                    <select name="position" class="styled">
-                        <option :value="userData.position ">{{ userData.position }}</option>
+                    <select name="position" class="styled" required>
+                        <option :value="userData.data.position ">{{ userData.data.position }}</option>
                         <option value="...">...</option>
                     </select>
                 </label>
                 <label class="edit_form__label">
                     <span class="input_title">Дата начала работы:</span>
                     <input type="date" class="styled"
-                           v-model="userData.dateOfCommencementOfWork">
+                           v-model="userData.data.date_start">
                 </label>
             </div>
             <div class="col-12">
@@ -71,8 +89,8 @@
                                    name="admin_perm"
                                    value="false"
                                    class="input_checkbox"
-                                   @click="userData.admin = true"
-                                   :checked="userData.admin">
+                                   @click="userData.data.is_admin = true"
+                                   :checked="userData.data.is_admin">
                         </label>
                         <label class="edit_form__label radio_label">
                             <span class="input_title">Нет</span>
@@ -80,8 +98,8 @@
                                    name="admin_perm"
                                    value="true"
                                    class="input_checkbox"
-                                   @click="userData.admin = false"
-                                   :checked="!userData.admin">
+                                   @click="userData.data.is_admin = false"
+                                   :checked="!userData.data.is_admin">
                         </label>
                     </div>
                 </div>
@@ -91,30 +109,46 @@
                 <label class="edit_form__label">
                     <span class="input_title">E-mail</span>
                     <input type="email" class="styled"
-                           v-model="userData.email">
+                           v-model="userData.data.email"
+                           maxlength="255"
+                           required>
                 </label>
                 <label class="edit_form__label">
                     <span class="input_title">Skype:</span>
                     <input type="text" class="styled"
-                           v-model="userData.skype">
+                           v-model="userData.data.skype"
+                           maxlength="255"
+                    >
                 </label>
             </div>
             <div class="col-md-6">
                 <label class="edit_form__label">
                     <span class="input_title">Мобильный телефон:</span>
                     <input type="tel" class="styled"
-                           v-model="userData.phone">
+                           v-model="userData.data.mobile_phone"
+                           maxlength="12"
+                           minlength="10">
                 </label>
                 <label class="edit_form__label">
                     <span class="input_title">Рабочий телефон:</span>
                     <input type="tel" class="styled"
-                           v-model="userData.wPhone">
+                           v-model="userData.data.work_phone"
+                           maxlength="12"
+                           minlength="10">
                 </label>
             </div>
             <div class="col-12">
-                <div class="btn_wrapper">
-                    <ConfirmBtn :text="confirm"></ConfirmBtn>
-                    <CancelBtn></CancelBtn>
+                <div class="btn_wrapper" v-if="$route.path === '/users-management/user-edit'">
+                    <ConfirmBtn :text="confirm2"
+                                @confirmEvent="updateUser(userData)">
+                    </ConfirmBtn>
+                    <CancelBtn @cancelEvent="$router.push('/users-management')"></CancelBtn>
+                </div>
+                <div class="btn_wrapper" v-if="$route.path === '/users-management/new-user'">
+                    <ConfirmBtn :text="confirm"
+                                @confirmEvent="createUser(userData)">
+                    </ConfirmBtn>
+                    <CancelBtn @cancelEvent="cancelUser(userData)"></CancelBtn>
                 </div>
             </div>
         </form>
@@ -124,33 +158,90 @@
 <script>
 import ConfirmBtn from "../../buttons/ConfirmBtn";
 import CancelBtn from "../../buttons/CancelBtn";
+import Message from "../../message/Message";
+import {mapActions} from "vuex";
 
 export default {
     name: "UserEditForm",
     props: ['data'],
     components: {
         CancelBtn,
-        ConfirmBtn
+        ConfirmBtn,
+        Message
+
     },
     data() {
         return {
             confirm: 'Сохранить',
-            userData: {
-                img: this.data.img,
-                firstName: this.data.firstName,
-                lastName: this.data.lastName,
-                patronymic: this.data.patronymic,
-                dateOfBirth: this.data.dateOfBirth,
-                department: this.data.department,
-                position: this.data.position,
-                dateOfCommencementOfWork: this.data.dateOfCommencementOfWork,
-                admin: this.data.admin,
-                email: this.data.email,
-                phone: this.data.phone,
-                wPhone: this.data.wPhone,
-                skype: this.data.skype
-            }
+            confirm2: 'Изменить',
+            imgChange: false,
+            userData: this.$props,
+            userId: 0
         }
+    },
+    methods: {
+        ...mapActions([
+            'getUMMessage'
+        ]),
+        createUser(data) {
+            // console.log('data',data)
+            return axios.post('/api/user/create', data.data)
+                .then(value => {
+                    // console.log('value', value.data)
+                    this.getUMMessage(value)
+                    if (value.data.status) {
+                        this.userId = value.data.data.id
+                        axios.post('/api/user/permission/create', {
+                            user_id: value.data.data.id
+                        })
+                    }
+                })
+                // .catch(reason => {
+                //     let error = 'error'
+                //     this.getUMMessage(error)
+                // })
+
+        },
+        updateUser(data) {
+            return axios.put('/api/user/update/' + data.id, data.data)
+                .then(value => {
+                    // console.log(value)
+                    this.getUMMessage(value)
+                })
+                .catch(reason => {
+                    // console.log(reason)
+                    this.getUMMessage('error')
+                })
+        },
+        cancelUser(data) {
+            // // console.log('cancelUser',data)
+            // for (let key of Object.keys(data)) {
+            //     data[key] = ''
+            // }
+        },
+        handleFileUpload(data) {
+            // console.log('data', data)
+            // console.log('handleFileUpload', this.$refs.file.files[0])
+            if (data.data.avatar !== this.$refs.file.files[0] && this.$refs.file.files[0]) {
+                this.imgChange = true
+                data.data.avatar = this.$refs.file.files[0];
+                this.saveImg(data.data.avatar, data)
+            }
+        },
+        saveImg(image, data) {
+            let formData = new FormData();
+            formData.append('file', image)
+            // console.log('formData', formData.get('file'))
+            return axios.post('/api/image/upload/avatar', formData)
+                .then(value => {
+                    data.data.avatar = value.data.path
+                })
+        },
+        shortFio(last, first) {
+            if (last && first) return last.slice(0, 1) + '.' + first.slice(0, 1)
+
+        },
+
     }
 }
 </script>
@@ -168,6 +259,7 @@ export default {
         display: flex;
         align-items: center;
     }
+
     .input_title {
         font-weight: 500;
         font-size: 14px;
@@ -190,7 +282,28 @@ export default {
             width: fit-content;
             padding-right: 15px;
         }
+    }
 
+    .short-fio {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: flex;
+        width: 100%;
+        height: 100%;
+        flex: 1 1 100%;
+        justify-content: center;
+        align-items: center;
+        font-weight: 600;
+        color: #FFFFFF;
+        font-size: 42px;
+        text-transform: uppercase;
+        transition: none;
+
+        &:hover {
+            color: transparent;
+            opacity: 0;
+        }
     }
 
     .btn_wrapper {
@@ -212,7 +325,21 @@ export default {
         padding-top: 100%;
         position: relative;
         overflow: hidden;
-        background: url('../../../../images/users_img/user_demo_img.png') no-repeat center / cover;
+        transition: none;
+        background: rgba(76, 75, 75, 0.5);
+
+        &:hover {
+            &:after {
+                top: 0;
+                left: 0;
+                position: absolute;
+                content: '';
+                display: block;
+                width: 100%;
+                height: 100%;
+                background: url("../../../../images/icons/ic_camera_alt.png") no-repeat center / 30%, darken(rgba(76, 75, 75, 0.6), 15%);
+            }
+        }
 
         img {
             position: absolute;
@@ -220,13 +347,12 @@ export default {
             left: 0;
             width: 100%;
             height: 100%;
-            //object-fit: cover;
+            object-fit: cover;
 
         }
 
         img[alt] {
             font-size: 12px;
-            padding-top: 40%;
             text-align: center;
         }
     }

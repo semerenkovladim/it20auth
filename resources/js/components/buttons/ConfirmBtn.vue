@@ -29,6 +29,9 @@ export default {
     background: $designColorOne;
     color: #FFFFFF;
     margin-right: 10px;
+    &:hover {
+        background: darken($designColorOne, 5%);
+    }
 }
 .btn_wrapper {
     display: flex;

@@ -5,7 +5,7 @@
                 <li class="breadcrumbs-item"
                     v-for="link in links"
                     :key="link.id">
-                    <a :href="link.href">{{link.name}}</a>
+                    <router-link :to="link.href">{{ link.name }}</router-link>
                 </li>
             </ul>
         </nav>
@@ -15,7 +15,7 @@
 <script>
 export default {
     name: "Breadcrumbs",
-    props:['links']
+    props: ['links']
 }
 </script>
 
@@ -25,6 +25,10 @@ export default {
 .breadcrumbs {
     font-weight: 500;
     font-size: 13px;
+
+    nav {
+        margin-left: 0;
+    }
 
     ul {
         display: flex;

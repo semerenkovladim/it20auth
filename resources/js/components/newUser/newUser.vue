@@ -1,5 +1,5 @@
 <template>
-    <main class="users_management new_user">
+    <main class="row users_management new_user">
         <div class="container-fluid users_management__container user_edit__container">
             <div class="wrapper col">
                 <Placeholder :links="links"
@@ -44,15 +44,18 @@ export default {
                 {
                     id: 2,
                     name: 'Пользователи',
-                    href: '#'
+                    href: '/users-management'
                 },
                 {
                     id: 3,
                     name: 'Новый пользователь',
-                    href: '#'
+                    href: '/users-management/new-user'
                 },
             ],
-            userData: ''
+            userData: {
+                position: 'developer',
+                avatar:''
+            }
         }
     },
     computed: {
