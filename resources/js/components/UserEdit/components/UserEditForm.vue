@@ -67,7 +67,7 @@
                 <label class="edit_form__label">
                     <span class="input_title">Должность:</span>
                     <select name="position" class="styled" required>
-                        <option :value="userData.data.position ">{{ userData.data.position }}</option>
+                        <option value="1">{{ userData.data.position }}</option>
                         <option value="...">...</option>
                     </select>
                 </label>
@@ -175,7 +175,11 @@ export default {
             confirm: 'Сохранить',
             confirm2: 'Изменить',
             imgChange: false,
-            userData: this.$props,
+            userData: {
+                data: {
+                    is_admin: false
+                }
+            },
             userId: 0
         }
     },
@@ -205,10 +209,13 @@ export default {
                 })
         },
         cancelUser(data) {
-            // // console.log('cancelUser',data)
-            // for (let key of Object.keys(data)) {
-            //     data[key] = ''
-            // }
+            if (data.data) {
+                for (let key of Object.keys(data.data)) {
+                    data.data[key] = ''
+                }
+            } else {
+                this.$router.push('/users-management')
+            }
         },
         handleFileUpload(data) {
             if (data.data.avatar !== this.$refs.file.files[0] && this.$refs.file.files[0]) {
@@ -229,7 +236,12 @@ export default {
             if (last && first) return last.slice(0, 1) + '.' + first.slice(0, 1)
 
         },
-
+        setData() {
+            this.userData.data = this.data
+        }
+    },
+    mounted() {
+        this.setData()
     }
 }
 </script>
