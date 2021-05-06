@@ -3,6 +3,7 @@
         <nav aria-label="Page navigation">
             <ul class="paginator">
                 <li class="paginator_item paginator__prev"
+                    :class="page <= 1 ? 'disabled':''"
                     @click="prevPage"></li>
                 <li class="paginator_item"
                     v-for="page in data.last_page"
@@ -11,6 +12,7 @@
                     @click="toPage(page)">{{ page }}
                 </li>
                 <li class="paginator_item paginator__next"
+                    :class="page >= data.last_page? 'disabled':''"
                     @click="nextPage"></li>
             </ul>
         </nav>
@@ -95,6 +97,14 @@ export default {
             background-color: #FAFAFA;
         }
 
+    }
+
+    .disabled {
+        opacity: 0.5;
+
+        &:hover {
+            background-color: #FFFFFF;
+        }
     }
 
     .paginator__prev {

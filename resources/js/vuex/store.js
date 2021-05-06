@@ -79,7 +79,6 @@ const store = new Vuex.Store({
     actions: {
         //управление пользователями
         getUMMessage({commit}, message) {
-            // console.log('getUMMessage', message)
             commit('setUMMessage', message)
         },
         hideUMMessage({commit}) {
@@ -94,7 +93,7 @@ const store = new Vuex.Store({
         async getUMAllUsers({commit}, page = 1) {
             axios.get(USERS_LINK, {
                 params: {
-                    page: page.page
+                    page: page
                 }
             })
                 .then(value => {
@@ -105,6 +104,19 @@ const store = new Vuex.Store({
                         this.getUMMessage(reason)
                     }
                 )
+        },
+        async getUsersInDepartment({commit}, data = {id: 1, page: 1}) {
+            return axios.get('/api/users/' + data.id, {
+                params: {
+                    page: data.page
+                }
+            })
+                .then(value => {
+                    commit('setUMUsers', value.data.data)
+                })
+                .catch(reason => {
+                    this.getUMMessage(reason)
+                })
         },
         changeUMPersonalDataStatus({commit}, status) {
             commit('setUMPersonalDataStatus', status)
