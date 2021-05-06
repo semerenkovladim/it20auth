@@ -19,7 +19,7 @@
                             </svg>
                             <!-- Modal -->
                             <div class="modal fade" id="mainPassword" data-bs-keyboard="false" tabindex="-1" aria-labelledby="mainPasswordLabel" aria-hidden="true">
-                                <div class="modal-dialog">
+                                <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="mainPasswordLabel">Смена пароля</h5>
@@ -105,7 +105,7 @@
                             </svg>
                             <!-- Modal -->
                             <div class="modal fade" id="twoFactor" data-bs-keyboard="false" tabindex="-1" aria-labelledby="twoFactorLabel" aria-hidden="true">
-                                <div class="modal-dialog">
+                                <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="staticBackdropLabel">Двухэтапная аутентификация</h5>
@@ -134,8 +134,10 @@
                         <div class="title-list">Резервный пароль</div>
                         <div class="subaction">
                             <label>
-                                <span class="checkbox checkbox-active" @click="toogleCheckbox">Включена</span>
-                                <input type="checkbox" hidden>
+                                <span
+                                    :class="{'checkbox': true, 'checkbox-active': reservedPassword}"
+                                    @click="toogleCheckbox">{{ reservedPassword ? 'Включено' : 'Выключено' }}</span>
+                                <input type="checkbox" v-model="reservedPassword" hidden>
                             </label>
                         </div>
                         <div class="tooltip-icon">
@@ -149,7 +151,7 @@
                             </svg>
                             <!-- Modal -->
                             <div class="modal fade" id="reservedPassword" data-bs-keyboard="false" tabindex="-1" aria-labelledby="reservedPasswordLabel" aria-hidden="true">
-                                <div class="modal-dialog">
+                                <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="reservedPasswordLabel">Резервный пароль</h5>
@@ -190,7 +192,7 @@
                             </svg>
                             <!-- Modal -->
                             <div class="modal fade" id="reservedEmail" data-bs-keyboard="false" tabindex="-1" aria-labelledby="reservedEmailLabel" aria-hidden="true">
-                                <div class="modal-dialog">
+                                <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="reservedEmailLabel">Резервный email</h5>
@@ -236,8 +238,10 @@
                         <div class="title-list">Уведомления о подозрительных входах</div>
                         <div class="subaction">
                             <label>
-                                <span class="checkbox checkbox-active" @click="toogleCheckbox">Включена</span>
-                                <input type="checkbox" hidden>
+                                <span
+                                    :class="{'checkbox': true, 'checkbox-active': notification}"
+                                    @click="toogleCheckbox">{{ notification ? 'Включено' : 'Выключено' }}</span>
+                                <input type="checkbox" v-model="notification" hidden>
                             </label>
                         </div>
                         <div class="tooltip-icon">
@@ -251,7 +255,7 @@
                             </svg>
                             <!-- Modal -->
                             <div class="modal fade" id="dangerLoginAlert" data-bs-keyboard="false" tabindex="-1" aria-labelledby="dangerLoginAlertLabel" aria-hidden="true">
-                                <div class="modal-dialog">
+                                <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="dangerLoginAlertabel">Уведомления о подозрительных входах</h5>
@@ -279,10 +283,12 @@
                     </li>
                     <li class="flex justify-content-between align-items-center settings-item">
                         <div class="title-list" @click="openModal('reservedCode')">Кодовое слово при назначении пароля</div>
-                        <div class="subaction" @click="openModal('reservedCode')">
+                        <div class="subaction">
                             <label>
-                                <span class="checkbox checkbox-active" @click="toogleCheckbox">Включена</span>
-                                <input type="checkbox" hidden>
+                                <span
+                                    :class="{'checkbox': true, 'checkbox-active': codeWord}"
+                                    @click="toogleCheckbox">{{ codeWord ? 'Включено' : 'Выключено' }}</span>
+                                <input type="checkbox" v-model="codeWord" hidden>
                             </label>
                         </div>
                         <div class="tooltip-icon">
@@ -296,7 +302,7 @@
                             </svg>
                             <!-- Modal -->
                             <div class="modal fade" id="reservedCode" data-bs-keyboard="false" tabindex="-1" aria-labelledby="reservedCodeLabel" aria-hidden="true">
-                                <div class="modal-dialog">
+                                <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="reservedCodeLabel">Кодовое слово при восстановлении пароля</h5>
@@ -343,7 +349,7 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
     name: "AccountLogin",
@@ -354,15 +360,16 @@ export default {
             password: '',
             passwordRepeate: '',
             twofactor: false,
+            reservedPassword: false,
+            notification: false,
+            codeWord: false,
         }
     },
     methods: {
+        ...mapActions([
+            'saveUserFromServer',
+        ]),
         toogleCheckbox(event) {
-            if(this.twofactor) {
-                event.target.innerText = 'Выключено'
-            } else {
-                event.target.innerText = 'Включено'
-            }
             event.target.classList.toggle('checkbox-active');
         },
         openModal(id) {
@@ -385,18 +392,29 @@ export default {
         },
         save() {
             const data = {
-                twoFactor: this.twofactor
+                twoFactor: this.twofactor,
+                reservedPassword: this.reservedPassword
             }
             axios.post('/api/settings', data, {
                 headers: {
                     'Authorization': `Bearer ` + this.access_token
                 }
+            }).then((response) => {
+                console.log(response.data);
+                this.saveUserFromServer(response.data);
             });
+        },
+        clearAll() {
+            this.twofactor = this.user.setting.useTwoStepAuth;
+            this.reservedPassword = this.user.setting.useReservedPassword;
+            this.notification = this.user.setting.suspiciousLoginNotifications;
+            this.codeWord = this.user.setting.useCodeWord;
         }
     },
     computed: {
         ...mapGetters([
-            'access_token'
+            'access_token',
+            'user'
         ]),
     },
     watch: {
@@ -407,6 +425,12 @@ export default {
             this.showIconPasswordRepeate = this.passwordRepeate.length > 0;
         },
     },
+    created() {
+        this.twofactor = this.user.setting.useTwoStepAuth;
+        this.reservedPassword = this.user.setting.useReservedPassword;
+        this.notification = this.user.setting.suspiciousLoginNotifications;
+        this.codeWord = this.user.setting.useCodeWord;
+    }
 }
 </script>
 
@@ -416,7 +440,7 @@ export default {
     box-shadow: 0px 5px 30px rgba(0, 0, 0, 0.07);
     border-radius: 6px;
     margin-top: 13px;
-    padding: 0 8px;
+    padding: 8px;
     box-sizing: border-box;
     margin-bottom: 146px;
 }
@@ -431,17 +455,19 @@ export default {
 .list-settings > li:last-child {
     margin-bottom: 0;
 }
+.settings > li {
+    padding: 15px 40px;
+    border-bottom: 2px solid #F0F0F0;
+    cursor: pointer;
+}
 .settings > .title {
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
     color: #666666;
     text-align: left;
-    padding-bottom: 0;
-    padding-left: 40px;
 }
 .settings-item {
-    padding: 15px 0;
     border-bottom: 2px solid #F0F0F0;
     cursor: pointer;
 }
@@ -454,7 +480,6 @@ export default {
     font-size: 13px;
     color: #666666;
     flex: 20% 0 0;
-    padding-left: 40px;
 }
 .subaction {
     font-style: normal;
@@ -465,7 +490,10 @@ export default {
 }
 .checkbox {
     border-radius: 100px;
-    display: block;
+    display: flex;
+    width: 118px;
+    height: 30px;
+    align-items: center;
     font-style: normal;
     font-weight: 900;
     font-size: 12px;
@@ -473,7 +501,9 @@ export default {
     background: #666666;
     color: #FFFFFF;
     position: relative;
-    padding: 10px 22px 10px 32px;
+    box-sizing: border-box;
+    padding: 0 12px;
+    justify-content: flex-end;
     transition: all .5s ease-in-out;
 }
 .checkbox:before {
@@ -484,16 +514,17 @@ export default {
     border-radius: 100%;
     background: #FFFFFF;
     position: absolute;
-    left: 8%;
-    top: 9px;
+    left: 6px;
     transition: all .5s ease-in-out;
 }
 .checkbox-active {
-    padding: 10px 32px 10px 22px;
     background: #1875F0;
+    justify-content: flex-start;
+    padding: 0 24px;
 }
 .checkbox-active:before {
-    left: 75%;
+    right: 6px;
+    left: auto;
 }
 .btn-form-group {
     justify-content: center;
@@ -501,12 +532,15 @@ export default {
     padding-bottom: 14px;
 }
 .btn-form-group button {
-    display: block;
+    display: flex;
     background: #1875F0;
     border: 2px solid #F5F5F5;
     box-sizing: border-box;
     border-radius: 4px;
-    padding: 15px 40px;
+    width: 120px;
+    height: 50px;
+    justify-content: center;
+    align-items: center;
     font-family: 'Roboto', sans-serif;
     font-style: normal;
     font-weight: 900;
@@ -524,12 +558,10 @@ export default {
     letter-spacing: 1.5px;
     text-transform: uppercase;
     color: #B3B3B3;
-    padding: 15px 40px;
     background: #FFFFFF;
     border: 2px solid #F5F5F5;
     box-sizing: border-box;
     border-radius: 4px;
-    display: block;
 }
 .modal-title {
     font-style: normal;
@@ -537,9 +569,8 @@ export default {
     font-size: 18px;
     color: #666666;
 }
-.modal {
-    padding-left: 40px;
-    padding-bottom: 30px;
+.modal-content {
+    padding: 25px 10px 30px 40px;
     border-radius: 6px;
 }
 .modal-body {
@@ -547,9 +578,23 @@ export default {
     font-weight: normal;
     font-size: 12px;
     color: #666666;
+    padding: 20px 0 0 0;
 }
 .modal-header {
-    padding-bottom: 25px;
+    padding: 0;
+    border: none;
+    position: relative;
+}
+.modal-header .close {
+    position: absolute;
+    top: -8px;
+    right: 8px;
+}
+.modal-content {
+    border: none;
+}
+.modal-backdrop {
+    background-color: #C4C4C4;
 }
 .form-group label {
     font-family: Roboto;
