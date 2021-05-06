@@ -13,6 +13,7 @@ class ImageUploadController extends Controller
         if (!$request) {
             return response()->json('Ошибка');
         }
+
         $validator = Validator::make($request->all(), [
             'avatar' => 'image|nullable|size:2048|mimes:jpg,bmp,png,jpeg,webp'
         ]);

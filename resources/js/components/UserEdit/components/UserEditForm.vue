@@ -10,20 +10,27 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="label_wrapper">
-                            <label class="edit_form__label img_input_label">
-                                <input type="file"
-                                       accept="image/*"
-                                       name="image"
-                                       ref="file"
-                                       class="d-none"
-                                       @change="handleFileUpload(userData)">
-                                <img :src="userData.data.avatar"
-                                     :alt="userData.data.surname + ' ' + userData.data.name + ' фото'"
-                                     v-if="userData.data.avatar">
-                                <span class="short-fio" v-else>{{
-                                        shortFio(userData.data.surname, userData.data.name)
-                                    }}</span>
-                            </label>
+                            <Cropper :imageProp="imgData"
+                                     @cropImg="setCropImg">
+                            </Cropper>
+                            <ImageLoader :imageProp="userData.data.avatar"
+                                         @imageSelected="imgSelected">
+                            </ImageLoader>
+<!--                            <label class="edit_form__label img_input_label">-->
+
+<!--                                <input type="file"-->
+<!--                                       accept="image/*"-->
+<!--                                       name="image"-->
+<!--                                       ref="file"-->
+<!--                                       class="d-none"-->
+<!--                                       @change="handleFileUpload(userData)">-->
+<!--                                <img :src="userData.data.avatar"-->
+<!--                                     :alt="userData.data.surname + ' ' + userData.data.name + ' фото'"-->
+<!--                                     v-if="userData.data.avatar">-->
+<!--                                <span class="short-fio" v-else>{{-->
+<!--                                        shortFio(userData.data.surname, userData.data.name)-->
+<!--                                    }}</span>-->
+<!--                            </label>-->
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -167,6 +174,8 @@
 import ConfirmBtn from "../../buttons/ConfirmBtn";
 import CancelBtn from "../../buttons/CancelBtn";
 import Message from "../../message/Message";
+import Cropper from "../../cropper/Cropper";
+import ImageLoader from "../../cropper/ImageLoader";
 import {mapActions} from "vuex";
 
 export default {
@@ -175,7 +184,9 @@ export default {
     components: {
         CancelBtn,
         ConfirmBtn,
-        Message
+        Message,
+        ImageLoader,
+        Cropper
 
     },
     data() {
@@ -217,13 +228,23 @@ export default {
                 }
             ],
             userId: 0,
-            routeBack: false
+            routeBack: false,
+            imgData: {}
         }
     },
     methods: {
         ...mapActions([
             'getUMMessage'
         ]),
+        setCropImg(data) {
+            console.log('setCropImg', data)
+            this.userData.data = data
+            console.log(' this.userData.data', this.userData.data)
+        },
+        imgSelected(data) {
+            console.log('imgSelected', data)
+            this.imgData = data
+        },
         createUser(data) {
             return axios.post('/api/user/create', data.data)
                 .then(value => {
@@ -258,14 +279,14 @@ export default {
                 this.$router.push('/users-management')
             }
         },
-        handleFileUpload(data) {
-            console.log('handleFileUpload', data)
-            if (data.data.avatar !== this.$refs.file.files[0] && this.$refs.file.files[0]) {
-                this.imgChange = true
-                data.data.avatar = this.$refs.file.files[0];
-                this.saveImg(data.data.avatar, data)
-            }
-        },
+        // handleFileUpload(data) {
+        //     console.log('handleFileUpload', data)
+        //     if (data.data.avatar !== this.$refs.file.files[0] && this.$refs.file.files[0]) {
+        //         this.imgChange = true
+        //         data.data.avatar = this.$refs.file.files[0];
+        //         this.saveImg(data.data.avatar, data)
+        //     }
+        // },
         saveImg(image, data) {
             let formData = new FormData();
             formData.append('file', image)

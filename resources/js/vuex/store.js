@@ -58,6 +58,7 @@ const store = new Vuex.Store({
             state.UMMessage.data = message.data.error
             state.UMMessage.status = message.data.status
             state.UMMessage.show = true
+            console.log('message',message)
         },
         hideUMMessage(state) {
             state.UMMessage.show = false
