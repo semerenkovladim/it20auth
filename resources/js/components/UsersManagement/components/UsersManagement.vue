@@ -169,9 +169,7 @@ export default {
             this.selectUsers = data.data
         },
         setAllCheck(data) {
-            console.log(data)
             this.checkAll = data.status
-            console.log('setAllCheck', this.checkAll)
         },
         toggleSettings() {
             this.changeUMSettingStatus()

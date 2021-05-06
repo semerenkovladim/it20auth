@@ -65,11 +65,11 @@ export default {
             return axios.get('/api/user/' + this.$route.query.id)
                 .then(value => {
                     this.userData = value.data.data
-                    console.log(value)
-                    console.log('this.userData', this.userData)
+                    // console.log(value)
+                    // console.log('this.userData', this.userData)
                 })
                 .catch(reason => {
-                    console.log(reason)
+                    // console.log(reason)
                 })
         }
     },

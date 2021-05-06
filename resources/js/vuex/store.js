@@ -79,7 +79,7 @@ const store = new Vuex.Store({
     actions: {
         //управление пользователями
         getUMMessage({commit}, message) {
-            console.log('getUMMessage', message)
+            // console.log('getUMMessage', message)
             commit('setUMMessage', message)
         },
         hideUMMessage({commit}) {

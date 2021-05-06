@@ -184,10 +184,10 @@ export default {
             'getUMMessage'
         ]),
         createUser(data) {
-            console.log('data',data)
+            // console.log('data',data)
             return axios.post('/api/user/create', data.data)
                 .then(value => {
-                    console.log('value', value.data)
+                    // console.log('value', value.data)
                     this.getUMMessage(value)
                     if (value.data.status) {
                         this.userId = value.data.data.id
@@ -205,23 +205,23 @@ export default {
         updateUser(data) {
             return axios.put('/api/user/update/' + data.id, data.data)
                 .then(value => {
-                    console.log(value)
+                    // console.log(value)
                     this.getUMMessage(value)
                 })
                 .catch(reason => {
-                    console.log(reason)
+                    // console.log(reason)
                     this.getUMMessage('error')
                 })
         },
         cancelUser(data) {
-            // console.log('cancelUser',data)
+            // // console.log('cancelUser',data)
             // for (let key of Object.keys(data)) {
             //     data[key] = ''
             // }
         },
         handleFileUpload(data) {
-            console.log('data', data)
-            console.log('handleFileUpload', this.$refs.file.files[0])
+            // console.log('data', data)
+            // console.log('handleFileUpload', this.$refs.file.files[0])
             if (data.data.avatar !== this.$refs.file.files[0] && this.$refs.file.files[0]) {
                 this.imgChange = true
                 data.data.avatar = this.$refs.file.files[0];
@@ -231,7 +231,7 @@ export default {
         saveImg(image, data) {
             let formData = new FormData();
             formData.append('file', image)
-            console.log('formData', formData.get('file'))
+            // console.log('formData', formData.get('file'))
             return axios.post('/api/image/upload/avatar', formData)
                 .then(value => {
                     data.data.avatar = value.data.path

@@ -33,7 +33,6 @@ export default {
         prevPage() {
             if (this.data.current_page > 1) {
                 this.page -= 1
-                // console.log('prevPage', this.current_page, this.page)
             } else {
                 return
             }
@@ -41,13 +40,12 @@ export default {
         },
         toPage(page) {
             this.page = page
-                // console.log('toPage', page)
+
             this.emitPage()
         },
         nextPage() {
             if (this.data.last_page > this.data.current_page) {
                 this.page += 1
-                // console.log('nextPage')
             } else {
                 return
             }
