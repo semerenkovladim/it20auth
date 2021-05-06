@@ -40,8 +40,7 @@ export default {
         else {
             this.accountActive = true;
         }
-
-    }
+    },
 }
 </script>
 
