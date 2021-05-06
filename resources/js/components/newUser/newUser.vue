@@ -1,5 +1,5 @@
 <template>
-    <main class="users_management new_user">
+    <main class="row users_management new_user">
         <div class="container-fluid users_management__container user_edit__container">
             <div class="wrapper col">
                 <Placeholder :links="links"
