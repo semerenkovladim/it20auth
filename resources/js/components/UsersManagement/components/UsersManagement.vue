@@ -1,5 +1,5 @@
 <template>
-    <main class="users_management">
+    <main class="row users_management">
         <user-management-settings></user-management-settings>
         <user-management-confirm></user-management-confirm>
         <div class="container-fluid users_management__container">
