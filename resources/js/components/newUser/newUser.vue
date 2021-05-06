@@ -53,7 +53,6 @@ export default {
                 },
             ],
             userData: {
-                position: 'developer',
                 avatar:''
             }
         }
