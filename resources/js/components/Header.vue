@@ -11,7 +11,7 @@
                 <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left" aria-labelledby="dropdownMenuButton">
                     <router-link to="/profile" class="dropdown-item drop_links">Мой профиль</router-link>
                     <div class="dropdown-divider"></div>
-                    <router-link to="/settings-secure" class="dropdown-item drop_links ">Настройки безопасности</router-link>
+                    <router-link :to="{name: 'setting.base'}" class="dropdown-item drop_links ">Настройки безопасности</router-link>
                     <div class="dropdown-divider"></div>
                     <a to="#" class="dropdown-item drop_links" @click.prevent="logout">Выход из системы</a>
                 </div>
