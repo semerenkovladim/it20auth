@@ -12,7 +12,7 @@
         </div>
         <ul class="users_management__user_list">
             <li class="user"
-                v-for="user in userData"
+                v-for="user in data"
                 :key="user.id">
                 <ul class="row user__info">
                     <li class="col-1 user_info__item user_checkbox">
@@ -43,15 +43,15 @@ export default {
     props: ['data', 'checkStatus'],
     data() {
         return {
-            userData: this.$props.data,
-            status: this.$props.checkStatus,
+            userData: this.data,
+            status: this.checkStatus,
             selectUsers: []
         }
     },
     methods: {
         test() {
             let status = true
-            for (let item of this.userData) {
+            for (let item of this.data) {
                 if (item.checked === undefined || !item.checked) {
                     item.checked = false
                 }
@@ -76,17 +76,17 @@ export default {
             }
         },
         selectAll() {
-            this.userData.map(function (el) {
+            this.data.map(function (el) {
                 el.checked = true
             })
-            console.log(this.userData)
+            // console.log(this.data)
         },
         unselectAll() {
-            for (let item of this.userData) {
+            for (let item of this.data) {
                 item.checked = false
-                console.log('unselectAll', item.checked)
+                // console.log('unselectAll', item.checked)
             }
-            console.log(this.userData)
+            // console.log(this.data)
         }
     },
     computed: {
@@ -103,11 +103,10 @@ export default {
                 length: this.selectUsers.length,
                 data: this.selectUsers
             })
-            console.log(this.selectUsers.length)
+            // console.log(this.selectUsers.length)
         },
         watchCheckStatus() {
 
-            console.log('watchCheckStatus', this.status)
             if (this.status) {
                 this.selectAll()
             } else {
