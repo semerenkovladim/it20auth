@@ -15,7 +15,9 @@
                             </button>
                         </div>
                         <div class="users_management__users_filter">
-                            <department-list :data="departments"></department-list>
+                            <department-list :data="departments"
+                                             @sendDepartmentId="setDepartmentId">
+                            </department-list>
                         </div>
                     </div>
                     <div class="col-md-9 users_management__col users_management__list">
@@ -83,7 +85,7 @@
                     <div class="col-md-9">
                         <div class="row paginator_row">
                             <paginator :data="UM_USERS"
-                                       @toPage="getUsers">
+                                       @toPage="setCurrentPage">
 
                             </paginator>
                         </div>
@@ -154,16 +156,24 @@ export default {
             checkAll: false,
             checkStatus: false,
             usersCount: '',
-            selectUsers: []
+            selectUsers: [],
+            currentDepartment: 0,
+            currentPage: 1
         }
     },
     methods: {
         ...mapActions([
             'changeUMSettingStatus',
             'changeUMConfirmStatus',
-            'getUMAllUsers'
+            'getUMAllUsers',
+            'getUsersInDepartment'
 
         ]),
+        setDepartmentId(data) {
+            this.currentDepartment = data.id
+            this.currentPage = 1
+            this.getUsers(this.currentPage)
+        },
         userCount(data) {
             this.usersCount = data.length
             this.selectUsers = data.data
@@ -177,9 +187,20 @@ export default {
         removeUser() {
             this.changeUMConfirmStatus()
         },
-        getUsers(data) {
-            this.getUMAllUsers(data)
+        setCurrentPage(data) {
+            if (this.UM_USERS.last_page >= data.page >= 1) {
+                this.currentPage = data.page
+                this.getUsers()
+            }
         },
+        getUsers() {
+            if (this.currentDepartment > 1) {
+                this.getUsersInDepartment({id: this.currentDepartment, page: this.currentPage})
+            } else {
+                this.getUMAllUsers(this.currentPage)
+            }
+        },
+
     },
     computed: {
         ...mapGetters([

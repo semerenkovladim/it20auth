@@ -4,7 +4,7 @@
             v-for="department in data"
             :key="department.id"
             :class="current === department.id ? 'filter-active':''"
-            @click="getUsers(department.id)">{{ department.name }}
+            @click="getDepartmentId(department.id)">{{ department.name }}
         </li>
         <li class="col-12 users_management__filter_item"
             v-if="!data">Отделы не найдены
@@ -22,21 +22,11 @@ export default {
         }
     },
     methods: {
-        getUsers(id) {
-            let url = ''
-            if (id === 1) url = 'http://it20auth/users'
-            if (id > 1) url = 'http://it20auth/users/' + id
-
-            // axios.get(url)
-            //     .then(value => {
-            //         console.log(value)
-            this.current = id
-            //     })
-            //     .catch(reason => {
-            //         console.log(reason)
-            //         alert('error')
-            //     })
-
+        getDepartmentId(id) {
+            if (this.current !== id) {
+                this.current = id
+                this.$emit('sendDepartmentId', {id: id})
+            }
         }
     }
 }

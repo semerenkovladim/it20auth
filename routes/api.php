@@ -30,6 +30,7 @@ Route::post('/login/resend-code', [ResetPasswordController::class, 'resendPasswo
 Route::post('/login/repair-password/new-password', [ResetPasswordController::class, 'resetPassword']);
 
 Route::get('/users', [UserController::class, 'index'])->name('users');
+Route::get('/users/{id}', [UserController::class, 'in_department'])->name('usersInDepartment');
 Route::get('/user/{id}', [UserController::class, 'show'])->name('user');
 Route::post('/user/create', [UserController::class, 'store'])->name('userCreate');
 Route::put('/user/update/{id}', [UserController::class, 'update'])->name('userUpdate');
