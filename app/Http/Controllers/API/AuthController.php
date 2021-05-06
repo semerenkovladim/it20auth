@@ -107,7 +107,7 @@ class AuthController extends Controller
             'twostep_code' => 'required'
         ]);
 
-        $user = User::whereEmail($validated['email'])->first();
+        $user = User::whereEmail($validated['email'])->with(['department', 'access_level', 'backup_date', 'setting'])->first();
 
         if (!$user) {
             return response()->json([], 422);
@@ -168,5 +168,20 @@ class AuthController extends Controller
             'user' => $user,
             'status' => 200
         ]);
+    }
+
+    public function logout()
+    {
+        $accessToken = auth()->user()->token();
+
+        $refreshToken = DB::table('oauth_refresh_tokens')
+            ->where('access_token_id', $accessToken->id)
+            ->update([
+                'revoked' => true
+            ]);
+
+        $accessToken->revoke();
+
+        return response()->json(['status' => 200]);
     }
 }

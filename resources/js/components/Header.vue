@@ -13,7 +13,7 @@
                     <div class="dropdown-divider"></div>
                     <router-link to="/" class="dropdown-item drop_links ">Настройки безопасности</router-link>
                     <div class="dropdown-divider"></div>
-                    <router-link to="/" class="dropdown-item drop_links">Выход из системы</router-link>
+                    <a to="#" class="dropdown-item drop_links" @click.prevent="logout">Выход из системы</a>
                 </div>
             </div>
         </div>
@@ -21,13 +21,40 @@
 </template>
 
 <script>
+import {mapActions, mapGetters} from "vuex";
+
 export default {
     name: "Header",
     data() {
         return{
             show:false
         }
-    }
+    },
+    methods: {
+        ...mapActions([
+            'saveUserFromServer',
+            'saveAccessFromServer',
+            'saveRefreshFromServer'
+        ]),
+        logout() {
+            axios.post('/api/logout', {}, {
+                headers: {
+                    'Authorization': `Bearer ` + this.access_token
+                }
+            }).then(() => {
+                this.saveUserFromServer(null);
+                this.saveAccessFromServer(null);
+                this.saveRefreshFromServer(null);
+                this.$router.push({name: 'login.index'});
+            })
+        },
+    },
+    computed: {
+        ...mapGetters([
+            'access_token',
+        ]),
+    },
+
 }
 </script>
 

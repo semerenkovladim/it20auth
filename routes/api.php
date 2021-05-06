@@ -40,5 +40,6 @@ Route::post('/image/upload/avatar', [ImageUploadController::class, 'upload_avata
 
 Route::middleware('auth:api')->group(function () {
     Route::post('settings', [UserSettingsController::class, 'update']);
+    Route::post('logout', [AuthController::class, 'logout']);
 });
 

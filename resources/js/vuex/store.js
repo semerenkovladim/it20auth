@@ -114,6 +114,7 @@ const store = new Vuex.Store({
         },
         //
         saveUserFromServer({commit}, user) {
+            console.log(user);
             commit('setUser', user);
         },
         saveAccessFromServer({commit}, access_token) {
