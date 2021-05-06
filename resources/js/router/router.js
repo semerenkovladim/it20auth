@@ -141,6 +141,7 @@ const router = new VueRouter({
                 {
                     path: '/settings-secure',
                     component: SettingsSecure,
+                    name: 'setting.base',
                     children: [
                         {
                             path: 'account-login',
