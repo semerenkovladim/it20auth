@@ -35,10 +35,11 @@
                         </svg>
                     </div>
                     <div class="form-group">
-                        <div class="subtitle">Воспользуйтесь одним из двух вариантов подтверждения:</div>
+                        <div class="subtitle" v-if="!incorrectPassword">Воспользуйтесь одним из двух вариантов подтверждения:</div>
+                        <div class="error-msg" v-if="incorrectPassword">Вы ввели неверный резервный пароль</div>
                         <div class="flex justify-content-between align-items-end">
                             <button class="give-code" @click.prevent="getEmailCode">ПОЛУЧИТЬ КОД</button>
-                            <div class="reserved-password password">
+                            <div :class="{'reserved-password': true, 'password': true, 'has-error': incorrectPassword}">
                                 <label for="inputReservedPassword">Ввести резервный пароль:</label>
                                 <input type="password" class="form-control" id="inputReservedPassword" aria-describedby="emailHelp"
                                        placeholder="Резервный пароль:"
@@ -82,6 +83,7 @@ export default {
             showIconPassword: true,
             showIconReservedPassword: false,
             hasError: false,
+            incorrectPassword: false,
         };
     },
     methods: {
@@ -121,7 +123,13 @@ export default {
                 this.saveRefreshFromServer(response.data.refresh_token);
                 this.$router.push('/home');
             }).catch((e) => {
-                this.hasError = true;
+                if(e.response.status === 403 || e.response.status === 422) {
+                    this.hasError = false;
+                    this.incorrectPassword = true;
+                } else {
+                    this.hasError = true;
+                    this.incorrectPassword = false;
+                }
             })
         },
         getEmailCode() {

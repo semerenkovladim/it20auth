@@ -74,6 +74,7 @@ export default {
     background: #FFFFFF;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.05);
     box-sizing: border-box;
+    margin-top: 10px;
 }
 .title {
     font-style: normal;

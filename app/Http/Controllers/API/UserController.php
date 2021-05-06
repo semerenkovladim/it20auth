@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -16,16 +15,22 @@ class UserController extends Controller
     {
         $users = User::paginate(6);
         if ($users) {
-            $status = 200;
+            $status = true;
         } else {
-            $status = 404;
+            $status = false;
         }
         return response()->json(['data' => $users, 'status' => $status]);
     }
 
-    public function create()
+    public function in_department($id)
     {
-        //
+        $users = User::where('department_id', '=', $id)->paginate(6);
+        if ($users) {
+            $status = true;
+        } else {
+            $status = false;
+        }
+        return response()->json(['data' => $users, 'status' => $status]);
     }
 
     public function store(Request $request)

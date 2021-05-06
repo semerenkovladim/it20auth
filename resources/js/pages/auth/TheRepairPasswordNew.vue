@@ -51,17 +51,33 @@
                         <button @click.prevent="newPassword">подтвердить</button>
                         <button class="cancel" @click.prevent="clearAll">Отмена</button>
                     </div>
-                </form>
-            </div>
-        </div>
-        <div class="position-fixed notification" style="z-index: 5; right: 0; bottom: 0;">
-            <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000" data-autohide="false">
-                <div class="toast-body">
-                    <div class="text-toast">Пароль успешно изменен</div>
-                    <div class="form-group d-flex flex-row btn-form-group">
-                        <button @click.prevent="redirectToLogin">ок</button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="resetPassword" data-bs-keyboard="false" tabindex="-1" aria-labelledby="resetPasswordLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="resetPasswordLabel">Пароль успешно изменен</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <mask id="mask13" mask-type="alpha" maskUnits="userSpaceOnUse" x="8" y="8" width="14" height="14">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M22 9.41L20.59 8L15 13.59L9.41 8L8 9.41L13.59 15L8 20.59L9.41 22L15 16.41L20.59 22L22 20.59L16.41 15L22 9.41Z" fill="white"/>
+                                            </mask>
+                                            <g mask="url(#mask13)">
+                                                <rect x="2" y="2" width="26" height="26" fill="#D8D8D8"/>
+                                            </g>
+                                        </svg>
+
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group d-flex flex-row btn-form-group">
+                                        <button @click.prevent="redirectToLogin" data-dismiss="modal" aria-label="Close">ок</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
@@ -103,14 +119,16 @@ export default {
                 this.hasError = true;
                 this.incorrectPassword = false;
             } else {
-                console.log('WE HERE');
                 this.hasError = false;
                 this.incorrectPassword = false;
                 axios.post('/api/login/repair-password/new-password', {
                     'password': this.password,
                     'email': this.resetPasswordEmail
                 }).then(() => {
-                    $('.toast').toast('show');
+                    var myModal = new bootstrap.Modal(document.getElementById('resetPassword'), {
+                        keyboard: false
+                    })
+                    myModal.show();
                 })
             }
         },
@@ -119,7 +137,10 @@ export default {
             this.passwordRepeate = '';
         },
         redirectToLogin() {
-            $('.toast').toast('hide');
+            var myModal = new bootstrap.Modal(document.getElementById('resetPassword'), {
+                keyboard: false
+            })
+            myModal.hide();
             this.$router.push('/login');
         }
     },
@@ -291,6 +312,44 @@ form button {
 }
 .has-error .subtitle-form {
     display: none;
+}
+.modal-title {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    color: #666666;
+}
+.modal-content {
+    padding: 25px 10px 30px 40px;
+    border-radius: 6px;
+}
+.modal-body {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    color: #666666;
+    padding: 20px 0 0 0;
+}
+.modal-header {
+    padding: 0;
+    border: none;
+    position: relative;
+}
+.modal-header .close {
+    position: absolute;
+    top: -8px;
+    right: 8px;
+    background: none;
+    border: none;
+    box-sizing: border-box;
+    border-radius: 0;
+    padding: 0;
+}
+.modal-content {
+    border: none;
+}
+.modal-backdrop {
+    background-color: #C4C4C4;
 }
 @media screen and (max-width: 1023.99px) {
     .form-wrapper {
