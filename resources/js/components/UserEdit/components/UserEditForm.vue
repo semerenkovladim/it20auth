@@ -10,12 +10,12 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="label_wrapper">
-<!--                            <Cropper :imageProp="imgData"-->
-<!--                                     @cropImg="setCropImg">-->
-<!--                            </Cropper>-->
-<!--                            <ImageLoader :imageProp="userData.data.avatar"-->
-<!--                                         @imageSelected="imgSelected">-->
-<!--                            </ImageLoader>-->
+                            <!--                            <Cropper :imageProp="imgData"-->
+                            <!--                                     @cropImg="setCropImg">-->
+                            <!--                            </Cropper>-->
+                            <!--                            <ImageLoader :imageProp="userData.data.avatar"-->
+                            <!--                                         @imageSelected="imgSelected">-->
+                            <!--                            </ImageLoader>-->
                             <label class="edit_form__label img_input_label">
 
                                 <input type="file"
@@ -254,6 +254,10 @@ export default {
                         axios.post('/api/user/permission/create', {
                             user_id: value.data.data.id
                         })
+                        axios.post('/api/user/settings/create', {
+                            user_id: value.data.data.id
+                        })
+
                     }
                 })
         },

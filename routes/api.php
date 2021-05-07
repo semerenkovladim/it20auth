@@ -5,6 +5,7 @@ use App\Http\Controllers\API\ResetPasswordController;
 use App\Http\Controllers\API\UserSettingsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\SettingController;
 use App\Http\Controllers\API\ProfileController;
 use App\Http\Controllers\API\ImageUploadController;
 use App\Http\Controllers\API\AccessLevelController;
@@ -40,6 +41,8 @@ Route::post('/user/permission/create', [AccessLevelController::class, 'store'])-
 Route::get('/user/permission', [AccessLevelController::class, 'show'])->name('userPermissionShow');
 Route::get('/user/permission/update', [AccessLevelController::class, 'update'])->name('userPermissionUpdate');
 Route::post('/image/upload/avatar', [ImageUploadController::class, 'upload_avatar'])->name('userAvatar');
+
+Route::post('/user/settings/create',[SettingController::class,'store'])->name('setUserSetting');
 
 Route::middleware('auth:api')->group(function () {
     Route::post('settings', [UserSettingsController::class, 'update']);
