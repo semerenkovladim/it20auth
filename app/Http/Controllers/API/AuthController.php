@@ -205,7 +205,7 @@ class AuthController extends Controller
             return response()->json([], 422);
         }
 
-        if(!Hash::check($validated['reservedPassword'], $user->backup_date->backup_password)) {
+        if(!Hash::check($validated['reservedPassword'], $user->backup_date->backup_password) || !$user->setting->useReservedPassword) {
             return response()->json([], 403);
         }
 

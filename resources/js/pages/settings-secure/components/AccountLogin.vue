@@ -350,7 +350,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="saveSettingsLabel">Изменение настроект</h5>
+                    <h5 class="modal-title" id="saveSettingsLabel">Изменение настроек безопасности</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <mask id="mask28" mask-type="alpha" maskUnits="userSpaceOnUse" x="8" y="8" width="14" height="14">
