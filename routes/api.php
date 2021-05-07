@@ -5,6 +5,7 @@ use App\Http\Controllers\API\ResetPasswordController;
 use App\Http\Controllers\API\UserSettingsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\ProfileController;
 use App\Http\Controllers\API\ImageUploadController;
 use App\Http\Controllers\API\AccessLevelController;
 
@@ -43,5 +44,6 @@ Route::post('/image/upload/avatar', [ImageUploadController::class, 'upload_avata
 Route::middleware('auth:api')->group(function () {
     Route::post('settings', [UserSettingsController::class, 'update']);
     Route::post('logout', [AuthController::class, 'logout']);
+    Route::get('/profile', [ProfileController::class, 'profile']);
 });
 

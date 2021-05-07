@@ -109,7 +109,6 @@ class UserController extends Controller
         return response()->json(['data' => $data, 'status' => true]);
 
     }
-
     public function destroy($id)
     {
         $user = User::find($id);
