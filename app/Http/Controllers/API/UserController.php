@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Mail\SendUserPassword;
+use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -55,6 +56,7 @@ class UserController extends Controller
             return response()->json(['error' => $validator->errors(), 'status' => false]);
         }
         $user = User::make($request->all());
+
         $password = Str::random(8);
         $user->password = Hash::make($password);
         $email = $user->email;
