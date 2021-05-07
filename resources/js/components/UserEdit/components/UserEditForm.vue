@@ -81,7 +81,7 @@
                             required>
                         <option v-for="position in positions"
                                 :key="position.id"
-                                :value="position.id">
+                                :value="position.title">
                             {{ position.title }}
                         </option>
                     </select>
