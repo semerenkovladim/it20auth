@@ -79,14 +79,11 @@ export default {
             this.data.map(function (el) {
                 el.checked = true
             })
-            // console.log(this.data)
         },
         unselectAll() {
             for (let item of this.data) {
                 item.checked = false
-                // console.log('unselectAll', item.checked)
             }
-            // console.log(this.data)
         }
     },
     computed: {

@@ -195,7 +195,7 @@ export default {
         },
         getUsers() {
             if (this.currentDepartment > 1) {
-                this.getUsersInDepartment({id: this.currentDepartment, page: this.currentPage})
+                this.getUsersInDepartment({id: this.currentDepartment - 1, page: this.currentPage})
             } else {
                 this.getUMAllUsers(this.currentPage)
             }

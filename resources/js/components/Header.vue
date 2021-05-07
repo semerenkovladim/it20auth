@@ -3,7 +3,7 @@
         <div class="logo"><img src="/images/logo_foot2.svg" alt="logo">
         </div>
         <div class="accoun_flex">
-            <div class="user_name">Анна Кононенко</div>
+            <div class="user_name">{{ user.name }}</div>
             <div><img src="/images/placeholder.png" alt=""></div>
             <div class="dropdown">
                 <button class="btn drop dropdown-toggle" type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -27,7 +27,10 @@ export default {
     name: "Header",
     data() {
         return{
-            show:false
+            show:false,
+            user:{
+                name:'Марина'
+            }
         }
     },
     methods: {

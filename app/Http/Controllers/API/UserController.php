@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Mail\SendUserPassword;
+use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -44,7 +47,7 @@ class UserController extends Controller
             'position' => 'required|max:225',
             'date_start' => 'date|nullable',
             'is_admin' => 'boolean|nullable',
-            'email' => 'email|required|max:255|unique:users',
+            'email' => 'email|required|unique:users|max:255',
             'mobile_phone' => 'numeric|digits_between:8,12|nullable',
             'work_phone' => 'numeric|digits_between:8,12|nullable',
             'skype' => 'max:255|nullable|unique:users'
@@ -53,12 +56,22 @@ class UserController extends Controller
             return response()->json(['error' => $validator->errors(), 'status' => false]);
         }
         $user = User::make($request->all());
+
         $password = Str::random(8);
         $user->password = Hash::make($password);
+        $email = $user->email;
+
+        $data = ([
+            'name' => $request->get('name'),
+            'password' => $password,
+            'email' => $request->get('email'),
+        ]);
+
+        Mail::to($email)->send(new SendUserPassword($data));
 
         $user->save();
 
-        return response()->json(['data' => $user, 'password' => $password, 'status' => true]);
+        return response()->json(['data' => $user, 'status' => true]);
 
 
     }
@@ -109,7 +122,6 @@ class UserController extends Controller
         return response()->json(['data' => $data, 'status' => true]);
 
     }
-
     public function destroy($id)
     {
         $user = User::find($id);
