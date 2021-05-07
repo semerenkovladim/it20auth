@@ -2,9 +2,9 @@
     <div>
             <div class="slider">
             <carousel :autoplay="true" :items="1" :dots="false" :autoplayTimeout="30000" :nav="false">
-                <div class="slide1"></div>
-                <div class="slide2"></div>
-                <div class="slide3"></div>
+                <div class="slide slide1"></div>
+                <div class="slide slide2"></div>
+                <div class="slide slide3"></div>
             </carousel>
         </div>
 
@@ -131,7 +131,13 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss">
+.slider {
+    margin: 0 auto;
+    width: 100%;
+    .slide {
+        width: 100%;
+    }
+}
 </style>
 
