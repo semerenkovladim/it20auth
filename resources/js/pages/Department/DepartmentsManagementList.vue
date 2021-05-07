@@ -20,39 +20,40 @@
                     </div>
                 </div>
                 <div class="row departments_management__content">
-                    <div class="col-md-2">
-                        <div class="row add_departments-btn">
-                            <button type="button" @click="$router.push('/departments-create')">
-                                Добавить отдел
-                            </button>
-
-                        </div>
+                    <div class="col-md-3 p-0">
+                                <div class="add_departments-btn">
+                                    <button type="button" @click="$router.push('/departments-create')">
+                                        Добавить отдел
+                                    </button>
+                                </div>
                         <div class="empty_area"></div>
                     </div>
-                    <div class="col-md-10 departments_list-box">
+                    <div class="col-md-9 departments_list-box">
                         <div class="list_controls">
                             <div class="row">
-                                <div class="col-sm-12 col-md-3 col-xl-2 list_control_btns">
-                                    <div class="row">
-                                        <div class="col-4 checkbox_section">
-                                            <input type="checkbox" name="checkAll" id="checkbox" class="checkbox">
-                                            <label for="checkbox"></label>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="departments_list-edit"></div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="departments_list-delete"></div>
+                                <div class="col-sm-12 col-md-4 col-xl-3 list_control_btns">
+                                    <div class="wrapper">
+                                        <div class="row">
+                                            <div class="col-4 checkbox_section">
+                                                <input type="checkbox" name="checkAll" id="checkbox" class="checkbox">
+                                                <label for="checkbox"></label>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="departments_list-edit"></div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="departments_list-delete"></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <form class="col-sm-12 col-md-9 col-xl-10 departments_list-search" method="get"
+                                <form class="col-sm-12 col-md-8 col-xl-9 departments_list-search" method="get"
                                       action="#">
                                     <div class="row">
-                                        <div class="col-10">
+                                        <div class="col-10 col-sm-8 col-md-10">
                                             <input type="text" placeholder="Поиск">
                                         </div>
-                                        <div class="col-2 search-btn">
+                                        <div class="col-2 col-sm-4 col-md-2 search-btn">
 
                                         </div>
                                     </div>
@@ -64,99 +65,27 @@
                                 <ul class="row">
                                     <li class="col-1"></li>
                                     <li class="col-3">
-                                        <span class="with_sort">Название</span>
+                                        <span :class="[arrowName ? 'with_sort_active' : 'with_sort']" @click="sortName">Название</span>
                                     </li>
                                     <li class="col-4">
-                                        <span class="with_sort">Руководитель</span>
+                                        <span :class="[arrowLead ? 'with_sort_active' : 'with_sort']" @click="sortLead">Руководитель</span>
                                     </li>
                                     <li class="col-4">
-                                        <span class="with_sort">Количество сотрудников</span>
+                                        <span :class="[arrowCtr ? 'with_sort_active' : 'with_sort']" @click="sortCtr">Количество сотрудников</span>
                                     </li>
                                 </ul>
                             </div>
                             <div class="departments_list-body">
                                 <ul>
-                                    <li class="departments_list-item">
+                                    <li class="departments_list-item" v-for="dep in getDepartments" :key="dep.id">
                                         <ul class="row list-item_info">
                                             <li class="col-1 checkbox_section">
                                                 <input type="checkbox" name="checkAll" id="checkbox_id1"
                                                        class="checkbox">
-                                                <label for="checkbox_id1"></label>
+                                                <label for="checkbox"></label>
                                             </li>
-                                            <li class="col-3">Название отдела</li>
-                                            <li class="col-4">Имя руководителя отдела</li>
-                                            <li class="col-4">16</li>
-                                        </ul>
-                                    </li>
-                                    <li class="departments_list-item">
-                                        <ul class="row list-item_info">
-                                            <li class="col-1 checkbox_section">
-                                                <input type="checkbox" name="checkAll" id="checkbox_id1"
-                                                       class="checkbox">
-                                                <label for="checkbox_id1"></label>
-                                            </li>
-                                            <li class="col-3">Название отдела</li>
-                                            <li class="col-4">Имя руководителя отдела</li>
-                                            <li class="col-4">16</li>
-                                        </ul>
-                                    </li>
-                                    <li class="departments_list-item">
-                                        <ul class="row list-item_info">
-                                            <li class="col-1 checkbox_section">
-                                                <input type="checkbox" name="checkAll" id="checkbox_id2"
-                                                       class="checkbox">
-                                                <label for="checkbox_id2"></label>
-                                            </li>
-                                            <li class="col-3">Название отдела</li>
-                                            <li class="col-4">Имя руководителя отдела</li>
-                                            <li class="col-4">16</li>
-                                        </ul>
-                                    </li>
-                                    <li class="departments_list-item">
-                                        <ul class="row list-item_info">
-                                            <li class="col-1 checkbox_section">
-                                                <input type="checkbox" name="checkAll" id="checkbox_id3"
-                                                       class="checkbox">
-                                                <label for="checkbox_id3"></label>
-                                            </li>
-                                            <li class="col-3">Название отдела</li>
-                                            <li class="col-4">Имя руководителя отдела</li>
-                                            <li class="col-4">16</li>
-                                        </ul>
-                                    </li>
-                                    <li class="departments_list-item">
-                                        <ul class="row list-item_info">
-                                            <li class="col-1 checkbox_section">
-                                                <input type="checkbox" name="checkAll" id="checkbox_id4"
-                                                       class="checkbox">
-                                                <label for="checkbox_id4"></label>
-                                            </li>
-                                            <li class="col-3">Название отдела</li>
-                                            <li class="col-4">Имя руководителя отдела</li>
-                                            <li class="col-4">16</li>
-                                        </ul>
-                                    </li>
-                                    <li class="departments_list-item">
-                                        <ul class="row list-item_info">
-                                            <li class="col-1 checkbox_section">
-                                                <input type="checkbox" name="checkAll" id="checkbox_id5"
-                                                       class="checkbox">
-                                                <label for="checkbox_id5"></label>
-                                            </li>
-                                            <li class="col-3">Название отдела</li>
-                                            <li class="col-4">Имя руководителя отдела</li>
-                                            <li class="col-4">16</li>
-                                        </ul>
-                                    </li>
-                                    <li class="departments_list-item">
-                                        <ul class="row list-item_info">
-                                            <li class="col-1 checkbox_section">
-                                                <input type="checkbox" name="checkAll" id="checkbox_id6"
-                                                       class="checkbox">
-                                                <label for="checkbox_id6"></label>
-                                            </li>
-                                            <li class="col-3">Название отдела</li>
-                                            <li class="col-4">Имя руководителя отдела</li>
+                                            <li class="col-3">{{ dep.title }}</li>
+                                            <li class="col-4">Example</li>
                                             <li class="col-4">16</li>
                                         </ul>
                                     </li>
@@ -166,8 +95,8 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-2"></div>
-                    <div class="col-md-10 box-pagination">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-9 box-pagination">
                         <ul class="row pagination">
                             <li class="page-item gotoPrevPage">
                                 <a class="page-link" href="#" aria-label="Previous">
@@ -198,10 +127,15 @@
 </template>
 
 <script>
+import {mapActions, mapGetters} from 'vuex'
+
 export default {
     name: "DepartmentsManagementList",
     data() {
         return {
+            departments: null,
+            nextPage: null,
+            prevPage: null,
             uncheck: false,
             cheked: false,
             arrowName: false,
@@ -210,6 +144,15 @@ export default {
         }
     },
     methods: {
+        ...mapActions(['fetchDepartments','delDepartment']),
+        gotoNext() {
+            this.nextPage = this.getNextPage;
+            this.fetchAds(this.nextPage)
+        },
+        gotoPrev() {
+            this.prevPage = this.getPrevPage;
+            this.fetchAds(this.prevPage)
+        },
         checkAll() {
             this.uncheck = true;
             this.cheked = true;
@@ -239,13 +182,37 @@ export default {
                 this.arrowLead = false;
             }
             this.arrowCtr = !this.arrowCtr;
-        }
+        },
+    },
+    computed: {
+        ...mapGetters(['getDepartments', 'getNextPage', 'getPrevPage'])
+    },
+    mounted() {
+        this.fetchDepartments()
     }
 }
 </script>
 
 <style lang="scss" scoped>
 @import "resources/sass/variables";
+
+%sortArrow {
+    content: '';
+    display: inline-block;
+    position: relative;
+    height: 10px;
+    width: 10px;
+    top: -2px;
+    left: 5px;
+    transform: rotate(135deg);
+    transition: 0.4s ease;
+    padding: 0;
+    margin: 0 13px;
+    border-style: solid;
+    border-width: 2px 2px 0 0;
+    color: #D8D8D8;
+    cursor: pointer;
+}
 
 * {
     font-family: $depManagementFF;
@@ -345,6 +312,10 @@ export default {
     display: flex;
     align-items: center;
     border-right: $depBoxBorder;
+
+    .wrapper {
+        width: 100%;
+    }
 }
 
 .checkbox_section {
@@ -435,20 +406,13 @@ export default {
     }
 
     .with_sort::after {
-        content: '';
-        display: inline-block;
-        position: relative;
-        height: 10px;
-        width: 10px;
-        top: -2px;
-        left: 5px;
-        transform: rotate(135deg);
-        padding: 0;
-        margin: 0 13px;
-        border-style: solid;
-        border-width: 2px 2px 0 0;
-        color: #D8D8D8;
-        cursor: pointer;
+        @extend %sortArrow;
+    }
+
+    .with_sort_active::after {
+        @extend %sortArrow;
+        top: 4px;
+        transform: rotate(-45deg);
     }
 }
 
@@ -509,258 +473,9 @@ export default {
     }
 }
 
-//.departments_management__pagination {
-//    background: #FFFFFF;
-//    box-shadow: $depBoxShadow;
-//    border-radius: 6px;
-//
-//    nav {
-//        width: 100%;
-//    }
-//
-//    .paginator {
-//        display: flex;
-//        height: 60px;
-//    }
-//
-//    .paginator_item {
-//        flex: 1 1;
-//        display: flex;
-//        align-items: center;
-//        justify-content: center;
-//        font-weight: bold;
-//        font-size: 14px;
-//        color: $darkColor;
-//        width: 100%;
-//        max-width: 68px;
-//        cursor: pointer;
-//        border-right: $depBoxBorder;
-//
-//        &:last-child {
-//            border-right: none;
-//        }
-//
-//        &:hover {
-//            background-color: #FAFAFA;
-//        }
-//
-//    }
-//
-//    .paginator__prev {
-//        background: url("/images/arow-left.png") no-repeat center / 36px 30px;
-//    }
-//
-//    .paginator__next {
-//        background: url("/images/arrow-rigth.png") no-repeat center / 36px 30px;
-//    }
-//
-//    .paginator__current_page {
-//        background: #FAFAFA;
-//    }
-//}
-
-/*.rb {*/
-/*    border-right: solid 2px #F5F5F5;*/
-/*}*/
-/*.container {*/
-/*    background-color: #F5F5F5;*/
-/*    padding: 7px 18px 10px 10px;*/
-/*    font-family: 'Roboto', sans-serif;*/
-/*}*/
-/*.box-header {*/
-/*    padding: 5px 0 7px 15px;*/
-/*    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));*/
-/*    border-radius: 6px;*/
-/*}*/
-/*.box-content {*/
-/*    padding: 0 0 0 15px;*/
-/*}*/
-
-/*.breadcrumb{*/
-/*    border-radius: 6px 6px 0 0;*/
-/*}*/
-/*.breadcrumb,*/
-/*.breadcrumb a {*/
-/*    padding-left: 0;*/
-/*    background-color: #FFFFFF;*/
-/*    color: #CCCCCC;*/
-/*    font-size: 13px;*/
-/*    font-weight: bolder;*/
-/*}*/
-/*.breadcrumb-item + .breadcrumb-item::before,*/
-/*.sortArrow {*/
-//border-style: solid;
-//border-width: 2px 2px 0 0;
-//content: '';
-//display: inline-block;
-//height: 8px;
-//left: -5px;
-//position: relative;
-//top: 7px;
-//transform: rotate(45deg);
-//width: 8px;
-//color: #D8D8D8;
-//padding: 0;
-/*}*/
-/*.breadcrumb li {*/
-/*    padding: 0 0 0 5px;*/
-/*}*/
-/*.breadcrumb li:first-child {*/
-/*    padding: 0 5px 0 0;*/
-/*}*/
-/*.container-title {*/
-/*    color: #808080;*/
-/*    font-weight: 300;*/
-/*    font-size: 36px;*/
-/*    padding-left: 13px;*/
-/*    border-radius: 0 0 6px 6px;*/
-/*}*/
-/*.btn-box,*/
-/*.controls-box,*/
-/*.search-box,*/
-/*.departmentsTable-box,*/
-/*.emptyArea-box {*/
-/*    background-color: #FFFFFF;*/
-/*}*/
-/*.btn-box {*/
-/*    display: flex;*/
-/*    justify-content: center;*/
-/*    padding: 23px;*/
-/*}*/
-/*.btn-createDep {*/
-/*    width: 208px;*/
-/*    height: 48px;*/
-/*    text-align: center;*/
-/*    font-style: normal;*/
-/*    font-weight: 900;*/
-/*    font-size: 12px;*/
-/*    text-transform: uppercase;*/
-/*    padding: 15px;*/
-/*    color: #FFFFFF;*/
-/*    background-color: #1875F0;*/
-/*}*/
-/*.checkbox {*/
-/*    display: none;*/
-/*}*/
-/*.checkbox+label::after {*/
-/*    content: '';*/
-/*    display: inline-block;*/
-/*    width: 20px;*/
-/*    height: 20px;*/
-/*    border: 2px solid #E6E6E6;*/
-/*    border-radius: 4px;*/
-/*    background-repeat: no-repeat;*/
-/*    background-position: center center;*/
-/*    background-size: 50% 50%;*/
-/*    transition: .4s;*/
-/*    margin-top: 5px;*/
-/*    cursor: pointer;*/
-/*}*/
-/*.checkbox:checked+label::after {*/
-/*    border-color: #0b76ef;*/
-/*    background-color: #0b76ef;*/
-/*    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e");*/
-/*}*/
-/*.controls-box {*/
-/*    display: flex;*/
-/*    height: 100%;*/
-/*    padding: 31px 0 0 5px;*/
-/*}*/
-/*.controls-box>.create,*/
-/*.controls-box>.delete {*/
-/*    padding: 4px 10px;*/
-/*    background: top center no-repeat;*/
-/*    cursor: pointer;*/
-/*}*/
-/*.controls-box>.create {*/
-/*    background-image: url("/resources/images/icons/edit_img.png");*/
-/*    margin: 0 36px;*/
-/*}*/
-/*.controls-box>.delete {*/
-/*    background-image: url("/resources/images/icons/delete_img.png");*/
-/*}*/
-/*.search-box {*/
-/*    display: flex;*/
-/*    color: #666666;*/
-/*}*/
-/*.search-box>input {*/
-/*    width: 100%;*/
-/*    border: none;*/
-/*    background: url("/resources/images/icons/search_img.png") no-repeat right 30px center;*/
-/*    outline:none;*/
-/*    font-weight: bolder;*/
-/*}*/
-/*.search-box>input::placeholder {*/
-/*    color: #CCCCCC;*/
-/*}*/
-/*.table th {*/
-/*    border-top: none !important;*/
-/*    border-bottom: none !important;*/
-/*}*/
-/*tr,*/
-/*.emptyArea-box{*/
-/*    border-top: solid 2px #F5F5F5;*/
-/*    border-radius: 0 0 0 6px;*/
-/*}*/
-/*.departmentsTable-box {*/
-/*    border-radius: 0 0 6px 0;*/
-/*}*/
-/*.table {*/
-/*    margin-bottom: 0 !important;*/
-/*    font-weight: bold;*/
-/*    font-size: 12px;*/
-/*    line-height: 30px;*/
-/*    color: #999999;*/
-/*}*/
-/*.select,*/
-/*.activePage{*/
-/*    background-color: #FCFCFC !important;*/
-/*}*/
-/*.cols-title {*/
-/*    font-weight: bold;*/
-/*    font-size: 13px;*/
-/*    color: #666666;*/
-/*}*/
-/*.table .checkbox {*/
-/*    margin-top: 0;*/
-/*}*/
-/*.table-checkbox {*/
-/*    padding-left: 8px;*/
-/*}*/
-/*.sortArrow {*/
-/*    left: 15px;*/
-/*    top: -3px;*/
-/*    transform: rotate(135deg);*/
-/*    transition: .4s;*/
-/*    cursor: pointer;*/
-/*}*/
-/*.sorted {*/
-/*    top: 3px !important;*/
-/*    transform: rotate(-45deg) !important;*/
-/*}*/
-/*.page-link {*/
-/*    padding: 25px 30px;*/
-/*    background-color: #fff;*/
-/*    border: 3px solid #f5f5f5;*/
-/*    font-size: 14px;*/
-/*    font-weight: bolder;*/
-/*    color: #999999;*/
-/*}*/
-/*.box-pagination {*/
-/*    padding: 0;*/
-/*}*/
-/*.gotoNextPage {*/
-/*    flex-grow: 1;*/
-/*    border-radius: 6px 0 6px 0;*/
-/*}*/
-/*.gotoPrevPage {*/
-/*    border-radius: 0 6px 0 6px;*/
-/*}*/
-/*@media (max-width: 995px) {*/
-/*    .btn-createDep {*/
-/*        width: 116px;*/
-/*        height: 67px;*/
-/*        padding: 15px;*/
-/*    }*/
-/*}*/
+@media (max-width: 768px) {
+    .list_control_btns {
+        border-bottom: $depBoxBorder;
+    }
+}
 </style>

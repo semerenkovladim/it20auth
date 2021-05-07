@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\DepartmentController;
 use App\Http\Controllers\API\ResetPasswordController;
 use App\Http\Controllers\API\UserSettingsController;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +40,11 @@ Route::post('/user/permission/create', [AccessLevelController::class, 'store'])-
 Route::get('/user/permission', [AccessLevelController::class, 'show'])->name('userPermissionShow');
 Route::get('/user/permission/update', [AccessLevelController::class, 'update'])->name('userPermissionUpdate');
 Route::post('/image/upload/avatar', [ImageUploadController::class, 'upload_avatar'])->name('userAvatar');
+
+Route::get('/departments', [DepartmentController::class, 'index'])->name('departments');
+Route::post('/departments/create', [DepartmentController::class, 'store'])->name('departmentCreate');
+
+
 
 Route::middleware('auth:api')->group(function () {
     Route::post('settings', [UserSettingsController::class, 'update']);

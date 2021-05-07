@@ -123,12 +123,12 @@
 </template>
 
 <script>
-import carousel from 'vue-owl-carousel2'
+// import carousel from 'vue-owl-carousel2'
 export default {
     name: "Home",
-    components: {
-        carousel
-        }
+    // components: {
+    //     carousel
+    //     }
 }
 </script>
 
