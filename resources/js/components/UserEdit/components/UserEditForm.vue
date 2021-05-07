@@ -10,7 +10,14 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="label_wrapper">
+<!--                            <Cropper :imageProp="imgData"-->
+<!--                                     @cropImg="setCropImg">-->
+<!--                            </Cropper>-->
+<!--                            <ImageLoader :imageProp="userData.data.avatar"-->
+<!--                                         @imageSelected="imgSelected">-->
+<!--                            </ImageLoader>-->
                             <label class="edit_form__label img_input_label">
+
                                 <input type="file"
                                        accept="image/*"
                                        name="image"
@@ -59,16 +66,24 @@
             <div class="col-md-6">
                 <label class="edit_form__label">
                     <span class="input_title">Отдел:</span>
-                    <select name="department" class="styled">
-                        <option value="1">{{ userData.data.department_id }}</option>
-                        <option value="...">...</option>
+                    <select name="department" class="styled" v-model="userData.data.department_id">
+                        <option v-for="department in departmentsData"
+                                :key="department.id"
+                                :value="department.id">
+                            {{ department.title }}
+                        </option>
                     </select>
                 </label>
                 <label class="edit_form__label">
                     <span class="input_title">Должность:</span>
-                    <select name="position" class="styled" required>
-                        <option :value="userData.data.position ">{{ userData.data.position }}</option>
-                        <option value="...">...</option>
+                    <select name="position" class="styled"
+                            v-model="userData.data.position"
+                            required>
+                        <option v-for="position in positions"
+                                :key="position.id"
+                                :value="position.id">
+                            {{ position.title }}
+                        </option>
                     </select>
                 </label>
                 <label class="edit_form__label">
@@ -159,6 +174,8 @@
 import ConfirmBtn from "../../buttons/ConfirmBtn";
 import CancelBtn from "../../buttons/CancelBtn";
 import Message from "../../message/Message";
+import Cropper from "../../cropper/Cropper";
+import ImageLoader from "../../cropper/ImageLoader";
 import {mapActions} from "vuex";
 
 export default {
@@ -167,7 +184,9 @@ export default {
     components: {
         CancelBtn,
         ConfirmBtn,
-        Message
+        Message,
+        ImageLoader,
+        Cropper
 
     },
     data() {
@@ -175,14 +194,57 @@ export default {
             confirm: 'Сохранить',
             confirm2: 'Изменить',
             imgChange: false,
-            userData: this.$props,
-            userId: 0
+            userData: {
+                data: {
+                    is_admin: false
+                }
+            },
+            departmentsData: [
+                {
+                    id: 1,
+                    title: 'Отдел сайтов'
+                },
+                {
+                    id: 2,
+                    title: 'Отдел разработки проектов'
+                },
+                {
+                    id: 3,
+                    title: 'Отдел дизайна'
+                }
+            ],
+            positions: [
+                {
+                    id: 1,
+                    title: 'Дизайнер'
+                },
+                {
+                    id: 2,
+                    title: 'Разработчик'
+                },
+                {
+                    id: 3,
+                    title: 'Менеджер'
+                }
+            ],
+            userId: 0,
+            routeBack: false,
+            imgData: {}
         }
     },
     methods: {
         ...mapActions([
             'getUMMessage'
         ]),
+        setCropImg(data) {
+            console.log('setCropImg', data)
+            this.userData.data = data
+            console.log(' this.userData.data', this.userData.data)
+        },
+        imgSelected(data) {
+            console.log('imgSelected', data)
+            this.imgData = data
+        },
         createUser(data) {
             return axios.post('/api/user/create', data.data)
                 .then(value => {
@@ -205,12 +267,20 @@ export default {
                 })
         },
         cancelUser(data) {
-            // // console.log('cancelUser',data)
-            // for (let key of Object.keys(data)) {
-            //     data[key] = ''
-            // }
+            let back = true
+            console.log('cancelUser', data, this.routeBack)
+            for (let key of Object.keys(data.data)) {
+                if (data.data[key] !== '') {
+                    data.data[key] = ''
+                    back = false
+                }
+            }
+            if (back) {
+                this.$router.push('/users-management')
+            }
         },
         handleFileUpload(data) {
+            console.log('handleFileUpload', data)
             if (data.data.avatar !== this.$refs.file.files[0] && this.$refs.file.files[0]) {
                 this.imgChange = true
                 data.data.avatar = this.$refs.file.files[0];
@@ -229,7 +299,23 @@ export default {
             if (last && first) return last.slice(0, 1) + '.' + first.slice(0, 1)
 
         },
-
+        setData() {
+            console.log('this.data', this.$props.data)
+            this.userData.data = this.data
+        },
+    },
+    computed: {
+        setUserData() {
+            return this.data
+        }
+    },
+    watch: {
+        setUserData() {
+            this.setData()
+        }
+    },
+    mounted() {
+        this.setData()
     }
 }
 </script>
