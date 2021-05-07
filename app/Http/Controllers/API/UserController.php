@@ -65,6 +65,8 @@ class UserController extends Controller
             'name' => $request->get('name'),
             'password' => $password,
             'email' => $request->get('email'),
+            'app_name' => env('APP_NAME'),
+            'app_location' => env('APP_URL')
         ]);
 
         Mail::to($email)->send(new SendUserPassword($data));
@@ -122,6 +124,7 @@ class UserController extends Controller
         return response()->json(['data' => $data, 'status' => true]);
 
     }
+
     public function destroy($id)
     {
         $user = User::find($id);
