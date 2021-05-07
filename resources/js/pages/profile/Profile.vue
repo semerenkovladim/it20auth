@@ -3,7 +3,7 @@
         <div class="profile_title">Мой профиль</div>
         <div class="profile_form">
             <div class="inform_title">Общая информация</div>
-            <form action="">
+            <form action="#" method="post" class="row user_edit_form__form" enctype="multipart/form-data">
                 <div class="container">
                     <div class="row profile_input">
                         <div class="col-6">
