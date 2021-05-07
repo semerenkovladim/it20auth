@@ -10,7 +10,14 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="label_wrapper">
+<!--                            <Cropper :imageProp="imgData"-->
+<!--                                     @cropImg="setCropImg">-->
+<!--                            </Cropper>-->
+<!--                            <ImageLoader :imageProp="userData.data.avatar"-->
+<!--                                         @imageSelected="imgSelected">-->
+<!--                            </ImageLoader>-->
                             <label class="edit_form__label img_input_label">
+
                                 <input type="file"
                                        accept="image/*"
                                        name="image"
@@ -167,6 +174,8 @@
 import ConfirmBtn from "../../buttons/ConfirmBtn";
 import CancelBtn from "../../buttons/CancelBtn";
 import Message from "../../message/Message";
+import Cropper from "../../cropper/Cropper";
+import ImageLoader from "../../cropper/ImageLoader";
 import {mapActions} from "vuex";
 
 export default {
@@ -175,7 +184,9 @@ export default {
     components: {
         CancelBtn,
         ConfirmBtn,
-        Message
+        Message,
+        ImageLoader,
+        Cropper
 
     },
     data() {
@@ -217,13 +228,23 @@ export default {
                 }
             ],
             userId: 0,
-            routeBack: false
+            routeBack: false,
+            imgData: {}
         }
     },
     methods: {
         ...mapActions([
             'getUMMessage'
         ]),
+        setCropImg(data) {
+            console.log('setCropImg', data)
+            this.userData.data = data
+            console.log(' this.userData.data', this.userData.data)
+        },
+        imgSelected(data) {
+            console.log('imgSelected', data)
+            this.imgData = data
+        },
         createUser(data) {
             return axios.post('/api/user/create', data.data)
                 .then(value => {

@@ -59,6 +59,8 @@ class UserController extends Controller
         $user->save();
 
         return response()->json(['data' => $user, 'password' => $password, 'status' => true]);
+
+
     }
 
     public function show($id)
