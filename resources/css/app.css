@@ -1,3 +1,4 @@
+
 *{
     font-family: Roboto, sans-serif;
     padding: 0;
@@ -322,6 +323,21 @@ ul {
     color: #F5F5F5;
     position: relative;
 }
+.slide1{
+    background: url("../images/slider/01.png") no-repeat;
+    width: 1110px;
+    height: 400px;
+}
+.slide2{
+    background: url("../images/slider/02.png") no-repeat;
+    width: 1110px;
+    height: 400px;
+}
+.slide3{
+    background: url("../images/slider/03.png") no-repeat;
+    width: 1110px;
+    height: 400px;
+}
 .font_icon{
     background: url("../images/icons/flag_icon.png") no-repeat;
     padding-top: 70px;
@@ -408,16 +424,14 @@ ul {
     padding-top: 20px;
 }
 .row_date{
-    padding-top: 55px;
+    padding-top: 39px;
 }
 .profile_photo{
     margin-top: 25px;
-    padding-bottom: 10px;
-    padding-left: 250px;
-}
-.profile_photo img{
-    width: 151px;
-    height: 151px;
+    padding-bottom: 145px;
+    margin-left: 200px;
+    background: url(../images/placeholder.png) no-repeat;
+    background-size:146px 146px ;
 }
 .profile_title{
     font-family: Roboto;
@@ -450,11 +464,20 @@ ul {
 .form_button{
     text-align: center;
     margin-top: 30px;
-    padding-bottom: 36px
+    padding-bottom: 36px;
+}
+.form_button button{
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 900;
+    font-size: 12px;
+    line-height: 20px;
+    text-transform: uppercase;
 }
 .save_btn{
     width: 120px;
     height: 50px;
+    color: #FFFFFF;
 }
 .cancel_btn{
     background: #FFFFFF;
@@ -464,6 +487,7 @@ ul {
     margin-left: 31px;
     width: 120px;
     height: 50px;
+    color: #B2B2B2;
 }
 .cancel_btn:hover{
     background: #bbb5b5;

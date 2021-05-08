@@ -1,11 +1,10 @@
 <template>
     <div>
-
             <div class="slider">
             <carousel :autoplay="true" :items="1" :dots="false" :autoplayTimeout="30000" :nav="false">
-                <img src="images/01.png" alt="slide1">
-                <img src="images/02.png" alt="slide1">
-                <img src="images/03.png" alt="slide1">
+                <div class="slide slide1"></div>
+                <div class="slide slide2"></div>
+                <div class="slide slide3"></div>
             </carousel>
         </div>
 
@@ -132,6 +131,13 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss">
+.slider {
+    margin: 0 auto;
+    width: 100%;
+    .slide {
+        width: 100%;
+    }
+}
 </style>
+

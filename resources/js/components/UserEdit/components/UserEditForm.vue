@@ -10,7 +10,14 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="label_wrapper">
+                            <!--                            <Cropper :imageProp="imgData"-->
+                            <!--                                     @cropImg="setCropImg">-->
+                            <!--                            </Cropper>-->
+                            <!--                            <ImageLoader :imageProp="userData.data.avatar"-->
+                            <!--                                         @imageSelected="imgSelected">-->
+                            <!--                            </ImageLoader>-->
                             <label class="edit_form__label img_input_label">
+
                                 <input type="file"
                                        accept="image/*"
                                        name="image"
@@ -74,7 +81,7 @@
                             required>
                         <option v-for="position in positions"
                                 :key="position.id"
-                                :value="position.id">
+                                :value="position.title">
                             {{ position.title }}
                         </option>
                     </select>
@@ -167,6 +174,8 @@
 import ConfirmBtn from "../../buttons/ConfirmBtn";
 import CancelBtn from "../../buttons/CancelBtn";
 import Message from "../../message/Message";
+import Cropper from "../../cropper/Cropper";
+import ImageLoader from "../../cropper/ImageLoader";
 import {mapActions} from "vuex";
 
 export default {
@@ -175,7 +184,9 @@ export default {
     components: {
         CancelBtn,
         ConfirmBtn,
-        Message
+        Message,
+        ImageLoader,
+        Cropper
 
     },
     data() {
@@ -217,13 +228,23 @@ export default {
                 }
             ],
             userId: 0,
-            routeBack: false
+            routeBack: false,
+            imgData: {}
         }
     },
     methods: {
         ...mapActions([
             'getUMMessage'
         ]),
+        setCropImg(data) {
+            console.log('setCropImg', data)
+            this.userData.data = data
+            console.log(' this.userData.data', this.userData.data)
+        },
+        imgSelected(data) {
+            console.log('imgSelected', data)
+            this.imgData = data
+        },
         createUser(data) {
             return axios.post('/api/user/create', data.data)
                 .then(value => {
@@ -233,6 +254,10 @@ export default {
                         axios.post('/api/user/permission/create', {
                             user_id: value.data.data.id
                         })
+                        axios.post('/api/user/settings/create', {
+                            user_id: value.data.data.id
+                        })
+
                     }
                 })
         },
@@ -275,7 +300,7 @@ export default {
                 })
         },
         shortFio(last, first) {
-            if (last && first) return last.slice(0, 1) + '.' + first.slice(0, 1)
+            if (last && first) return last.slice(0, 1) + ' ' + first.slice(0, 1)
 
         },
         setData() {

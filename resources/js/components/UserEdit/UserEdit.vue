@@ -42,11 +42,11 @@ export default {
                 {
                     id: 2,
                     name: 'Пользователи',
-                    href: '#'
+                    href: '/users-management'
                 },
                 {
                     id: 3,
-                    name: 'Попутько Николай Иванович',
+                    name: '',
                     href: '#'
                 },
                 {
@@ -57,7 +57,8 @@ export default {
             ],
             text: 'Редактирование пользователя',
             placeholderNav: true,
-            userData: {}
+            userData: {},
+            userName: ''
         }
     },
     methods: {
@@ -67,10 +68,19 @@ export default {
                     this.userData = value.data.data
                     console.log(value)
                     console.log('this.userData', this.userData)
+                    this.setUserName()
                 })
                 .catch(reason => {
                     // console.log(reason)
                 })
+        },
+        setUserName() {
+            let fio = []
+            if (this.userData.surname) fio.push(this.userData.surname)
+            if (this.userData.name) fio.push(this.userData.name)
+            if (this.userData.middle_name) fio.push(this.userData.middle_name)
+            this.links[2].name = `${fio.join(' ')}`
+            console.log('this.links[2].name', this.links[2].name)
         }
     },
     computed: {
