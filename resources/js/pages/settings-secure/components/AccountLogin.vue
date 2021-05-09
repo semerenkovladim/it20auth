@@ -531,6 +531,9 @@ export default {
     margin-bottom: 6px;
     padding: 25px 6px 0px 6px;
 }
+.flex {
+    display: flex;
+}
 .list-settings > li:last-child {
     margin-bottom: 0;
 }
