@@ -177,9 +177,9 @@
                         </div>
                     </li>
                     <li class="flex justify-content-between align-items-center settings-item">
-                        <div class="title-list">Резервный email</div>
-                        <div class="subaction">
-                            anna_ko@gmail.com
+                        <div class="title-list" @click="openModal('reservedEmail')">Резервный email</div>
+                        <div class="subaction" @click="openModal('reservedEmail')">
+                            {{ reservedEmail ? reservedEmail : 'Не заданно' }}
                         </div>
                         <div class="tooltip-icon">
                             <svg width="31" height="30" viewBox="0 0 31 30" fill="none" xmlns="http://www.w3.org/2000/svg" @click="openModal('reservedEmail')">
@@ -216,11 +216,11 @@
                                                     <label for="inputReservedEmail">Пароль:</label>
                                                     <input type="email" class="form-control" id="inputReservedEmail" aria-describedby="emailHelp"
                                                            placeholder="Резервный email:"
-                                                           name="reservedEmail">
+                                                           name="reservedEmail" v-model="reservedEmail">
                                                 </div>
                                                 <div class="form-group d-flex flex-row btn-form-group">
-                                                    <button @click.prevent="saveReservedEmail">Сохранить</button>
-                                                    <button class="cancel" @click.prevent="clearReservedEmail">Отмена</button>
+                                                    <button @click.prevent="saveReservedEmail" data-dismiss="modal">Сохранить</button>
+                                                    <button class="cancel" @click.prevent="clearReservedEmail" data-dismiss="modal">Отмена</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -388,6 +388,7 @@ export default {
             notification: false,
             codeWord: false,
             codeWordText: '',
+            reservedEmail: '',
         }
     },
     methods: {
@@ -437,7 +438,7 @@ export default {
             this.codeWordText = this.user.backup_date.code_word;
         },
         clearSecretCode() {
-            this.codeWordText = '';
+            this.codeWordText = this.user.backup_date.code_word;
             this.codeWord = this.user.setting.useCodeWord;
             var myModal = new bootstrap.Modal(document.getElementById('reservedCode'), {
                 keyboard: false
@@ -458,6 +459,26 @@ export default {
                 this.openModal('saveSettings');
             })
         },
+        saveReservedEmail() {
+            const payload = {
+                reservedEmail: this.reservedEmail,
+            }
+            axios.post('/api/settings', payload, {
+                headers: {
+                    'Authorization': `Bearer ` + this.access_token
+                }
+            }).then((response) => {
+                this.saveUserFromServer(response.data);
+                this.openModal('saveSettings');
+            })
+        },
+        clearReservedEmail() {
+            this.reservedEmail = this.user.backup_date.backup_email;
+            var myModal = new bootstrap.Modal(document.getElementById('reservedCode'), {
+                keyboard: false
+            })
+            myModal.hide();
+        }
     },
     computed: {
         ...mapGetters([
@@ -487,6 +508,7 @@ export default {
         this.notification = this.user.setting.suspiciousLoginNotifications;
         this.codeWord = this.user.setting.useCodeWord;
         this.codeWordText = this.user.backup_date.code_word;
+        this.reservedEmail = this.user.backup_date.backup_email;
     }
 }
 </script>

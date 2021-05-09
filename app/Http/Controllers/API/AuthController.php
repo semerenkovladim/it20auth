@@ -267,4 +267,18 @@ class AuthController extends Controller
 
         return response()->json([], 404);
     }
+
+    public function checkReservedEmail(Request $request)
+    {
+        $validated = $request->validate([
+            'email' => 'required|exists:users',
+        ]);
+
+        $user = User::whereEmail($validated['email'])->with(['backup_date'])->first();
+
+        if($user->backup_date->backup_email)
+        {
+            return response()->json($user->backup_date->backup_email, 200);
+        }
+    }
 }
