@@ -7,13 +7,13 @@
                         <nav>
                             <ul>
                                 <li>
-                                    <a href="#">Управление</a>
+                                    <span>Управление</span>
                                 </li>
                                 <li>
-                                    <a href="/departments-management">Отделы</a>
+                                    <router-link to="/departments-management">Отделы</router-link>
                                 </li>
                                 <li>
-                                    <a href="#">Отдел разработки проектов</a>
+                                    <router-link to="/departments-create">Создание отдела</router-link>
                                 </li>
                             </ul>
                         </nav>
@@ -32,11 +32,10 @@
                                 </li>
                                 <li>
                                     <label for="lead">Руководитель:</label>
-                                    <select type="text" id="lead" v-model="header">
-                                        <option value="1"></option>
-                                        <option value="2">Петров Сергей Сергеевич</option>
-                                        <option value="3">Петров Ивано Сергеевич</option>
-                                        <option value="4">Сергеев Петр Иванович</option>
+                                    <select type="text" id="lead" v-model="depHead">
+                                        <option v-for="lead in getLeads" :value="lead.id">
+                                            {{ lead.name}} {{lead.surname}}
+                                        </option>
                                     </select>
                                 </li>
                                 <li class="anchor_Modal">
@@ -67,7 +66,7 @@ export default {
     name: "DepartmentCreate",
     data() {
         return {
-            header: null,
+            depHead: null,
             isActiveWorkersList: false,
             title: null,
             head_department: null,
@@ -81,23 +80,23 @@ export default {
             console.log(this.isActiveWorkersList)
             this.isActiveWorkersList = !this.isActiveWorkersList
         },
-        ...mapActions(['fetchHeaders', 'createNewDepartment']),
+        ...mapActions(['fetchLeads', 'createNewDepartment']),
     },
     async setFormData() {
         let data = {
             title: this.title,
-            head_department: this.header
+            head_department: this.depHead
         };
 
         await this.createNewDepartment(data);
 
     },
     computed: {
-        ...mapGetters(['getHeaders']),
+        ...mapGetters(['getLeads']),
     },
     mounted() {
-        this.fetchHeaders()
-        console.log(this.getHeaders)
+        this.fetchLeads()
+        console.log(this.getLeads)
     }
 
 }
@@ -105,6 +104,23 @@ export default {
 
 <style lang="scss" scoped>
 @import "resources/sass/variables";
+
+%sortArrow {
+    content: '';
+    display: inline-block;
+    position: relative;
+    height: 10px;
+    width: 10px;
+    top: -2px;
+    left: 5px;
+    transform: rotate(135deg);
+    transition: 0.4s ease;
+    padding: 0;
+    margin: 0 13px;
+    border-style: solid;
+    border-width: 2px 2px 0 0;
+    color: #D8D8D8;
+}
 
 * {
     font-family: $depManagementFF;
@@ -175,32 +191,37 @@ form {
     display: flex;
     font-size: 14px;
     padding: 30px 0 50px 0;
-}
 
-form ul {
-    margin: 0 auto;
-    list-style: none;
-}
+    ul {
+        margin: 0 auto;
+        list-style: none;
+    }
 
-form label {
-    width: 100%;
-    font-size: 14px;
-    color: #666666;
-    margin-bottom: 21px;
-}
+    label {
+        width: 100%;
+        font-size: 14px;
+        color: #666666;
+        margin-bottom: 21px;
+    }
 
-form input,
-form select {
-    outline: none;
-    background: #FFFFFF;
-    border: 2px solid #F5F5F5;
-    box-sizing: border-box;
-    border-radius: 4px;
-    line-height: 30px;
-    color: #808080;
-    height: 60px;
-    width: 377px;
-    margin-bottom: 30px;
+    input,
+    select {
+        height: 60px;
+        width: 377px;
+        margin-bottom: 30px;
+        padding: 0 15px;
+        outline: none;
+        background: #FFFFFF;
+        border: 2px solid #F5F5F5;
+        box-sizing: border-box;
+        border-radius: 4px;
+        line-height: 30px;
+        color: #808080;
+    }
+
+    select {
+        background: url("/images/arrow_down.svg") no-repeat center right 15px;
+    }
 }
 
 .anchor_Modal {
@@ -242,9 +263,11 @@ form select {
 }
 
 @media (max-width: 460px) {
-    form input,
-    form select {
-        width: 90%;
+    form {
+        input,
+        select {
+            width: 90%;
+        }
     }
     .btnSave {
         margin-left: 0px;

@@ -8,17 +8,8 @@
                     </div>
                     <div class="modal-title">Список сотрудников</div>
                     <ul class="workers_list">
-                        <li>
-                            Петров Иван
-                        </li>
-                        <li>
-                            Берёза Петр
-                        </li>
-                        <li>
-                            Сидоров Сергей
-                        </li>
-                        <li>
-                            Седой Алексей
+                        <li v-for="member in getDepMembers">
+                            {{ member.name }} {{member.surname}}
                         </li>
                     </ul>
                     <div class="btns d-flex">
@@ -32,8 +23,19 @@
 </template>
 
 <script>
+import {mapActions, mapGetters} from 'vuex'
+
 export default {
-    name: "DepartmentWorkersList"
+    name: "DepartmentWorkersList",
+    methods: {
+        ...mapActions(['fetchDepMembers'])
+    },
+    computed: {
+        ...mapGetters(['getDepMembers'])
+    },
+    created() {
+        this.fetchDepMembers(1)
+    }
 }
 </script>
 

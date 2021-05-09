@@ -6,26 +6,36 @@ export default {
         nextPage: '',
         prevPage: '',
         validationErrs: null,
-        headers: null,
+        leads: null,
+        depMembers: null,
     },
 
     mutations: {
         updateDepartments(state, departments) {
             state.departments = departments;
         },
+
         updateDepartment(state, department) {
             state.department = department;
         },
+
         updateNextPage(state, nextPage) {
             state.nextPage = nextPage;
         },
+
         makePagination(state, res) {
             state.nextPage = res.next_page_url;
             state.prevPage = res.prev_page_url;
         },
-        updateHeaders(state, headers) {
-            state.headers = headers
+
+        updateLeads(state, leads) {
+            state.leads = leads
         },
+
+        updateDepMembers(state, depMembers) {
+            state.depMembers = depMembers;
+        },
+
         collectValidErrors(state, err) {
             state.validationErrs = err;
         }
@@ -51,12 +61,23 @@ export default {
                 );
         },
 
-        async fetchHeaders(ctx) {
+        async fetchLeads(ctx) {
 
             return await axios
                 .get(`/api/users`)
                 .then(res => {
-                    ctx.commit('updateHeaders', res.data.data.data)
+                    ctx.commit('updateLeads', res.data.data.data)
+                })
+                .catch(err => console.log('error:', err)
+                );
+        },
+
+        async fetchDepMembers(ctx, departmentId) {
+
+            return await axios
+                .get(`/api/users/${departmentId}`)
+                .then(res => {
+                    ctx.commit('updateDepMembers', res.data.data.data)
                 })
                 .catch(err => console.log('error:', err)
                 );
@@ -87,20 +108,29 @@ export default {
         getDepartments(state) {
             return state.departments
         },
+
         getDepartment(state) {
             return state.department
         },
+
         getNextPage(state) {
             return state.nextPage
         },
+
         getPrevPage(state) {
             return state.prevPage
         },
+
         getValidationErrs(state) {
             return state.validationErrs
         },
-        getHeaders(state) {
-            return state.headers
+
+        getLeads(state) {
+            return state.leads
+        },
+
+        getDepMembers(state) {
+            return state.depMembers
         }
     },
 }
