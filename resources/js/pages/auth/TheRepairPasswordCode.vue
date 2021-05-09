@@ -26,7 +26,7 @@
 
                     </div>
                     <div class="reset-password">
-                        <a href="/login/repair-password/secret-code">Установить новый пароль с помощью кодового слова</a>
+                        <a href="#" @click.prevent="secretCode">Установить новый пароль с помощью кодового слова</a>
                     </div>
                     <div class="reset-password">
                         <a href="#">Отправить код на резервный e-mail</a>
@@ -88,7 +88,20 @@ export default {
                 email: this.resetPasswordEmail,
             });
             this.startTimer();
-        }
+        },
+        secretCode() {
+            const payload = {
+                email: this.email
+            }
+            axios.post('/api/login/check-secret', payload).then(() => {
+
+                this.$router.push({name: 'login.repair.word'})
+            }).catch((e) => {
+                if(e.response.status === 422) {
+                    this.hasError = true;
+                }
+            });
+        },
     },
     computed: {
         ...mapGetters(['resetPasswordEmail']),

@@ -324,11 +324,11 @@
                                                     <label for="inputSecretCode">Кодовое слово:</label>
                                                     <input type="email" class="form-control" id="inputSecretCode" aria-describedby="emailHelp"
                                                            placeholder="Кодовое слово:"
-                                                           name="inputSecretCode">
+                                                           name="inputSecretCode" v-model="codeWordText">
                                                 </div>
                                                 <div class="form-group d-flex flex-row btn-form-group">
-                                                    <button @click.prevent="saveSecretCode">Сохранить</button>
-                                                    <button class="cancel" @click.prevent="clearSecretCode">Отмена</button>
+                                                    <button @click.prevent="saveSecretCode" data-dismiss="modal">Сохранить</button>
+                                                    <button class="cancel" @click.prevent="clearSecretCode" data-dismiss="modal">Отмена</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -387,6 +387,7 @@ export default {
             reservedPassword: false,
             notification: false,
             codeWord: false,
+            codeWordText: '',
         }
     },
     methods: {
@@ -424,7 +425,6 @@ export default {
                     'Authorization': `Bearer ` + this.access_token
                 }
             }).then((response) => {
-                console.log(response.data);
                 this.saveUserFromServer(response.data);
                 this.openModal('saveSettings');
             });
@@ -434,7 +434,30 @@ export default {
             this.reservedPassword = this.user.setting.useReservedPassword;
             this.notification = this.user.setting.suspiciousLoginNotifications;
             this.codeWord = this.user.setting.useCodeWord;
-        }
+            this.codeWordText = this.user.backup_date.code_word;
+        },
+        clearSecretCode() {
+            this.codeWordText = '';
+            this.codeWord = this.user.setting.useCodeWord;
+            var myModal = new bootstrap.Modal(document.getElementById('reservedCode'), {
+                keyboard: false
+            })
+            myModal.hide();
+        },
+        saveSecretCode() {
+            const payload = {
+                useCode: this.codeWord,
+                codeWord: this.codeWordText
+            }
+            axios.post('/api/settings', payload, {
+                headers: {
+                    'Authorization': `Bearer ` + this.access_token
+                }
+            }).then((response) => {
+                this.saveUserFromServer(response.data);
+                this.openModal('saveSettings');
+            })
+        },
     },
     computed: {
         ...mapGetters([
@@ -449,12 +472,21 @@ export default {
         passwordRepeate() {
             this.showIconPasswordRepeate = this.passwordRepeate.length > 0;
         },
+        codeWord() {
+            if(this.codeWord === true) {
+                var myModal = new bootstrap.Modal(document.getElementById('reservedCode'), {
+                    keyboard: false
+                })
+                myModal.show();
+            }
+        }
     },
     created() {
         this.twofactor = this.user.setting.useTwoStepAuth;
         this.reservedPassword = this.user.setting.useReservedPassword;
         this.notification = this.user.setting.suspiciousLoginNotifications;
         this.codeWord = this.user.setting.useCodeWord;
+        this.codeWordText = this.user.backup_date.code_word;
     }
 }
 </script>
