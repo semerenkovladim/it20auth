@@ -24,12 +24,15 @@ use App\Http\Controllers\API\AccessLevelController;
 
 
 Route::post('/login', [AuthController::class, 'baseAuth']);
+Route::post('/login/check-reserved-email', [AuthController::class, 'checkReservedEmail']);
+Route::post('/login/check-secret', [AuthController::class, 'checkSecret']);
 Route::post('/login/get-code', [AuthController::class, 'createAuthCode']);
 Route::post('/login/reserved-password', [AuthController::class, 'loginWithPassword']);
 Route::post('/login/login-code', [AuthController::class, 'loginWithCode']);
 Route::post('/login/resend-code', [AuthController::class, 'loginWithCode']);
 Route::post('/login/repair-password', [ResetPasswordController::class, 'sendCode']);
 Route::post('/login/repair-password/code', [ResetPasswordController::class, 'resetPasswordCode']);
+Route::post('/login/repair-password/code-word/new-password', [ResetPasswordController::class, 'resetPasswordSecretCode']);
 Route::post('/login/resend-code', [ResetPasswordController::class, 'resendPasswordCode']);
 Route::post('/login/repair-password/new-password', [ResetPasswordController::class, 'resetPassword']);
 

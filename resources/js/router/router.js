@@ -21,6 +21,7 @@ import TheLoginTwoFactor from "../pages/auth/TheLoginTwoFactor";
 import TheLoginCode from "../pages/auth/TheLoginCode";
 import middlewarePipeline from "./middlewarePipeline";
 import isLogin from './isLogin';
+import TheRepairPasswordCodeWord from "../pages/auth/TheRepairPasswordCodeWord";
 // import * as path from "path";
 
 Vue.use(VueRouter);
@@ -64,6 +65,11 @@ const router = new VueRouter({
                     path: 'repair-password/new-password',
                     name: 'login.repair.new',
                     component: TheRepairPasswordNew
+                },
+                {
+                    path: 'repair-password/code-word',
+                    name: 'login.repair.word',
+                    component: TheRepairPasswordCodeWord
                 }
             ]
         },

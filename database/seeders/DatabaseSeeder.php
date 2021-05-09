@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             SettingSeeder::class,
             BackupDatasSeeder::class,
             DepartmentTableSeeder::class,
+            AccessLevelSeed::class
         ]);
     }
 }

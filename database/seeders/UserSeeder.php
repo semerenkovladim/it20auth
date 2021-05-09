@@ -27,7 +27,8 @@ class UserSeeder extends Seeder
                 'date_start' => Date::now(),
                 'email' => 'bins.sheridan@example.com',
                 'password' => Hash::make('Q3kR2"&Jj><Qj+#X'), // password
-                'department_id' => 1
+                'department_id' => 1,
+                'is_admin' => false
             ],
             [
                 'position' => 'Developer',
@@ -38,7 +39,8 @@ class UserSeeder extends Seeder
                 'date_start' => Date::now(),
                 'email' => 'katherinebeglaryan@gmail.com',
                 'password' => Hash::make('Q3kR2"&Jj><Qj+#X'), // password
-                'department_id' => 1
+                'department_id' => 1,
+                'is_admin' => false
             ],
             [
                 'position' => 'Developer',
@@ -49,7 +51,8 @@ class UserSeeder extends Seeder
                 'date_start' => Date::now(),
                 'email' => 'admin@email.com',
                 'password' => Hash::make('Q3kR2"&Jj><Qj+#X'), // password
-                'department_id' => 1
+                'department_id' => 1,
+                'is_admin' => true
             ]
         ]);
     }

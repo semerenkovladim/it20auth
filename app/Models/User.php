@@ -66,4 +66,25 @@ class User extends Authenticatable
     {
         return $this->hasOne(BackupData::class);
     }
+
+    protected static function booted()
+    {
+        static::saved(function ($user) {
+            $setting = new Setting();
+            $setting->useTwoStepAuth = false;
+            $setting->useReservedPassword = false;
+            $setting->suspiciousLoginNotifications = false;
+            $setting->useCodeWord = false;
+            $setting->user_id = $user->id;
+
+            $backup = new BackupData();
+            $backup->backup_password = null;
+            $backup->backup_email = null;
+            $backup->code_word = null;
+
+            $user->setting()->save($setting);
+            $user->backup_date()->save($backup);
+
+        });
+    }
 }

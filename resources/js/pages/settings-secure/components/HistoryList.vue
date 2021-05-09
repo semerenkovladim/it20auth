@@ -60,6 +60,9 @@ export default {
 </script>
 
 <style scoped>
+.flex {
+    display: flex;
+}
 .content {
     background: #FFFFFF;
     box-shadow: 0px 5px 30px rgba(0, 0, 0, 0.07);

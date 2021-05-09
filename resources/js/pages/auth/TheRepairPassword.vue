@@ -17,7 +17,7 @@
                                v-model="email">
                     </div>
                     <div class="reset-password">
-                        <a href="/login/repair-password/secret-code">Установить новый пароль с помощью кодового слова</a>
+                        <a href="#" @click.prevent="secretCode">Установить новый пароль с помощью кодового слова</a>
                     </div>
                     <div class="form-group d-flex flex-row btn-form-group">
                         <button @click.prevent="validate">далее</button>
@@ -74,7 +74,20 @@ export default {
                 this.$refs.recaptcha.execute()
             }
         },
+        secretCode() {
+            const payload = {
+                email: this.email
+            }
 
+            axios.post('/api/login/check-secret', payload).then(() => {
+                this.saveResetPasswordEmail(this.email);
+                this.$router.push({name: 'login.repair.word'})
+            }).catch((e) => {
+                if(e.response.status === 422) {
+                    this.hasError = true;
+                }
+            });
+        },
         onCaptchaExpired () {
             this.$refs.recaptcha.reset()
         }
