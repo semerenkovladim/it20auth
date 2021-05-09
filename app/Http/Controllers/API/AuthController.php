@@ -252,4 +252,33 @@ class AuthController extends Controller
             'status' => 200
         ]);
     }
+
+    public function checkSecret(Request $request)
+    {
+        $validated = $request->validate([
+            'email' => 'required|exists:users',
+        ]);
+
+        $user = User::whereEmail($validated['email'])->with(['setting'])->first();
+
+        if($user->setting->useCodeWord) {
+            return response()->json([], 200);
+        }
+
+        return response()->json([], 404);
+    }
+
+    public function checkReservedEmail(Request $request)
+    {
+        $validated = $request->validate([
+            'email' => 'required|exists:users',
+        ]);
+
+        $user = User::whereEmail($validated['email'])->with(['backup_date'])->first();
+
+        if($user->backup_date->backup_email)
+        {
+            return response()->json($user->backup_date->backup_email, 200);
+        }
+    }
 }

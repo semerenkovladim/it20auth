@@ -17,27 +17,49 @@ class UserSettingsController extends Controller
     public function update(Request $request)
     {
         $validated = $request->validate([
-            'twoFactor' => 'required|bool',
-            'reservedPassword' => 'required|bool'
+            'twoFactor' => 'bool',
+            'reservedPassword' => 'bool',
+            'useCode' => 'bool',
+            'codeWord' => 'string',
+            'reservedEmail' => 'string'
         ]);
 
         $userAuth = $request->user();
         $user = User::find($userAuth->id);
         $setting = Setting::find($user->setting->id);
-        $setting->useTwoStepAuth = $validated['twoFactor'];
-        if(boolval($validated['reservedPassword']) !== boolval($setting->useReservedPassword)) {
-            if(boolval($validated['reservedPassword'])) {
-                $reservedPassword = Str::random(4) . mt_rand(10, 99);
-                Mail::to($user->email)->send(new SendReservedPassword($reservedPassword, $user->name));
+        $backup = BackupData::find($user->backup_date->id);
 
-                $backup = BackupData::find($user->backup_date->id);
-                $backup->backup_password = Hash::make($reservedPassword);
 
-                $user->backup_date()->save($backup);
-            }
-            $setting->useReservedPassword = $validated['reservedPassword'];
+        if(array_key_exists('twoFactor', $validated)) {
+            $setting->useTwoStepAuth = $validated['twoFactor'];
         }
+
+        if(array_key_exists('reservedPassword', $validated)) {
+            if(boolval($validated['reservedPassword']) !== boolval($setting->useReservedPassword)) {
+                if (boolval($validated['reservedPassword'])) {
+                    $reservedPassword = Str::random(4) . mt_rand(10, 99);
+                    Mail::to($user->email)->send(new SendReservedPassword($reservedPassword, $user->name));
+
+                    $backup->backup_password = Hash::make($reservedPassword);
+
+                }
+                $setting->useReservedPassword = $validated['reservedPassword'];
+            }
+        }
+
+        if(array_key_exists('useCode', $validated)) {
+            $setting->useCodeWord = $validated['useCode'];
+            if(array_key_exists('codeWord', $validated)) {
+                $backup->code_word = $validated['codeWord'];
+            }
+        }
+
+        if(array_key_exists('reservedEmail', $validated)) {
+            $backup->backup_email = $validated['reservedEmail'];
+        }
+
         $user->setting()->save($setting);
+        $user->backup_date()->save($backup);
         $user->refresh();
 
         return response()->json($user, 200);

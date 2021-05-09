@@ -300,7 +300,7 @@ export default {
                 })
         },
         shortFio(last, first) {
-            if (last && first) return last.slice(0, 1) + '.' + first.slice(0, 1)
+            if (last && first) return last.slice(0, 1) + ' ' + first.slice(0, 1)
 
         },
         setData() {

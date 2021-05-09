@@ -115,4 +115,24 @@ class ResetPasswordController extends Controller
 
         return response()->json([], 200);
     }
+
+    public function resetPasswordSecretCode(Request $request)
+    {
+        $validated = $request->validate([
+            'password' => 'required|min:6',
+            'email' => 'required|exists:users',
+            'codeword' => 'required',
+        ]);
+
+        $user = User::whereEmail($validated['email'])->with(['backup_date'])->first();
+
+        if($validated['codeword'] !== $user->backup_date->code_word) {
+            return response()->json([], 403);
+        }
+
+        $user->password = Hash::make($validated['password']);
+        $user->save();
+
+        return response()->json([], 200);
+    }
 }

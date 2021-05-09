@@ -21,7 +21,7 @@
             </ConfirmBtn>
             <ConfirmBtn :text="text"
                         v-if="UM_MESSAGE.status"
-                        @confirmEvent="complete">
+                        @confirmEvent="hideUMMessage">
             </ConfirmBtn>
         </div>
     </div>

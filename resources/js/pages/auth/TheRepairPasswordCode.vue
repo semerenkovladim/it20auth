@@ -26,10 +26,10 @@
 
                     </div>
                     <div class="reset-password">
-                        <a href="/login/repair-password/secret-code">Установить новый пароль с помощью кодового слова</a>
+                        <a href="#" @click.prevent="secretCode">Установить новый пароль с помощью кодового слова</a>
                     </div>
-                    <div class="reset-password">
-                        <a href="#">Отправить код на резервный e-mail</a>
+                    <div class="reset-password" v-if="hasReservedEmail">
+                        <a href="#" @click.prevent="sendOnReservedEmail">Отправить код на резервный e-mail</a>
                     </div>
                     <div class="form-group d-flex flex-row btn-form-group">
                         <button @click.prevent="newPassword">далее</button>
@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
     name: "TheRepairPasswordCode",
@@ -53,12 +53,17 @@ export default {
             countSecond: 60,
             hasError: false,
             hideTextBtn: false,
+            hasReservedEmail: false,
+            reservedEmail: '',
         };
     },
     mounted() {
         this.startTimer()
     },
     methods: {
+        ...mapActions([
+            'saveResetPasswordEmail',
+        ]),
         newPassword() {
             axios.post('/api/login/repair-password/code', {
                 'code': this.code,
@@ -85,13 +90,43 @@ export default {
         },
         resendCode() {
             axios.post('/api/login/resend-code', {
+                email: this.reservedEmail,
+            });
+            this.startTimer();
+        },
+        secretCode() {
+            const payload = {
+                email: this.email
+            }
+            axios.post('/api/login/check-secret', payload).then(() => {
+
+                this.$router.push({name: 'login.repair.word'})
+            }).catch((e) => {
+                if(e.response.status === 422) {
+                    this.hasError = true;
+                }
+            });
+        },
+        sendOnReservedEmail() {
+            axios.post('/api/login/resend-code', {
                 email: this.resetPasswordEmail,
             });
             this.startTimer();
+        },
+        clearAll() {
+            this.code = '';
         }
     },
     computed: {
         ...mapGetters(['resetPasswordEmail']),
+    },
+    created() {
+        axios.post('/api/login/check-reserved-email', {
+            email: this.resetPasswordEmail
+        }).then((response) => {
+            this.reservedEmail = response.data;
+            this.hasReservedEmail = true;
+        })
     }
 }
 </script>
