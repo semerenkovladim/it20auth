@@ -20,7 +20,8 @@ class UserSettingsController extends Controller
             'twoFactor' => 'bool',
             'reservedPassword' => 'bool',
             'useCode' => 'bool',
-            'codeWord' => 'string'
+            'codeWord' => 'string',
+            'reservedEmail' => 'string'
         ]);
 
         $userAuth = $request->user();
@@ -52,6 +53,11 @@ class UserSettingsController extends Controller
                 $backup->code_word = $validated['codeWord'];
             }
         }
+
+        if(array_key_exists('reservedEmail', $validated)) {
+            $backup->backup_email = $validated['reservedEmail'];
+        }
+
         $user->setting()->save($setting);
         $user->backup_date()->save($backup);
         $user->refresh();
