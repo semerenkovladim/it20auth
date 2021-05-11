@@ -48,8 +48,9 @@ Route::post('/image/upload/avatar', [ImageUploadController::class, 'upload_avata
 
 
 Route::get('/departments', [DepartmentController::class, 'index'])->name('departments');
+Route::delete('/departments/{id}', [DepartmentController::class, 'destroy'])->name('departmentsDestroy');
 Route::post('/departments/create', [DepartmentController::class, 'store'])->name('departmentCreate');
-
+//Route::apiResource('departments', DepartmentController::class);
 
 
 Route::post('/user/settings/create',[SettingController::class,'store'])->name('setUserSetting');

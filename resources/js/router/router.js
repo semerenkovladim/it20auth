@@ -128,7 +128,7 @@ const router = new VueRouter({
                 {
                     path: '/departments-management',
                     component: DepartmentsManagement,
-                    name: DepartmentsManagement,
+                    name: 'DepartmentsManagement',
                     meta: {
                         middleware: [
                             isLogin
@@ -139,6 +139,7 @@ const router = new VueRouter({
                 {
                     path: '/departments-create',
                     component: DepartmentCreate,
+                    name: 'DepartmentCreate',
                     meta: {
                         middleware: [
                             isLogin

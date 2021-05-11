@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Laravel\Passport\HasApiTokens;
+use App\Models\User;
 
 class Department extends Model
 {
@@ -14,20 +15,37 @@ class Department extends Model
 
     protected $fillable = [
         'title',
-        'head_department'
+        'head_department',
     ];
 
+    protected $rules = [
+        'title' => 'bail|required|string|min:3|max:150',
+        'head_department' => 'bail|required|integer|min:1|max:150000',
+    ];
 
+    //========== Валидация при редактировании отдела ======
+
+    public function validate($request)
+    {
+        $request->validate($this->rules);
+    }
+
+    //========== /Валидация при редактировании отдела ======
 
     public function header()
     {
         return $this->belongsTo(\App\Models\User::class);
     }
 
-    //формирование списка отделов
+    //=========== формирование списка отделов ========
+
     public function fetchAllDep()
     {
-        $departments = Department::latest()->paginate(15);
+        $departments = DB::table('departments')
+            ->leftJoin('users', 'users.department_id', '=', 'departments.id')
+            ->select('departments.id', 'name', 'surname', 'title', 'departments.created_at')
+            ->latest()
+            ->paginate(5);
         if ($departments) {
             $status = 201;
         } else {
@@ -36,7 +54,10 @@ class Department extends Model
         return response()->json(['data' => $departments, 'status' => $status]);
     }
 
-//========== добавление отдела ==================
+    //=========== /формирование списка отделов ========
+
+
+    //========== добавление отдела ==================
 
     public function store($request)
     {
@@ -47,4 +68,17 @@ class Department extends Model
 
         $dep->save();
     }
+
+    //========== добавление отдела ==================
+
+    //========= удаление отдела =======
+
+    public function deleteDepartment($request)
+    {
+       $dep = new Department;
+       $dep->find($request);
+       $dep->delete();
+    }
+
+    //========= /удаление отдела =======
 }

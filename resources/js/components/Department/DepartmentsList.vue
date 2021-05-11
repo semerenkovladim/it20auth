@@ -1,5 +1,8 @@
 <template>
     <div>
+        <department-confirm-modal v-if="isActiveConfirmModal"
+                                  @close="isActiveConfirmModal = false"
+        :checked-departments="checkedDepartments"/>
         <div class="list_controls">
             <div class="row">
                 <div class="col-sm-12 col-md-4 col-xl-3 list_control_btns">
@@ -10,10 +13,10 @@
                                 <label for="checkbox"></label>
                             </div>
                             <div class="col-4">
-                                <div class="departments_list-edit"></div>
+                                <div class="departments_list-edit" @click="deletePosition"></div>
                             </div>
                             <div class="col-4">
-                                <div class="departments_list-delete"></div>
+                                <div class="departments_list-delete" @click="isActiveConfirmModal=true"></div>
                             </div>
                         </div>
                     </div>
@@ -38,7 +41,8 @@
                         <span :class="[arrowName ? 'with_sort_active' : 'with_sort']" @click="sortName">Название</span>
                     </li>
                     <li class="col-4">
-                        <span :class="[arrowLead ? 'with_sort_active' : 'with_sort']" @click="sortLead">Руководитель</span>
+                        <span :class="[arrowLead ? 'with_sort_active' : 'with_sort']"
+                              @click="sortLead">Руководитель</span>
                     </li>
                     <li class="col-4">
                         <span :class="[arrowCtr ? 'with_sort_active' : 'with_sort']" @click="sortCtr">Количество сотрудников</span>
@@ -50,12 +54,15 @@
                     <li class="departments_list-item" v-for="dep in getDepartments" :key="dep.id">
                         <ul class="row list-item_info">
                             <li class="col-1 checkbox_section">
-                                <input type="checkbox" name="checkAll" id="checkAll"
+                                <input type="checkbox"
+                                       :value="dep.id"
+                                       :id="dep.id"
+                                       v-model="checkedDepartments"
                                        class="checkbox">
-                                <label for="checkAll"></label>
+                                <label :for="dep.id"></label>
                             </li>
-                            <li class="col-3">{{ dep.title }}</li>
-                            <li class="col-4">Example</li>
+                            <li class="col-3">{{ dep.title }} </li>
+                            <li class="col-4">{{ dep.name }} {{ dep.surname }}</li>
                             <li class="col-4">16</li>
                         </ul>
                     </li>
@@ -67,23 +74,28 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
+import DepartmentConfirmModal from "../layouts/DepartmentConfirmModal";
 
 export default {
     name: "DepartmentsList",
+    components: {
+        DepartmentConfirmModal,
+    },
     data() {
         return {
-            departments: null,
-            nextPage: null,
-            prevPage: null,
+            nextPage: '',
+            prevPage: '',
             uncheck: false,
             cheked: false,
             arrowName: false,
             arrowLead: false,
             arrowCtr: false,
+            isActiveConfirmModal: false,
+            checkedDepartments: [],
         }
     },
     methods: {
-        ...mapActions(['fetchDepartments','delDepartment']),
+        ...mapActions(['fetchDepartments', 'delDepartment']),
         gotoNext() {
             this.nextPage = this.getNextPage;
             this.fetchAds(this.nextPage)
@@ -122,12 +134,24 @@ export default {
             }
             this.arrowCtr = !this.arrowCtr;
         },
+        async deletePosition() {
+            for (let i = 0; i < this.checkedDepartments.length; i++) {
+                await this.delDepartment(this.checkedDepartments[i])
+            }
+        }
+
     },
     computed: {
-        ...mapGetters(['getDepartments', 'getNextPage', 'getPrevPage'])
+        ...mapGetters(['getDepartments', 'getNextPage', 'getPrevPage']),
+        selectAll: function() {
+            return this.users.every(function(user){
+                return user.checked;
+            });
+        }
     },
     mounted() {
         this.fetchDepartments()
+        console.log(this.getNextPage)
     }
 }
 </script>
@@ -192,7 +216,6 @@ export default {
             background-color: #0b76ef;
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e");
         }
-
     }
 }
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Department;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DepartmentController extends Controller
 {
@@ -18,11 +19,16 @@ class DepartmentController extends Controller
     public function store(Request $request)
     {
         $dep = new Department;
+        $dep->validate($request);
         $dep->store($request);
         $dep->save();
 
         return response()->json($dep, 200);
     }
 
+    public function destroy(Request $request) {
+        $dep = new Department;
+        $dep->deleteDepartment($request);
+    }
 
 }

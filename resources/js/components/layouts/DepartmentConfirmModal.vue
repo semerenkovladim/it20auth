@@ -6,14 +6,13 @@
                     <div class="position-relative">
                         <span class="closeModal" @click="$emit('close')"></span>
                     </div>
-                    <div class="modal-title">Список сотрудников</div>
-                    <ul class="workers_list">
-                        <li v-for="member in getDepMembers">
-                            {{ member.name }} {{member.surname}}
-                        </li>
-                    </ul>
+                    <div class="modal-title">Подтверждение удаления</div>
+                    <div class="modal-body">
+                        <span v-if="!showBody">Вы уверены, что хотите удалить данную запись?</span>
+                        <span v-if="showBody">Вы уверены, что хотите удалить данные записи?</span>
+                    </div>
                     <div class="btns d-flex">
-                        <button type="submit" class="btnSave">Сохранить</button>
+                        <button type="submit" class="btnDel">Удалить</button>
                         <button type="reset" class="btnCancel" @click="$emit('close')">Отмена</button>
                     </div>
                 </div>
@@ -23,18 +22,30 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from 'vuex'
-
 export default {
-    name: "DepartmentWorkersList",
-    methods: {
-        ...mapActions(['fetchDepMembers'])
+    name: "DepartmentConfirmModal",
+    data() {
+        return {
+            showBody:false,
+        }
     },
-    computed: {
-        ...mapGetters(['getDepMembers'])
+    props: {
+        checkedDepartments: Array
+    },
+    methods: {
+        checkDepartments() {
+            if(this.checkedDepartments.length <= 1){
+                this.showBody = false
+            }
+            if(this.checkedDepartments.length > 1){
+                this.showBody = true
+            }
+        }
     },
     created() {
-        this.fetchDepMembers(1)
+        console.log(this.checkedDepartments)
+        this.checkDepartments()
+
     }
 }
 </script>
@@ -50,26 +61,23 @@ export default {
     width: 100%;
     height: 100%;
     display: table;
+    background-color: #C4C4C4CC;
     transition: opacity 0.3s ease;
 }
 
 .modal-wrapper {
     display: table-cell;
-    vertical-align: middle;
 }
 
 .modal-container {
     max-width: 445px;
     max-height: 473px;
-    margin: 0px auto;
     padding: 20px 30px;
     background-color: #fff;
     border-radius: 2px;
     overflow-y: auto;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
     transition: all 0.3s ease;
-    font-family: Roboto, sans-serif;
-    font-weight: bold;
 }
 
 .modal-header h3 {
@@ -90,11 +98,10 @@ export default {
     margin-top: 50px;
 }
 
-.workers_list {
-        list-style: none;
-        color: #808080;
-        box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.05);
-        padding: 0;
+.modal-body {
+    list-style: none;
+    color: #808080;
+    padding: 0 10px 24px 0;
 
     &  li {
         display: flex;
@@ -139,9 +146,7 @@ export default {
     margin-top: 25px;
 }
 
-.btnSave {
-    %depSuccessfulBtn;
-}
+.btnDel,
 .btnCancel {
     width: 120px;
     height: 50px;
@@ -153,7 +158,7 @@ export default {
     border-radius: 3px;
 }
 
-.btnSave {
+.btnDel {
     color: #FFFFFF;
     background-color: #1875F0;
 }
@@ -178,7 +183,7 @@ export default {
     .modal-container {
         max-width: 320px;
     }
-    .btnSave {
+    .btnDel {
         margin-left: 0px;
     }
 }

@@ -1,5 +1,5 @@
 <template>
-    <main class="departments_management">
+    <main class="row departments_management">
         <div class="container-fluid departments_management__container">
             <div class="col">
                 <div class="row departments_management__header">
@@ -10,10 +10,10 @@
                                     <span>Управление</span>
                                 </li>
                                 <li>
-                                    <router-link to="/departments-management">Отделы</router-link>
+                                    <router-link :to="{name: 'DepartmentsManagement'}">Отделы</router-link>
                                 </li>
                                 <li>
-                                    <router-link to="/departments-create">Создание отдела</router-link>
+                                    <span>Создание отдела</span>
                                 </li>
                             </ul>
                         </nav>
@@ -33,6 +33,7 @@
                                 <li>
                                     <label for="lead">Руководитель:</label>
                                     <select type="text" id="lead" v-model="depHead">
+                                        <option value="null"></option>
                                         <option v-for="lead in getLeads" :value="lead.id">
                                             {{ lead.name}} {{lead.surname}}
                                         </option>
@@ -46,7 +47,7 @@
                                                              @close="isActiveWorkersList = false"/>
                                 </li>
                                 <li class="form-btns">
-                                    <button type="button" class="btnSave" @click="this.setFormData()">Сохранить</button>
+                                    <button type="button" class="btnSave" @click="this.sendFormData">Сохранить</button>
                                     <button type="reset" class="btnCancel">Отмена</button>
                                 </li>
                             </ul>
@@ -70,6 +71,7 @@ export default {
             isActiveWorkersList: false,
             title: null,
             head_department: null,
+            formData: null,
         }
     },
     components: {
@@ -77,26 +79,29 @@ export default {
     },
     methods: {
         showWorkers() {
-            console.log(this.isActiveWorkersList)
             this.isActiveWorkersList = !this.isActiveWorkersList
         },
-        ...mapActions(['fetchLeads', 'createNewDepartment']),
-    },
-    async setFormData() {
-        let data = {
-            title: this.title,
-            head_department: this.depHead
-        };
-
-        await this.createNewDepartment(data);
-
+        ...mapActions(['fetchLeads', 'createNewDepartment', 'getResStatus']),
+        async setFormData() {
+            this.formData = {
+                title: this.title,
+                head_department: this.depHead
+            }
+        },
+        async sendFormData() {
+            await this.setFormData()
+            await this.createNewDepartment(this.formData);
+            console.log('state' + this.getResStatus)
+            if(this.getResStatus === 200) {
+                await this.$router.push({name: 'DepartmentsManagement'})
+            }
+        }
     },
     computed: {
         ...mapGetters(['getLeads']),
     },
     mounted() {
         this.fetchLeads()
-        console.log(this.getLeads)
     }
 
 }

@@ -7,10 +7,10 @@
                         <nav>
                             <ul>
                                 <li>
-                                    <a href="#">Управление</a>
+                                    <span>Управление</span>
                                 </li>
                                 <li>
-                                    <a href="#">Отделы</a>
+                                    <span>Отделы</span>
                                 </li>
                             </ul>
                         </nav>
@@ -21,11 +21,11 @@
                 </div>
                 <div class="row departments_management__content">
                     <div class="col-md-3 p-0">
-                                <div class="add_departments-btn">
-                                    <button type="button" @click="$router.push('/departments-create')">
-                                        Добавить отдел
-                                    </button>
-                                </div>
+                        <div class="add_departments-btn">
+                            <button type="button" @click="$router.push({name: 'DepartmentCreate'})">
+                                Добавить отдел
+                            </button>
+                        </div>
                         <div class="empty_area"></div>
                     </div>
                     <div class="col-md-9 departments_list-box">
@@ -36,8 +36,8 @@
                     <div class="col-md-3"></div>
                     <div class="col-md-9 box-pagination">
                         <ul class="row pagination">
-                            <li class="page-item gotoPrevPage">
-                                <a class="page-link" href="#" aria-label="Previous">
+                            <li class="page-item gotoPrevPage" @click.prevent="gotoPrevPage">
+                                <a href="#" class="page-link" aria-label="Previous">
                                 </a>
                             </li>
                             <li class="page-item">
@@ -52,8 +52,8 @@
                             <li class="page-item">
                                 <a class="page-link" href="#">4</a>
                             </li>
-                            <li class="page-item gotoNextPage">
-                                <a class="page-link" href="#" aria-label="Next">
+                            <li class="page-item gotoNextPage" @click.prevent="gotoNextPage">
+                                <a href="#" class="page-link" aria-label="Next">
                                 </a>
                             </li>
                         </ul>
@@ -66,11 +66,36 @@
 
 <script>
 import DepartmentsList from "../../components/Department/DepartmentsList";
+import DepartmentConfirmModal from "../../components/layouts/DepartmentConfirmModal";
+import {mapGetters, mapActions} from 'vuex';
 
 export default {
     name: "DepartmentsManagementsList",
+    data() {
+        return {
+            nextPage: null,
+            prevPage: null,
+        }
+    },
+
     components: {
-        DepartmentsList
+        DepartmentsList,
+        DepartmentConfirmModal
+    },
+    methods: {
+        ...mapActions(['fetchDepartments']),
+        gotoNextPage() {
+            this.nextPage = this.getNextPage;
+            console.log(this.nextPage)
+            this.fetchDepartments(this.nextPage)
+        },
+        gotoPrevPage() {
+            this.prevPage = this.getPrevPage;
+            this.fetchDepartments(this.prevPage)
+        },
+    },
+    computed: {
+        ...mapGetters(['getPrevPage', 'getNextPage'])
     },
 }
 </script>

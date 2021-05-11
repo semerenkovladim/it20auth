@@ -3,11 +3,12 @@ export default {
         departments: null,
         departmentId: null,
         department: null,
-        nextPage: '',
-        prevPage: '',
+        nextPage: null,
+        prevPage: null,
         validationErrs: null,
         leads: null,
         depMembers: null,
+        resStatus: null
     },
 
     mutations: {
@@ -36,18 +37,24 @@ export default {
             state.depMembers = depMembers;
         },
 
+        updateResStatus(state, resStatus) {
+            state.resStatus = resStatus;
+        },
+
         collectValidErrors(state, err) {
             state.validationErrs = err;
         }
     },
     actions: {
-        async fetchDepartments(ctx, url = `api/departments/`) {
+        async fetchDepartments(ctx, url = `api/departments`) {
 
             return await axios
                 .get(url)
                 .then(res => {
                     ctx.commit('updateDepartments', res.data.data.data)
-                    ctx.commit('makePagination', res.data)
+                    ctx.commit('makePagination', res.data.data)
+
+                    console.log(res.data)
                 })
                 .catch(err => console.log('error:', err))
         },
@@ -83,15 +90,6 @@ export default {
                 );
         },
 
-
-        async delDepartment(ctx, idDel) {
-
-            return await axios
-                .delete(`api/departments/${idDel}`)
-                .then(res => console.log(res))
-                .catch(err => console.log(err))
-        },
-
         async createNewDepartment(ctx, data) {
             await axios
                 .post('/api/departments/create', {
@@ -99,8 +97,17 @@ export default {
                     head_department: data.head_department,
                 })
                 .then(res => {
-                    console.log(data);
+                    ctx.commit('updateResStatus', res.status)
+                    console.log(res.status)
                 })
+                .catch(err => console.log(err))
+        },
+
+        async delDepartment(ctx, idDel) {
+
+            return await axios
+                .delete(`api/departments/${idDel}`)
+                .then()
                 .catch(err => console.log(err))
         },
     },
@@ -131,6 +138,10 @@ export default {
 
         getDepMembers(state) {
             return state.depMembers
+        },
+
+        getResStatus(state) {
+            return state.resStatus
         }
     },
 }
