@@ -6,7 +6,8 @@
         <div class="wrapper">
             <div class="title_row">
                 <div class="title">Подтверждение удаления</div>
-                <div class="description">Вы уверены, что хотите удалить данную запись?</div>
+                <div class="description" v-if="userDataLength === 1">Вы уверены, что хотите удалить данную запись?</div>
+                <div class="description" v-if="userDataLength > 1">Вы уверены, что хотите удалить данные записи?</div>
             </div>
             <div class="btn_wrapper confirm__btn_wrapper">
                 <confirm-btn
@@ -26,6 +27,7 @@ import {mapActions, mapGetters} from "vuex";
 
 export default {
     name: "UserManagementConfirm",
+    props:['userDataLength'],
     components: {
         'cancel-btn': CancelBtn,
         'confirm-btn': ConfirmBtn
@@ -46,7 +48,7 @@ export default {
             this.changeUMConfirmStatus()
         },
         removeItem() {
-            this.changeUMConfirmStatus()
+            this.$emit('deleteEvent')
         }
     },
     computed: {

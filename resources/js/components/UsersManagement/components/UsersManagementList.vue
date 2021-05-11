@@ -10,7 +10,9 @@
                 <li class="col-2 sort_item"><span>Должность</span></li>
             </ul>
         </div>
-        <ul class="users_management__user_list">
+        <ul class="users_management__user_list"
+            v-if="data.length"
+            :key="checkStatus">
             <li class="user"
                 v-for="user in data"
                 :key="user.id">
@@ -20,7 +22,7 @@
                             <input type="checkbox"
                                    class="user_check input_checkbox"
                                    v-model="user.checked"
-                                   @change="test"
+                                   @change="changeCheck"
                             >
                         </label>
                     </li>
@@ -34,6 +36,7 @@
                 </ul>
             </li>
         </ul>
+        <div class="not_found" v-else>Пользователи не найдены</div>
     </div>
 </template>
 
@@ -43,13 +46,11 @@ export default {
     props: ['data', 'checkStatus'],
     data() {
         return {
-            userData: this.data,
-            status: this.checkStatus,
             selectUsers: []
         }
     },
     methods: {
-        test() {
+        changeCheck() {
             let status = true
             for (let item of this.data) {
                 if (item.checked === undefined || !item.checked) {
@@ -75,21 +76,9 @@ export default {
                 this.$emit('allChecked', {status: true})
             }
         },
-        selectAll() {
-            this.data.map(function (el) {
-                el.checked = true
-            })
-        },
-        unselectAll() {
-            for (let item of this.data) {
-                item.checked = false
-            }
-        }
+
     },
     computed: {
-        watchCheckStatus() {
-            return this.status
-        },
         selectUsersLength() {
             return this.selectUsers.length
         }
@@ -100,16 +89,7 @@ export default {
                 length: this.selectUsers.length,
                 data: this.selectUsers
             })
-            // console.log(this.selectUsers.length)
         },
-        watchCheckStatus() {
-
-            if (this.status) {
-                this.selectAll()
-            } else {
-                this.unselectAll()
-            }
-        }
     }
 }
 </script>
@@ -146,6 +126,16 @@ export default {
             color: $lightColor;
         }
     }
+    .user_checkbox {
+        justify-content: flex-start;
+        label {
+            justify-content: flex-start;
+            padding-left: 15px;
+        }
+        input {
+            margin: 0;
+        }
+    }
 }
 
 .users_management__sort .sort_item, .users_management__user_list .user__info {
@@ -165,8 +155,9 @@ export default {
         margin-left: -15px;
         overflow-x: auto;
         margin-bottom: 4px;
-        border-left: 2px solid #F5F5F5;
-
+        height: 100%;
+        display: flex;
+        flex-direction: column;
         > * {
             min-width: 800px;
         }
@@ -196,9 +187,9 @@ export default {
         flex: 1 1 10%;
 
         .row {
-            padding-right: 10px;
-            justify-content: space-between;
-            flex-wrap: nowrap;
+            justify-content: space-evenly;
+            padding: 0 15px;
+
         }
     }
 }

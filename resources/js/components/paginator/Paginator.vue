@@ -12,7 +12,7 @@
                     @click="toPage(page)">{{ page }}
                 </li>
                 <li class="paginator_item paginator__next"
-                    :class="page >= data.last_page? 'disabled':''"
+                    :class="page >= data.last_page ? 'disabled':''"
                     @click="nextPage"></li>
             </ul>
         </nav>
@@ -22,7 +22,7 @@
 <script>
 export default {
     name: "Paginator",
-    props: ['data'],
+    props: ['data','data_id'],
     data() {
         return {
             page: 1
@@ -42,7 +42,6 @@ export default {
         },
         toPage(page) {
             this.page = page
-
             this.emitPage()
         },
         nextPage() {
@@ -52,6 +51,17 @@ export default {
                 return
             }
             this.emitPage()
+        },
+
+    },
+    computed: {
+        dataChange() {
+          return this.data_id
+        }
+    },
+    watch: {
+        dataChange(){
+          this.page = 1
         }
     }
 }
