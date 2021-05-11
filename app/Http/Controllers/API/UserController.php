@@ -56,6 +56,7 @@ class UserController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors(), 'status' => false]);
         }
+
         $user = User::make($request->all());
 
         $password = Str::random(8);

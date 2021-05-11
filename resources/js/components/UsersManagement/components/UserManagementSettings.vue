@@ -12,11 +12,58 @@
                     <div class="col-8 option__col col_name">Столбец:</div>
                     <div class="col-4 option__col col_name">Отображать:</div>
                 </li>
-                <li class="row option"
-                    v-for="option in settings" :key="option.id">
-                    <div class="col-8 option__col col_name">{{ option.name }}</div>
+                <li class="row option">
+                    <div class="col-8 option__col col_name">Фамилия</div>
                     <div class="col-4 option__col option_checkbox ">
-                        <label><input type="checkbox" class="input_checkbox" v-model="option.status"></label>
+                        <label><input type="checkbox" class="input_checkbox" v-model="settings.surname"></label>
+                    </div>
+                </li>
+                <li class="row option">
+                    <div class="col-8 option__col col_name">Имя</div>
+                    <div class="col-4 option__col option_checkbox ">
+                        <label><input type="checkbox" class="input_checkbox" v-model="settings.name"></label>
+                    </div>
+                </li>
+                <li class="row option">
+                    <div class="col-8 option__col col_name">Отчество</div>
+                    <div class="col-4 option__col option_checkbox ">
+                        <label><input type="checkbox" class="input_checkbox" v-model="settings.patronymic"></label>
+                    </div>
+                </li>
+                <li class="row option">
+                    <div class="col-8 option__col col_name">E-mail</div>
+                    <div class="col-4 option__col option_checkbox ">
+                        <label><input type="checkbox" class="input_checkbox" v-model="settings.email"></label>
+                    </div>
+                </li>
+                <li class="row option">
+                    <div class="col-8 option__col col_name">Должность</div>
+                    <div class="col-4 option__col option_checkbox ">
+                        <label><input type="checkbox" class="input_checkbox" v-model="settings.position"></label>
+                    </div>
+                </li>
+                <li class="row option">
+                    <div class="col-8 option__col col_name">Отдел</div>
+                    <div class="col-4 option__col option_checkbox ">
+                        <label><input type="checkbox" class="input_checkbox" v-model="settings.department"></label>
+                    </div>
+                </li>
+                <li class="row option">
+                    <div class="col-8 option__col col_name">Дата рождения</div>
+                    <div class="col-4 option__col option_checkbox ">
+                        <label><input type="checkbox" class="input_checkbox" v-model="settings.date_of_birth"></label>
+                    </div>
+                </li>
+                <li class="row option">
+                    <div class="col-8 option__col col_name">Доступные модули</div>
+                    <div class="col-4 option__col option_checkbox ">
+                        <label><input type="checkbox" class="input_checkbox" v-model="settings.modules"></label>
+                    </div>
+                </li>
+                <li class="row option">
+                    <div class="col-8 option__col col_name">Роль в системе</div>
+                    <div class="col-4 option__col option_checkbox ">
+                        <label><input type="checkbox" class="input_checkbox" v-model="settings.role"></label>
                     </div>
                 </li>
             </ul>
@@ -37,59 +84,14 @@ import ConfirmBtn from "../../buttons/ConfirmBtn";
 
 export default {
     name: "UserManagementSettings",
+    props: ['data'],
     components: {
         'cancel-btn': CancelBtn,
         'confirm-btn': ConfirmBtn
     },
     data() {
         return {
-            settings: [
-                {
-                    id: 1,
-                    name: 'Фамилия',
-                    status: false
-                },
-                {
-                    id: 2,
-                    name: 'Имя',
-                    status: false
-                },
-                {
-                    id: 3,
-                    name: 'Отчество',
-                    status: false
-                },
-                {
-                    id: 4,
-                    name: 'E-mail',
-                    status: false
-                },
-                {
-                    id: 5,
-                    name: 'Должность',
-                    status: false
-                },
-                {
-                    id: 6,
-                    name: 'Отдел',
-                    status: false
-                },
-                {
-                    id: 7,
-                    name: 'Дата рождения',
-                    status: false
-                },
-                {
-                    id: 8,
-                    name: 'Доступные модули',
-                    status: false
-                },
-                {
-                    id: 9,
-                    name: 'Роль в системе',
-                    status: false
-                },
-            ],
+            settings: {},
             confirmBtnText: 'Подтвердить'
         }
     },
@@ -101,7 +103,9 @@ export default {
             if (event.target.classList.contains('users_management__settings')) this.changeUMSettingStatus()
         },
         confirm() {
-            this.changeUMSettingStatus()
+            axios.put('/api/admin-settings/update', this.settings).then(value => {
+                this.changeUMSettingStatus()
+            })
         },
         cancel() {
             this.changeUMSettingStatus()
@@ -110,8 +114,19 @@ export default {
     computed: {
         ...mapGetters([
             'UM_SETTINGS_STATUS'
-        ])
+        ]),
+        changeSettings() {
+            return this.data
+        },
+        changeSettings2() {
+            return Object.values(this.settings)
+        }
 
+    },
+    watch: {
+        changeSettings() {
+            this.settings = this.data
+        }
     }
 }
 </script>
@@ -178,9 +193,11 @@ export default {
         color: $darkColor;
         font-weight: 600;
     }
+
     .input_checkbox {
         margin-left: 0;
     }
+
     .btn_wrapper {
         justify-content: flex-start;
     }

@@ -44,11 +44,11 @@ export default {
         ]),
         showPersonalData() {
             this.changeUMPersonalDataStatus(true)
-            console.log('showPersonalData')
+            // console.log('showPersonalData')
         },
         showAccess() {
             this.changeUMPersonalAccess(true)
-            console.log('showAccess')
+            // console.log('showAccess')
         }
     },
     computed: {

@@ -9,6 +9,7 @@ use App\Http\Controllers\API\SettingController;
 use App\Http\Controllers\API\ProfileController;
 use App\Http\Controllers\API\ImageUploadController;
 use App\Http\Controllers\API\AccessLevelController;
+use App\Http\Controllers\API\AdminSettingsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +47,10 @@ Route::get('/user/permission', [AccessLevelController::class, 'show'])->name('us
 Route::get('/user/permission/update', [AccessLevelController::class, 'update'])->name('userPermissionUpdate');
 Route::post('/image/upload/avatar', [ImageUploadController::class, 'upload_avatar'])->name('userAvatar');
 Route::post('/user/settings/create',[SettingController::class,'store'])->name('setUserSetting');
+
+Route::post('/admin-settings/create',[AdminSettingsController::class,'store'])->name('setAdminSettings');
+Route::get('/admin-settings/{id}',[AdminSettingsController::class,'show'])->name('showAdminSettings');
+Route::put('/admin-settings/update',[AdminSettingsController::class,'update'])->name('updateAdminSettings');
 
 Route::middleware('auth:api')->group(function () {
     Route::post('settings', [UserSettingsController::class, 'update']);

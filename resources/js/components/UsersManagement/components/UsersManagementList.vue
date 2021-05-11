@@ -1,13 +1,17 @@
 <template>
     <div class="wrapper">
         <div class="users_management__sort">
-            <ul class="row users_management__sort_list">
+            <ul class="row users_management__sort_list flex-nowrap">
                 <li class="col-1 sort_item"></li>
-                <li class="col-2 sort_item"><span>Фамилия</span></li>
-                <li class="col-2 sort_item"><span>Имя</span></li>
-                <li class="col-2 sort_item"><span>Отчество</span></li>
-                <li class="col-3 sort_item"><span>E-mail</span></li>
-                <li class="col-2 sort_item"><span>Должность</span></li>
+                <li class="col-2 sort_item" v-if="settings.surname"><span>Фамилия</span></li>
+                <li class="col-2 sort_item" v-if="settings.name"><span>Имя</span></li>
+                <li class="col-2 sort_item" v-if="settings.patronymic"><span>Отчество</span></li>
+                <li class="col-3 sort_item" v-if="settings.email"><span>E-mail</span></li>
+                <li class="col-2 sort_item" v-if="settings.position"><span>Должность</span></li>
+                <li class="col-2 sort_item" v-if="settings.department"><span>Отдел</span></li>
+                <li class="col-2 sort_item" v-if="settings.date_of_birth"><span>Дата рождения</span></li>
+                <li class="col-2 sort_item" v-if="settings.modules"><span>Модули</span></li>
+                <li class="col-2 sort_item" v-if="settings.role"><span>Роль</span></li>
             </ul>
         </div>
         <ul class="users_management__user_list"
@@ -16,8 +20,8 @@
             <li class="user"
                 v-for="user in data"
                 :key="user.id">
-                <ul class="row user__info">
-                    <li class="col-1 user_info__item user_checkbox">
+                <ul class="row user__info flex-nowrap">
+                    <li class="user_info__item col-1 user_checkbox">
                         <label>
                             <input type="checkbox"
                                    class="user_check input_checkbox"
@@ -26,13 +30,17 @@
                             >
                         </label>
                     </li>
-                    <li class="col-2 user_info__item">{{ user.surname }}</li>
-                    <li class="col-2 user_info__item">{{ user.name }}</li>
-                    <li class="col-2 user_info__item">{{ user.middle_name }}</li>
-                    <li class="col-3 user_info__item">
+                    <li class="user_info__item col-2" v-if="settings.surname">{{ user.surname }}</li>
+                    <li class="user_info__item col-2" v-if="settings.name">{{ user.name }}</li>
+                    <li class="user_info__item col-2" v-if="settings.patronymic">{{ user.middle_name }}</li>
+                    <li class="user_info__item col-3" v-if="settings.email">
                         <a :href="'mailto:' + user.email">{{ user.email }}</a>
                     </li>
-                    <li class="col-2 user_info__item">{{ user.position }}</li>
+                    <li class="user_info__item col-2" v-if="settings.position">{{ user.position }}</li>
+                    <li class="user_info__item col-2" v-if="settings.department">{{ user.department_id }}</li>
+                    <li class="user_info__item col-2" v-if="settings.date_of_birth">{{ user.birth }}</li>
+                    <li class="user_info__item col-2" v-if="settings.modules">{{user.modules ? user.modules : '-'}}</li>
+                    <li class="user_info__item col-2" v-if="settings.role">{{user.is_admin ? 'Админ' : 'Пользователь'}}</li>
                 </ul>
             </li>
         </ul>
@@ -43,7 +51,7 @@
 <script>
 export default {
     name: "UsersManagementList",
-    props: ['data', 'checkStatus'],
+    props: ['data', 'checkStatus', 'settings'],
     data() {
         return {
             selectUsers: []
@@ -102,7 +110,9 @@ export default {
 
     .user {
         &:last-child {
-            border-bottom: none;
+            .user_info__item {
+                border-bottom: none;
+            }
 
             .user__info {
                 border-bottom: none;
@@ -121,17 +131,21 @@ export default {
         align-items: center;
         font-weight: 600;
         word-break: break-all;
+        border-bottom: 2px solid #F5F5F5;
 
         a {
             color: $lightColor;
         }
     }
+
     .user_checkbox {
         justify-content: flex-start;
+
         label {
             justify-content: flex-start;
             padding-left: 15px;
         }
+
         input {
             margin: 0;
         }
@@ -140,15 +154,18 @@ export default {
 
 .users_management__sort .sort_item, .users_management__user_list .user__info {
     color: $userManagementUserColor;
-    border-bottom: 2px solid #F5F5F5;
+    //border-bottom: 2px solid #F5F5F5;
     font-style: normal;
     font-weight: 500;
+
 }
 
 .users_management__list {
     display: flex;
     flex-direction: column;
-
+    .sort_item {
+        border-bottom: 2px solid #F5F5F5
+    }
     .wrapper {
         padding: 0 15px;
         margin-right: -15px;
@@ -158,6 +175,7 @@ export default {
         height: 100%;
         display: flex;
         flex-direction: column;
+
         > * {
             min-width: 800px;
         }

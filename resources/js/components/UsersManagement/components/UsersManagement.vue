@@ -1,6 +1,6 @@
 <template>
-    <main class="row users_management">
-        <user-management-settings></user-management-settings>
+    <main class="row users_management" v-if="tempUser.is_admin">
+        <user-management-settings :data="tempSettings"></user-management-settings>
         <user-management-confirm
             @deleteEvent="deleteSelectUsers"
             :userDataLength="selectUsers.length">
@@ -77,6 +77,7 @@
                             v-if="usersData.data"
                             :data="usersData.data"
                             :checkStatus="checkStatus"
+                            :settings="tempSettings"
                             @allChecked="setAllCheck"
                             @changeUsersLength="userCount">
                         </users-management-list>
@@ -167,6 +168,10 @@ export default {
             selectUsers: [],
             currentDepartment: 0,
             currentPage: 1,
+            tempUser: {
+                is_admin: true
+            },
+            tempSettings: []
 
         }
     },
@@ -218,13 +223,11 @@ export default {
                 })
         },
         async deleteSelectUsers() {
-            console.log('deleteSelectUsers')
             if (this.selectUsers) {
                 let usersId = []
                 for (let item in this.selectUsers) {
                     usersId.push(this.selectUsers[item].id)
                 }
-                console.log('usersId', usersId)
                 axios.post('/api/users/delete', {
                     data: usersId
                 })
@@ -236,7 +239,6 @@ export default {
                         }
 
                         // this.getUMMessage(value)
-                        console.log('this.selectUsers', this.selectUsers)
                     })
                 usersId.length = 0
                 this.selectUsers.length = 0
@@ -273,7 +275,12 @@ export default {
                 this.getUMAllUsers(this.currentPage)
             }
         },
-
+        getAdminSettings() {
+            axios.get('/api/admin-settings/1')
+                .then(value => {
+                    this.tempSettings = value.data.data
+                })
+        },
     },
     computed: {
         ...mapGetters([
@@ -287,6 +294,11 @@ export default {
         },
     },
     created() {
+        if (!this.tempUser.is_admin) {
+            this.$router.push('/home')
+        } else {
+            this.getAdminSettings()
+        }
         this.getUMAllUsers()
     }
 }
@@ -417,12 +429,15 @@ export default {
         }
     }
 }
+
 .edit__action_checkbox {
     justify-content: flex-start;
+
     label {
         padding-left: 15px;
     }
 }
+
 .edit_btn {
     background: url("../../../../images/icons/edit_img.png") no-repeat center / contain;
 }

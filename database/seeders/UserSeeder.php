@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Database\Factories\DepartmentFactory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Date;
@@ -17,6 +18,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
+        User::factory(30)->create();
         DB::table('users')->insert([
             [
                 'position' => 'Developer',
