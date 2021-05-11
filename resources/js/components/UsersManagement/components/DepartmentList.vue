@@ -62,7 +62,6 @@ export default {
         color: $darkColor;
     }
 }
-
 .filter-active {
     background: $userManagementFilterActiveBg;
     border-left: 2px solid $designColorOne;

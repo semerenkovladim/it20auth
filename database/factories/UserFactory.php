@@ -32,7 +32,7 @@ class UserFactory extends Factory
             'date_start' => $this->faker->date(),
             'email' => $this->faker->unique()->safeEmail(),
             'password' => Hash::make('Q3kR2"&Jj><Qj+#X'), // password
-            'department_id' => DepartmentFactory::new()
+            'department_id' => rand(1,3)
         ];
     }
 }
