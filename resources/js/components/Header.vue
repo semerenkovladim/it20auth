@@ -3,7 +3,7 @@
         <div class="logo"><img src="/images/logo_foot2.svg" alt="logo">
         </div>
         <div class="accoun_flex">
-            <div class="user_name">{{ user.name }}</div>
+            <div class="user_name">{{user.surname}} {{ user.name }} {{user.middle_name}}</div>
             <div><img src="/images/placeholder.png" alt=""></div>
             <div class="dropdown">
                 <button class="btn drop dropdown-toggle" type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -29,7 +29,9 @@ export default {
         return{
             show:false,
             user:{
-                name:'Марина'
+                name:'',
+                surname:'',
+                middle_name:''
             }
         }
     },
@@ -56,7 +58,15 @@ export default {
         ...mapGetters([
             'access_token',
         ]),
+        auth_user(){
+            console.log(this.$store.getters.user)
+            return this.$store.getters.user;
+        }
     },
+     mounted(){
+        this.user=Object.assign(this.user,this.auth_user)
+        console.log('mounted', this.user)
+    }
 
 }
 </script>
