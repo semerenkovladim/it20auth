@@ -1,13 +1,12 @@
 <template>
-    <div>
-            <div class="slider">
+    <div class="home_page">
+        <div class="slider">
             <carousel :autoplay="true" :items="1" :dots="false" :autoplayTimeout="30000" :nav="false">
                 <div class="slide slide1"></div>
                 <div class="slide slide2"></div>
                 <div class="slide slide3"></div>
             </carousel>
         </div>
-
         <div class="title_hello">
             <div class="title">Рады снова Вас приветствовать!</div>
             <div class="hello_description">
@@ -17,7 +16,7 @@
 
         <div class="cards">
             <div class="row">
-                <div class="card mb-3 hello contact_item">
+                <div class="card hello contact_item">
                     <div class="row g-0">
                         <div class="col-md-4 left_cards">
                             <div class="font_text">D</div>
@@ -37,8 +36,7 @@
                         </div>
                     </div>
                 </div>
-
-                <div class=" card mb-3 a hello contact_item">
+                <div class="card hello contact_item">
                     <div class="row g-0">
                         <div class="col-md-4 left_cards">
                             <div class="font_text">A</div>
@@ -50,15 +48,15 @@
                                     Ускорьте скорость доставки писем!
                                 </div>
                                 <div class="card-text description">
-                                    Используйте инструмент Mail для внутреннего комфортного общения среди сотрудников компании.
+                                    Используйте инструмент Mail для внутреннего комфортного общения среди сотрудников
+                                    компании.
                                 </div>
                                 <div class="card-text">Без ограничения на количество писем.</div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="card mb-3 a hello contact_item">
+                <div class="card hello contact_item">
                     <div class="row g-0">
                         <div class="col-md-4 left_cards">
                             <div class="font_text">S</div>
@@ -70,15 +68,15 @@
                                     Записывайте важные даты!
                                 </div>
                                 <div class="card-text description">
-                                    Используйте удобный инструмент Calendar для фиксации важных событий, встреч и рабочих мероприятий.
+                                    Используйте удобный инструмент Calendar для фиксации важных событий, встреч и
+                                    рабочих мероприятий.
                                 </div>
                                 <div class="card-text">Оцените интуитивно понятный интерфейс и локаничный дизайн.</div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="card mb-3 a hello contact_item">
+                <div class="card hello contact_item">
                     <div class="row g-0">
                         <div class="col-md-4 left_cards">
                             <div class="font_text">B</div>
@@ -90,14 +88,15 @@
                                     Делитесь воспоминания с коллегами!
                                 </div>
                                 <div class="card-text description">
-                                    Публикуйте все знаменательные события из жизни компании в личное пространство Photos.
+                                    Публикуйте все знаменательные события из жизни компании в личное пространство
+                                    Photos.
                                 </div>
                                 <div class="card-text">Формируйте папки и вложенность как удобно Вам.</div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="card mb-3 a hello contact_item">
+                <div class="card hello contact_item">
                     <div class="row g-0">
                         <div class="col-md-4 left_cards">
                             <div class="font_text">B</div>
@@ -109,7 +108,8 @@
                                     Сохраняйте больше контактов!
                                 </div>
                                 <div class="description">
-                                    Добавляйте важные номера телефонов, адреса электронных почт, никнеймы различных мессенджеров в одно место Contacts.
+                                    Добавляйте важные номера телефонов, адреса электронных почт, никнеймы различных
+                                    мессенджеров в одно место Contacts.
                                 </div>
                                 <div class="card-text">Вперёд за возможностями!</div>
                             </div>
@@ -123,11 +123,12 @@
 
 <script>
 import carousel from 'vue-owl-carousel2'
+
 export default {
     name: "Home",
     components: {
         carousel
-        }
+    }
 }
 </script>
 
@@ -135,9 +136,14 @@ export default {
 .slider {
     margin: 0 auto;
     width: 100%;
+
     .slide {
         width: 100%;
     }
+}
+.card {
+    padding-left: 15px;
+    padding-right: 15px;
 }
 </style>
 

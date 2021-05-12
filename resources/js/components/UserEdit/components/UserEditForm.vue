@@ -300,6 +300,7 @@ export default {
             return axios.post('/api/image/upload/avatar', formData)
                 .then(value => {
                     data.data.avatar = value.data.path
+                    console.log('saveImg',value.data.path)
                 })
         },
         shortFio(last, first) {
