@@ -78,7 +78,7 @@
 <script>
 export default {
     name: "Sidebar",
-    props:['show'],
+    props: ['show'],
     data() {
         return {
             showMenu: false
@@ -91,7 +91,7 @@ export default {
 @import "resources/sass/variables";
 
 .sidebar_list {
-    @media all and (max-width: 768px){
+    @media all and (max-width: 768px) {
         transform: translate(-100%);
     }
     background: #FFFFFF;
@@ -100,6 +100,7 @@ export default {
     position: relative;
     width: 100%;
     max-width: 160px;
+
     .link {
         padding: 0;
         border: none;
@@ -111,16 +112,22 @@ export default {
             border-right: 2px solid transparent;
             border-left: 2px solid transparent;
 
+            * {
+                transition: none;
+            }
+
             &:hover {
                 border-left: 2px solid #1875F0;
             }
         }
 
         .active {
+            color: #0056b3;
             border-left: 2px solid #1875F0;
         }
     }
 }
+
 .sidebar_list-active {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     border-radius: 6px;
@@ -128,7 +135,7 @@ export default {
     height: auto;
     overflow: hidden;
     background: transparent;
-    @media all and (max-width: 768px){
+    @media all and (max-width: 768px) {
         transform: translate(0);
     }
 }
