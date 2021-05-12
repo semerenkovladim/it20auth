@@ -52,9 +52,9 @@ Route::post('/admin-settings/create',[AdminSettingsController::class,'store'])->
 Route::get('/admin-settings/{id}',[AdminSettingsController::class,'show'])->name('showAdminSettings');
 Route::put('/admin-settings/update',[AdminSettingsController::class,'update'])->name('updateAdminSettings');
 
+
 Route::middleware('auth:api')->group(function () {
     Route::post('settings', [UserSettingsController::class, 'update']);
     Route::post('logout', [AuthController::class, 'logout']);
-    Route::get('/profile', [ProfileController::class, 'profile']);
 });
 
