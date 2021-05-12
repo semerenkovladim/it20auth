@@ -13,13 +13,13 @@
                                     <router-link :to="{name: 'DepartmentsManagement'}">Отделы</router-link>
                                 </li>
                                 <li>
-                                    <span>Создание отдела</span>
+                                    <span>Редактирование отдела</span>
                                 </li>
                             </ul>
                         </nav>
                     </div>
                     <div class="col-12 departments_management__header-title">
-                        Создание отдела
+                        Редактирование отдела
                     </div>
                 </div>
                 <div class="row departments_create__container">
@@ -64,7 +64,7 @@ import DepartmentWorkersList from "../../components/layouts/DepartmentWorkersLis
 import {mapActions, mapGetters} from 'vuex';
 
 export default {
-    name: "DepartmentCreate",
+    name: "DepartmentEdit",
     data() {
         return {
             depHead: null,

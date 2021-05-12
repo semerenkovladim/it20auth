@@ -56,12 +56,9 @@ export default {
 .modal-mask {
     position: absolute;
     z-index: 9998;
-    top: 100px;
-    left: 270px;
     width: 100%;
     height: 100%;
     display: table;
-    background-color: #C4C4C4CC;
     transition: opacity 0.3s ease;
 }
 

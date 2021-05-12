@@ -32,9 +32,35 @@ class Department extends Model
 
     //========== /Валидация при редактировании отдела ======
 
-    public function header()
+    //========== связи департаментов с пользователями
+
+    public function members()
     {
-        return $this->belongsTo(\App\Models\User::class);
+        return $this->belongsTo(\App\Models\User::class, 'id', 'department_id');
+    }
+
+    //========== связи департаментов с пользователями
+
+    public function getCountMembers($depID)
+    {
+        return $members = $this::find($depID)->loadCount('members');
+    }
+
+    public function getNameHeader() {
+        return $this->hasOne()
+    }
+
+    public function getNameMembers($depID)
+    {
+        return $members = $this::find($depID);
+    }
+
+
+    public function test($id) {
+//        $re = $this->getCountMembers($id)->get();
+        $sh = Department::find($id);
+//        $sh->head_department = $re;
+        return (response()->json(['data' => $sh]));
     }
 
     //=========== формирование списка отделов ========
@@ -75,9 +101,9 @@ class Department extends Model
 
     public function deleteDepartment($request)
     {
-       $dep = new Department;
-       $dep->find($request);
-       $dep->delete();
+        $dep = new Department;
+        $dep->find($request);
+        $dep->delete();
     }
 
     //========= /удаление отдела =======

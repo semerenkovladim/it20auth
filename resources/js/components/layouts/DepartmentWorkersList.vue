@@ -139,9 +139,7 @@ export default {
     margin-top: 25px;
 }
 
-.btnSave {
-    %depSuccessfulBtn;
-}
+.btnSave,
 .btnCancel {
     width: 120px;
     height: 50px;

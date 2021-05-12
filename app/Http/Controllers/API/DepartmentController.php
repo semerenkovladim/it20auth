@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Department;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent;
 use Illuminate\Support\Facades\DB;
 
 class DepartmentController extends Controller
@@ -14,6 +15,7 @@ class DepartmentController extends Controller
         $dep = new Department;
 
         return $dep->fetchAllDep();
+
     }
 
     public function store(Request $request)
@@ -31,4 +33,10 @@ class DepartmentController extends Controller
         $dep->deleteDepartment($request);
     }
 
+    public function show($id) {
+        $department = Department::find($id);
+
+        return (response()->json(['data' => $members]));
+
+    }
 }

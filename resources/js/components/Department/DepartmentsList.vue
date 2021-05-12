@@ -13,7 +13,7 @@
                                 <label for="checkbox"></label>
                             </div>
                             <div class="col-4">
-                                <div class="departments_list-edit" @click="deletePosition"></div>
+                                <router-link :to="{name: 'DepartmentEdit'}" class="departments_list-edit"></router-link>
                             </div>
                             <div class="col-4">
                                 <div class="departments_list-delete" @click="isActiveConfirmModal=true"></div>
@@ -226,6 +226,7 @@ export default {
     }
 
     .departments_list-edit {
+        display: block;
         width: 30px;
         height: 30px;
         margin-left: 10px;
