@@ -4,18 +4,23 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Department;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent;
-use Illuminate\Support\Facades\DB;
 
 class DepartmentController extends Controller
 {
-    public function index()
+    public function index(): \Illuminate\Http\JsonResponse
     {
         $dep = new Department;
 
         return $dep->fetchAllDep();
 
+    }
+
+    public function create()
+    {
+        //
     }
 
     public function store(Request $request)
@@ -28,15 +33,29 @@ class DepartmentController extends Controller
         return response()->json($dep, 200);
     }
 
-    public function destroy(Request $request) {
-        $dep = new Department;
-        $dep->deleteDepartment($request);
+    public function show(Department $department)
+    {
+        $dep = DB::table('departments')
+            ->leftJoin('users', 'users.department_id', '=', 'departments.id')
+            ->where('users.department_id', '=', "{$department}");
+        dd($dep);
+
+        return response()->json($dep, 200);
     }
 
-    public function show($id) {
-        $department = Department::find($id);
+    public function edit(Department $department)
+    {
+        //
+    }
 
-        return (response()->json(['data' => $members]));
+    public function update(Request $request, Department $department)
+    {
+        //
+    }
 
+    public function destroy(Department $department)
+    {
+        $dep = new Department;
+        $dep->deleteDepartment($department);
     }
 }

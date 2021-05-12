@@ -5,15 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
-use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Laravel\Passport\HasApiTokens;
-use App\Http\Controllers\API\DepartmentController;
+use App\Models\User;
 
-class Department extends Model
+class DepartmentNoRes extends Model
 {
-    use HasFactory;
-
+    use HasFactory, HasApiTokens, Notifiable;
 
     protected $fillable = [
         'title',
@@ -34,6 +32,38 @@ class Department extends Model
 
     //========== /Валидация при редактировании отдела ======
 
+    //========== связи департаментов с пользователями
+
+    public function header()
+    {
+        return $this->belongsTo(User::class, 'head_department', 'id');
+    }
+
+
+    //========== связи департаментов с пользователями
+
+    public function getCountMembers($depID)
+    {
+        return $members = $this::find($depID)->loadCount('members');
+    }
+
+    public function getNameHeader($depID) {
+        return $this::find($depID)->header()->where('name', 'surname');
+    }
+
+    public function getNameMembers($depID)
+    {
+        return $members = $this::find($depID);
+    }
+
+
+    public function test($id) {
+//        $re = $this->getCountMembers($id)->get();
+        $sh = Department::find($id);
+//        $sh->head_department = $re;
+        return (response()->json(['data' => $sh]));
+    }
+
     //=========== формирование списка отделов ========
 
     public function fetchAllDep()
@@ -53,19 +83,6 @@ class Department extends Model
 
     //=========== /формирование списка отделов ========
 
-    //======== формирование одного отдела =======
-
-    public function showDepInfo($id)
-    {
-        $department = DB::table('departments')
-            ->leftJoin('users', 'users.department_id', '=', 'departments.id')
-            ->where('users.department_id', '=', "{$id}")
-            ->get();
-
-        return $department;
-    }
-
-    //======== /формирование одного отдела =======
 
     //========== добавление отдела ==================
 
@@ -83,13 +100,12 @@ class Department extends Model
 
     //========= удаление отдела =======
 
-    public function deleteDepartment($department)
+    public function deleteDepartment($request)
     {
-        $dep = Department::find($department)->each->delete();
+        $dep = new Department;
+        $dep->find($request);
+        $dep->delete();
     }
 
     //========= /удаление отдела =======
 }
-
-
-

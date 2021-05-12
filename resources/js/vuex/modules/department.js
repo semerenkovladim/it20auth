@@ -92,7 +92,7 @@ export default {
 
         async createNewDepartment(ctx, data) {
             await axios
-                .post('/api/departments/create', {
+                .post('/api/departments', {
                     title: data.title,
                     head_department: data.head_department,
                 })
