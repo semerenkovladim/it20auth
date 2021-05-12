@@ -139,6 +139,7 @@ export default {
 
     .slide {
         width: 100%;
+        background-size: cover;
     }
 }
 .card {
