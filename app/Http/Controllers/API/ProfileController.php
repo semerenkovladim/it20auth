@@ -11,15 +11,10 @@ use Response;
 
 class ProfileController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth:api');
-    }
 
-
-    public function index()
+    public function index($id)
     {
-        $user = User::where(Auth::user()->id)->get();
+        $user = User::find($id);
         return response()->json([
             'user'    => $user,
         ], 200);

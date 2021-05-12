@@ -10,9 +10,25 @@
                     <div class="container">
                         <div class="row profile_input">
                             <div class="col-6">
-                                <div class="profile_photo"><img src="../../images/placeholder.png" alt=""></div>
+                           <div class="label_wrapper">
+                            <label class="edit_form__label img_input_label">
+
+                                <input type="file"
+                                       accept="image/*"
+                                       name="image"
+                                       ref="file"
+                                       class="d-none"
+                                       @change="handleFileUpload(user)">
+                                <img :src="user.avatar"
+                                     :alt="user.surname + ' ' + user.name + ' фото'"
+                                     v-if="user.avatar">
+                                <span class="short-fio" v-else>{{
+                                        shortFio(user.surname, user.name)
+                                    }}</span>
+                            </label>
+                        </div>
                                     <label>Фамилия:</label>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" v-model="user.surname">
 
                                     <label>Имя:</label>
                                     <input type="text" class="form-control" v-model="user.name">
@@ -24,16 +40,31 @@
                         <label>Дата рождения:</label>
                         <input type="date" class="form-control" v-model="user.birth">
 
-                        <label>Отдел:</label>
-                        <select class="form-control" v-model="user.departament_id">
-                            <option value="">Отдел разработки проектов</option>
-                        </select>
+                    <label class="edit_form__label">
+                            <span class="input_title">Отдел:</span>
+                            <select name="department" class="styled" v-model="user.department_id">
+                                <option v-for="department in departmentsData"
+                                        :key="department.id"
+                                        :value="department.id">
+                                    {{ department.title }}
+                                </option>
+                            </select>
+                    </label>
 
-                        <label>Должность:</label>
-                        <input type="text"  class="form-control" v-model="user.position">
-
+                    <label class="edit_form__label">
+                            <span class="input_title">Должность:</span>
+                            <select name="position" class="styled"
+                                    v-model="user.position"
+                                    required>
+                                <option v-for="position in positions"
+                                        :key="position.title"
+                                        :value="position.title">
+                                    {{ position.title }}
+                                </option>
+                            </select>
+                    </label>
                         <label>Дата начала работы:</label>
-                        <input type="datetime-local"  class="form-control" v-model="user.date_start">
+                        <input type="date"  class="form-control" v-model="user.date_start">
                     </div>
                 </div>
                 <div class="inform_title">Контактная информация</div>
@@ -68,23 +99,46 @@ import {mapActions} from "vuex";
     export default {
     data() {
         return{
-            user: {
-                position:null,
-                name:null,
-                surname:null,
-                middle_name:null,
-                avatar:null,
-                birth:null,
-                date_start:null,
-                email:null,
-                mobile_phone:null,
-                work_phone:null,
-                skype:null,
-                department_id:null,
-                password:null,
-                code:null
+            user:{
+                surname:'',
+                name:'',
+                middle_name:'',
+                avatar:'',
+                birth:'',
+                date_start:'',
+                email:'',
+                mobile_phone:'',
+                work_phone:'',
+                skype:'',
+                department_id:''
             },
-                errors: []
+            departmentsData: [
+                {
+                    id: 1,
+                    title: 'Отдел сайтов'
+                },
+                {
+                    id: 2,
+                    title: 'Отдел разработки проектов'
+                },
+                {
+                    id: 3,
+                    title: 'Отдел дизайна'
+                }
+            ],
+            positions: [
+                {
+                    title: 'Design'
+                },
+                {
+                    title: 'Developer'
+                },
+                {
+                    title: 'Meneger'
+                }
+            ],
+            imgChange: false,
+            imgData: {}
         }
     },
     methods: {
@@ -92,10 +146,36 @@ import {mapActions} from "vuex";
             'saveUserFromServer',
             'saveAccessFromServer',
             'saveRefreshFromServer'
-        ])
-    },
-    created(){
-        axios.get("/api/profile").then(response => (this.user = response))
+        ]),
+        handleFileUpload(data) {
+            console.log('handleFileUpload', data)
+            if (data.avatar !== this.$refs.file.files[0] && this.$refs.file.files[0]) {
+                this.imgChange = true
+                data.avatar = this.$refs.file.files[0];
+                this.saveImg(data.avatar, data)
+            }
+        },
+        saveImg(image, data) {
+            let formData = new FormData();
+            formData.append('file', image)
+            return axios.post('/api/image/upload/avatar', formData)
+                .then(value => {
+                    data.avatar = value.data.path
+                })
+        },
+        shortFio(last, first) {
+            if (last && first) return last.slice(0, 1) + '.' + first.slice(0, 1)
         }
+    },
+    mounted(){
+        this.user=Object.assign(this.user,this.auth_user)
+        console.log('mounted', this.user)
+    },
+    computed:{
+        auth_user(){
+            console.log(this.$store.getters.user)
+            return this.$store.getters.user;
+        }
+    }
     }
 </script>
