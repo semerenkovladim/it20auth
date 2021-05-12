@@ -1,7 +1,5 @@
 <template>
-    <ul>
-        <button class="new_style" v-if="!show" @click="show=!show" key="menu"></button>
-        <button class="old_style" v-else @click="show=!show" key="menu"></button>
+    <ul class="sidebar_list" :class="{'sidebar_list-active':show}">
         <li class="link" v-bind:class="{'linkss':show}">
             <router-link to="/home" class="wiget">
                 <div v-bind:class="{'flex':show}">
@@ -64,7 +62,8 @@
                     <div v-bind:class="{'location2':show, 'location':!show}"></div>
                     <span>Отделы</span>
                 </div>
-            </router-link></li>
+            </router-link>
+        </li>
         <li class="link" v-bind:class="{'linkss':show}" v-if="showMenu">
             <router-link to="/users-management" class="wiget">
                 <div v-bind:class="{'flex':show}">
@@ -79,15 +78,59 @@
 <script>
 export default {
     name: "Sidebar",
+    props:['show'],
     data() {
-        return{
-            showMenu:false,
-            show:false
+        return {
+            showMenu: false
         }
     },
 }
 </script>
 
-<style scoped>
+<style lang="scss">
+@import "resources/sass/variables";
+
+.sidebar_list {
+    @media all and (max-width: 768px){
+        transform: translate(-100%);
+    }
+    background: #FFFFFF;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    height: 100%;
+    position: relative;
+    width: 100%;
+    max-width: 160px;
+    .link {
+        padding: 0;
+        border: none;
+        background: #FFFFFF;
+
+        a {
+            display: block;
+            padding: 0;
+            border-right: 2px solid transparent;
+            border-left: 2px solid transparent;
+
+            &:hover {
+                border-left: 2px solid #1875F0;
+            }
+        }
+
+        .active {
+            border-left: 2px solid #1875F0;
+        }
+    }
+}
+.sidebar_list-active {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    border-radius: 6px;
+    max-width: 255px;
+    height: auto;
+    overflow: hidden;
+    background: transparent;
+    @media all and (max-width: 768px){
+        transform: translate(0);
+    }
+}
 
 </style>
