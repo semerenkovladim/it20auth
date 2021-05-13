@@ -13,26 +13,28 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="label_wrapper">
-                            <!--<Cropper :imageProp="imgData"-->
-                            <!--@cropImg="setCropImg">-->
-                            <!--</Cropper>-->
-                            <!--<ImageLoader :imageProp="userData.data.avatar"-->
-                            <!--@imageSelected="imgSelected">-->
-                            <!--</ImageLoader>-->
-                            <label class="edit_form__label img_input_label">
-                                <input type="file"
-                                       accept="image/*"
-                                       name="image"
-                                       ref="file"
-                                       class="d-none"
-                                       @change="handleFileUpload(userData)">
+                            <!--                            <Cropper :imageProp="imgData"
+                                                        @cropImg="setCropImg">
+                                                        </Cropper>
+                                                        <ImageLoader :imageProp="userData.data.avatar"
+                                                        @imageSelected="imgSelected">
+                                                        </ImageLoader>-->
+
+                            <div class="edit_form__label img_input_label" @click="showComponent = !showComponent">
+                                <div class="cropper-wrapper" v-if="showComponent" @click.stop>
+                                    <VueCropper
+                                        @closeCropper="showComponent = false"
+                                        @uploadSuccess="setCropImg">
+                                    </VueCropper>
+                                </div>
                                 <img :src="userData.data.avatar"
                                      :alt="userData.data.surname + ' ' + userData.data.name + ' фото'"
-                                     v-if="userData.data.avatar">
+                                     v-if="userData.data.avatar"
+                                     v-cloak>
                                 <span class="short-fio" v-else>{{
                                         shortFio(userData.data.surname, userData.data.name)
                                     }}</span>
-                            </label>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -40,6 +42,8 @@
                             <span class="input_title">Дата рождения:</span>
                             <input type="date" class="styled"
                                    v-model="userData.data.birth"
+                                   min="1920-01-01"
+                                   :max="currentData()"
                                    required>
                         </label>
                     </div>
@@ -90,7 +94,10 @@
                 </label>
                 <label class="edit_form__label">
                     <span class="input_title">Дата начала работы:</span>
-                    <input type="date" class="styled"
+                    <input type="date"
+                           class="styled"
+                           min="2018-01-01"
+                           :max="currentData()"
                            v-model="userData.data.date_start">
                 </label>
             </div>
@@ -177,6 +184,7 @@ import CancelBtn from "../../buttons/CancelBtn";
 import Message from "../../message/Message";
 import Cropper from "../../cropper/Cropper";
 import ImageLoader from "../../cropper/ImageLoader";
+import VueCropper from "../../vue-image-crop/VueCropper";
 import {mapActions} from "vuex";
 
 export default {
@@ -187,11 +195,13 @@ export default {
         ConfirmBtn,
         Message,
         ImageLoader,
-        Cropper
+        Cropper,
+        VueCropper
 
     },
     data() {
         return {
+            showComponent: false,
             confirm: 'Сохранить',
             confirm2: 'Изменить',
             imgChange: false,
@@ -239,7 +249,7 @@ export default {
             'getUMMessage'
         ]),
         setCropImg(data) {
-            this.userData.data = data
+            this.userData.data.avatar = data.path
         },
         imgSelected(data) {
             this.imgData = data
@@ -311,6 +321,18 @@ export default {
         setData() {
             this.userData.data = this.data
         },
+        currentData() {
+            let date = new Date(),
+                year = date.getFullYear(),
+                month,
+                day
+            date.getMonth() < 10 ? month = '0' + (date.getMonth() + 1) : month = date.getMonth() + 1
+            date.getDate() < 10 ? day = '0' + date.getDate() : day = date.getDate()
+
+            console.log('date', `${year}-${month}-${day}`)
+            return `${year}-${month}-${day}`
+
+        }
     },
     computed: {
         setUserData() {
@@ -324,6 +346,7 @@ export default {
     },
     mounted() {
         this.setData()
+        this.currentData()
     }
 }
 </script>
@@ -336,6 +359,14 @@ export default {
     max-width: 900px;
     margin: 0 auto;
     padding-bottom: 30px;
+
+    .cropper-wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+    }
 
     .radio_col {
         display: flex;
@@ -409,6 +440,7 @@ export default {
         overflow: hidden;
         transition: none;
         background: rgba(76, 75, 75, 0.5);
+        cursor: pointer;
 
         &:hover {
             &:after {
