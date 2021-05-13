@@ -1,14 +1,17 @@
 <template>
-    <main class="row users_management">
-        <user-management-settings></user-management-settings>
-        <user-management-confirm></user-management-confirm>
-        <div class="container-fluid users_management__container">
+    <main class="row users_management" v-if="tempUser.is_admin">
+        <user-management-settings :data="tempSettings"></user-management-settings>
+        <user-management-confirm
+            @deleteEvent="deleteSelectUsers"
+            :userDataLength="selectUsers.length">
+        </user-management-confirm>
+        <div class="col">
             <div class="wrapper col">
                 <placeholder :text="placeholderText"
                              :links="links">
                 </placeholder>
                 <div class="row users_management__row users_management__wrapper">
-                    <div class="col-md-3 users_management__col">
+                    <div class="col-md-3 users_management__col department_col">
                         <div class="users_management__add_user">
                             <button class="add_user__btn" type="button"
                                     @click="$router.push('/users-management/new-user')">Добавить пользователя
@@ -27,12 +30,12 @@
                                     <label>
                                         <input type="checkbox"
                                                class="select_all input_checkbox"
-                                               @change="checkStatus = !checkStatus"
+                                               @change="changeSelectAll"
                                                v-model="checkAll">
                                     </label>
                                 </div>
                                 <div class="edit__actions_list">
-                                    <ul class="row">
+                                    <ul class="row flex-nowrap">
                                         <li class="edit__action">
                                             <button class="edit_btn"
                                                     type="button"
@@ -40,13 +43,14 @@
                                                         path:'/users-management/user-edit',
                                                         query:{id:selectUsers[0].id}
                                                     })"
-                                                    :disabled="usersCount !==1">
+                                                    :disabled="selectUsers.length !==1">
                                             </button>
                                         </li>
                                         <li class="edit__action">
                                             <button class="remove_btn"
                                                     type="button"
-                                                    @click="removeUser">
+                                                    @click="removeUser"
+                                                    :disabled="selectUsers.length === 0">
                                             </button>
                                         </li>
                                         <li class="edit__action">
@@ -70,9 +74,10 @@
                             </div>
                         </div>
                         <users-management-list
-                            v-if="UM_USERS.data.length"
-                            :data="UM_USERS.data"
+                            v-if="usersData.data"
+                            :data="usersData.data"
                             :checkStatus="checkStatus"
+                            :settings="tempSettings"
                             @allChecked="setAllCheck"
                             @changeUsersLength="userCount">
                         </users-management-list>
@@ -80,11 +85,12 @@
                     </div>
                 </div>
                 <div class="row users_management__paginator_row"
-                     v-if="UM_USERS.data.length">
+                     v-if="usersData.data.length">
                     <div class="col-md-3"></div>
                     <div class="col-md-9">
                         <div class="row paginator_row">
-                            <paginator :data="UM_USERS"
+                            <paginator :data="usersData"
+                                       :data_id="currentDepartment"
                                        @toPage="setCurrentPage">
 
                             </paginator>
@@ -117,6 +123,9 @@ export default {
     },
     data() {
         return {
+            usersData: {
+                data: []
+            },
             settingsStatus: false,
             placeholderText: 'Управление пользователями',
             links: [
@@ -158,17 +167,83 @@ export default {
             usersCount: '',
             selectUsers: [],
             currentDepartment: 0,
-            currentPage: 1
+            currentPage: 1,
+            tempUser: {
+                is_admin: true
+            },
+            tempSettings: []
+
         }
     },
     methods: {
         ...mapActions([
             'changeUMSettingStatus',
             'changeUMConfirmStatus',
-            'getUMAllUsers',
-            'getUsersInDepartment'
+            'getUMMessage'
 
         ]),
+        changeSelectAll() {
+            for (let user in this.usersData.data) {
+                this.usersData.data[user].checked = this.checkAll;
+                if (this.checkAll) {
+                    this.selectUsers.push(this.usersData.data[user])
+                } else {
+                    this.selectUsers = []
+                }
+            }
+            this.usersCount = this.selectUsers.length
+            this.checkStatus = !this.checkStatus
+        },
+        async getUMAllUsers(page = 1) {
+            axios.get('/api/users', {
+                params: {
+                    page: page
+                }
+            })
+                .then(value => {
+                        this.usersData = value.data.data
+                    }
+                )
+                .catch(reason => {
+                        this.getUMMessage(reason)
+                    }
+                )
+        },
+        async getUsersInDepartment(data = {id: 1, page: 1}) {
+            axios.get('/api/users/' + data.id, {
+                params: {
+                    page: data.page
+                }
+            })
+                .then(value => {
+                    this.usersData = value.data.data
+                })
+                .catch(reason => {
+                    this.getUMMessage(reason)
+                })
+        },
+        async deleteSelectUsers() {
+            if (this.selectUsers) {
+                let usersId = []
+                for (let item in this.selectUsers) {
+                    usersId.push(this.selectUsers[item].id)
+                }
+                axios.post('/api/users/delete', {
+                    data: usersId
+                })
+                    .then(value => {
+                        if (value.status) {
+                            this.checkAll = false
+                            this.getUsers()
+                            this.changeUMConfirmStatus()
+                        }
+
+                        // this.getUMMessage(value)
+                    })
+                usersId.length = 0
+                this.selectUsers.length = 0
+            }
+        },
         setDepartmentId(data) {
             this.currentDepartment = data.id
             this.currentPage = 1
@@ -188,7 +263,7 @@ export default {
             this.changeUMConfirmStatus()
         },
         setCurrentPage(data) {
-            if (this.UM_USERS.last_page >= data.page >= 1) {
+            if (this.usersData.last_page >= data.page >= 1) {
                 this.currentPage = data.page
                 this.getUsers()
             }
@@ -200,7 +275,12 @@ export default {
                 this.getUMAllUsers(this.currentPage)
             }
         },
-
+        getAdminSettings() {
+            axios.get('/api/admin-settings/1')
+                .then(value => {
+                    this.tempSettings = value.data.data
+                })
+        },
     },
     computed: {
         ...mapGetters([
@@ -211,14 +291,14 @@ export default {
         },
         setStatus() {
             return this.setStatus
-        }
-    },
-    watch: {
-        checkSelectAll() {
-            if (this.checkAll) this.checkStatus = this.checkAll
-        }
+        },
     },
     created() {
+        if (!this.tempUser.is_admin) {
+            this.$router.push('/home')
+        } else {
+            this.getAdminSettings()
+        }
         this.getUMAllUsers()
     }
 }
@@ -293,12 +373,7 @@ export default {
 }
 
 .users_management__edit {
-    > .row {
-        border-left: 2px solid #F5F5F5;
-    }
-
     .row {
-
         flex-wrap: nowrap;
         height: 100%;
         @media all and (max-width: $breakpoint) {
@@ -348,15 +423,23 @@ export default {
         height: 26px;
         cursor: pointer;
         display: block;
+
+        &[disabled] {
+            opacity: 0.5;
+        }
+    }
+}
+
+.edit__action_checkbox {
+    justify-content: flex-start;
+
+    label {
+        padding-left: 15px;
     }
 }
 
 .edit_btn {
     background: url("../../../../images/icons/edit_img.png") no-repeat center / contain;
-
-    &[disabled] {
-        opacity: 0.5;
-    }
 }
 
 .remove_btn {
@@ -373,8 +456,11 @@ export default {
 
 .edit__action_checkbox {
     flex: none;
-    width: 77.33px;
-    max-width: unset;
+    //width: 77.33px;
+    //max-width: unset;
 }
 
+.department_col {
+    border-right: 2px solid #F5F5F5;
+}
 </style>

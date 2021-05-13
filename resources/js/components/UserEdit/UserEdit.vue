@@ -1,6 +1,6 @@
 <template>
     <main class="row users_management">
-        <div class="container-fluid users_management__container user_edit__container">
+        <div class="col user_edit__container">
             <div class="wrapper col">
                 <Placeholder :links="links"
                              :text="text"
@@ -66,12 +66,12 @@ export default {
             return axios.get('/api/user/' + this.$route.query.id)
                 .then(value => {
                     this.userData = value.data.data
-                    console.log(value)
-                    console.log('this.userData', this.userData)
+                    // console.log(value)
+                    // console.log('this.userData', this.userData)
                     this.setUserName()
                 })
                 .catch(reason => {
-                    // console.log(reason)
+                    // // console.log(reason)
                 })
         },
         setUserName() {
@@ -80,7 +80,7 @@ export default {
             if (this.userData.name) fio.push(this.userData.name)
             if (this.userData.middle_name) fio.push(this.userData.middle_name)
             this.links[2].name = `${fio.join(' ')}`
-            console.log('this.links[2].name', this.links[2].name)
+            // console.log('this.links[2].name', this.links[2].name)
         }
     },
     computed: {

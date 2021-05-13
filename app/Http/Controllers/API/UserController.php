@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Mail\SendUserPassword;
+use App\Models\AccessLevel;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -55,6 +56,7 @@ class UserController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors(), 'status' => false]);
         }
+
         $user = User::make($request->all());
 
         $password = Str::random(8);
@@ -125,18 +127,25 @@ class UserController extends Controller
 
     }
 
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        $user = User::find($id);
-        if ($user) {
-            $user->delete();
-            $status = true;
-            $message = 'Товар удален!';
-        } else {
-            $status = false;
-            $message = 'Товар не найден!';
-        }
+        $data = $request->data;
+        foreach ($data as $id) {
+            $user = User::find($id);
+            if ($user) {
+                $accessLevel = AccessLevel::where('user_id', '=', $id);
+                $user->delete();
+                if ($accessLevel) {
+                    $accessLevel->delete();
+                }
+                $status = true;
+                $message = 'Удалено';
+            } else {
+                $status = false;
+                $message = 'Ошибка';
+            }
 
-        return response()->json(['data' => $user, 'message' => $message, 'status' => $status]);
+        }
+        return response()->json(['data' => $data, 'message' => $message, 'status' => $status]);
     }
 }

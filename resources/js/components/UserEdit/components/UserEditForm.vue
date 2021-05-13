@@ -6,18 +6,20 @@
               class="row user_edit_form__form"
               enctype="multipart/form-data">
             <div class="col-12 edit_form__title">Общая информация</div>
+            <div class="col-12 error-message"
+                 v-if="message">Заполните, пожалуйста, все обязательные поля
+            </div>
             <div class="col-12">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="label_wrapper">
-                            <!--                            <Cropper :imageProp="imgData"-->
-                            <!--                                     @cropImg="setCropImg">-->
-                            <!--                            </Cropper>-->
-                            <!--                            <ImageLoader :imageProp="userData.data.avatar"-->
-                            <!--                                         @imageSelected="imgSelected">-->
-                            <!--                            </ImageLoader>-->
+                            <!--<Cropper :imageProp="imgData"-->
+                            <!--@cropImg="setCropImg">-->
+                            <!--</Cropper>-->
+                            <!--<ImageLoader :imageProp="userData.data.avatar"-->
+                            <!--@imageSelected="imgSelected">-->
+                            <!--</ImageLoader>-->
                             <label class="edit_form__label img_input_label">
-
                                 <input type="file"
                                        accept="image/*"
                                        name="image"
@@ -132,8 +134,7 @@
                     <span class="input_title">Skype:</span>
                     <input type="text" class="styled"
                            v-model="userData.data.skype"
-                           maxlength="255"
-                    >
+                           maxlength="255">
                 </label>
             </div>
             <div class="col-md-6">
@@ -229,6 +230,7 @@ export default {
             ],
             userId: 0,
             routeBack: false,
+            message: false,
             imgData: {}
         }
     },
@@ -237,19 +239,18 @@ export default {
             'getUMMessage'
         ]),
         setCropImg(data) {
-            console.log('setCropImg', data)
             this.userData.data = data
-            console.log(' this.userData.data', this.userData.data)
         },
         imgSelected(data) {
-            console.log('imgSelected', data)
             this.imgData = data
         },
         createUser(data) {
             return axios.post('/api/user/create', data.data)
                 .then(value => {
-                    this.getUMMessage(value)
+                    // this.getUMMessage(value)
+
                     if (value.data.status) {
+                        this.message = false
                         this.userId = value.data.data.id
                         axios.post('/api/user/permission/create', {
                             user_id: value.data.data.id
@@ -257,22 +258,26 @@ export default {
                         axios.post('/api/user/settings/create', {
                             user_id: value.data.data.id
                         })
-
+                        this.$router.go()
+                    } else {
+                        this.message = true
                     }
                 })
         },
         updateUser(data) {
             return axios.put('/api/user/update/' + data.id, data.data)
                 .then(value => {
-                    this.getUMMessage(value)
+                    // this.getUMMessage(value)
+                    // this.message = false
+                    this.$router.go()
                 })
                 .catch(reason => {
-                    this.getUMMessage('error')
+                    // this.getUMMessage('error')
+                    this.message = true
                 })
         },
         cancelUser(data) {
             let back = true
-            console.log('cancelUser', data, this.routeBack)
             for (let key of Object.keys(data.data)) {
                 if (data.data[key] !== '') {
                     data.data[key] = ''
@@ -284,7 +289,6 @@ export default {
             }
         },
         handleFileUpload(data) {
-            console.log('handleFileUpload', data)
             if (data.data.avatar !== this.$refs.file.files[0] && this.$refs.file.files[0]) {
                 this.imgChange = true
                 data.data.avatar = this.$refs.file.files[0];
@@ -297,6 +301,7 @@ export default {
             return axios.post('/api/image/upload/avatar', formData)
                 .then(value => {
                     data.data.avatar = value.data.path
+                    console.log('saveImg', value.data.path)
                 })
         },
         shortFio(last, first) {
@@ -304,7 +309,6 @@ export default {
 
         },
         setData() {
-            console.log('this.data', this.$props.data)
             this.userData.data = this.data
         },
     },
@@ -434,7 +438,6 @@ export default {
             text-align: center;
         }
     }
-
 }
 
 .edit_form__title {
@@ -446,6 +449,16 @@ export default {
     justify-content: center;
     align-items: center;
     border-bottom: 2px solid #F5F5F5;;
+    margin-bottom: 15px;
+
+}
+
+.error-message {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    text-align: center;
+    color: #FF0000;
     margin-bottom: 15px;
 
 }
@@ -470,6 +483,8 @@ export default {
     }
 
     input[type=date] {
+        transition: 0.2s;
+
         &::-webkit-calendar-picker-indicator {
             transition: 0.2s ease;
             color: transparent;
@@ -478,10 +493,15 @@ export default {
             background-size: 26px 26px;
             cursor: pointer;
             padding: 5px 0 5px 5px;
+        }
 
-            &:hover {
-                transform: translateY(-25%);
-            }
+        &::-webkit-datetime-edit-day-field:focus,
+        &::-webkit-datetime-edit-month-field:focus,
+        &::-webkit-datetime-edit-year-field:focus {
+            background-color: transparent;
+            color: $designColorOne;
+            font-weight: 900;
+            font-size: 18px;
         }
     }
 }
