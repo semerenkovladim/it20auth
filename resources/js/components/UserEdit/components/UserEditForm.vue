@@ -7,7 +7,8 @@
               enctype="multipart/form-data">
             <div class="col-12 edit_form__title">Общая информация</div>
             <div class="col-12 error-message"
-                 v-if="message">Заполните, пожалуйста, все обязательные поля</div>
+                 v-if="message">Заполните, пожалуйста, все обязательные поля
+            </div>
             <div class="col-12">
                 <div class="row">
                     <div class="col-md-6">
@@ -300,7 +301,7 @@ export default {
             return axios.post('/api/image/upload/avatar', formData)
                 .then(value => {
                     data.data.avatar = value.data.path
-                    console.log('saveImg',value.data.path)
+                    console.log('saveImg', value.data.path)
                 })
         },
         shortFio(last, first) {
@@ -451,6 +452,7 @@ export default {
     margin-bottom: 15px;
 
 }
+
 .error-message {
     font-style: normal;
     font-weight: 500;
@@ -460,6 +462,7 @@ export default {
     margin-bottom: 15px;
 
 }
+
 .edit_form__label {
     flex-direction: column;
     display: flex;
@@ -480,6 +483,8 @@ export default {
     }
 
     input[type=date] {
+        transition: 0.2s;
+
         &::-webkit-calendar-picker-indicator {
             transition: 0.2s ease;
             color: transparent;
@@ -488,10 +493,15 @@ export default {
             background-size: 26px 26px;
             cursor: pointer;
             padding: 5px 0 5px 5px;
+        }
 
-            &:hover {
-                transform: translateY(-25%);
-            }
+        &::-webkit-datetime-edit-day-field:focus,
+        &::-webkit-datetime-edit-month-field:focus,
+        &::-webkit-datetime-edit-year-field:focus {
+            background-color: transparent;
+            color: $designColorOne;
+            font-weight: 900;
+            font-size: 18px;
         }
     }
 }
