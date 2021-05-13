@@ -137,6 +137,19 @@ export default {
             }
         }
 
+        .vicp-step3 {
+            .vicp-upload {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                .vicp-success {
+                    line-height: 1.5;
+                    height: fit-content;
+                }
+            }
+        }
+
         .vicp-operate {
             position: static;
             display: flex;
