@@ -285,7 +285,8 @@ export default {
     },
     computed: {
         ...mapGetters([
-            'UM_USERS'
+            'UM_USERS',
+            'user'
         ]),
         checkSelectAll() {
             return this.checkAll
@@ -295,11 +296,16 @@ export default {
         },
     },
     created() {
-        if (!this.tempUser.is_admin) {
-            this.$router.push('/home')
+        if (this.user) {
+            if (!this.user.is_admin) {
+                this.$router.push('/home')
+                return
+            }
         } else {
-            this.getAdminSettings()
+            this.$router.push('/login')
+            return
         }
+        this.getAdminSettings()
         this.getUMAllUsers()
         this.getAllDepartments()
     }
