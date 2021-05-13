@@ -55,6 +55,7 @@ export default {
             hideTextBtn: false,
             hasReservedEmail: false,
             reservedEmail: '',
+            timer: null,
         };
     },
     mounted() {
@@ -78,11 +79,12 @@ export default {
             this.countSecond = 60;
             this.disableButton = true;
             this.hideTextBtn = false;
-            const timer = setInterval(() => {
+            clearInterval(this.timer)
+            this.timer = setInterval(() => {
                 if(this.countSecond > 0) {
                     this.countSecond--
                 } else {
-                    clearInterval(timer)
+                    clearInterval(this.timer)
                     this.disableButton = false;
                     this.hideTextBtn = true;
                 }
@@ -108,13 +110,15 @@ export default {
             });
         },
         sendOnReservedEmail() {
-            axios.post('/api/login/resend-code', {
+            axios.post('/api/login/resend-code/reserved', {
                 email: this.resetPasswordEmail,
+                reservedEmail: this.reservedEmail
             });
             this.startTimer();
         },
         clearAll() {
             this.code = '';
+            this.$router.push({name: 'login.repair'});
         }
     },
     computed: {
@@ -150,6 +154,9 @@ export default {
 }
 .form-group {
     margin-bottom: 10px;
+}
+.flex {
+    display: flex;
 }
 .form-group label {
     font-family: Roboto;

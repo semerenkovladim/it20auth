@@ -165,6 +165,9 @@ export default {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     border-radius: 6px;
 }
+.flex {
+    display: flex;
+}
 .title-form {
     font-family: 'Roboto', sans-serif;
     font-style: normal;
