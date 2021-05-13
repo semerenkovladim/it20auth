@@ -34,12 +34,23 @@ class Department extends Model
 
     //========== /Валидация при редактировании отдела ======
 
+    public function members()
+    {
+        return $this->hasMany(User::class, 'department_id', 'id');
+
+    }
+
+    public function depHeader()
+    {
+        return $this->hasMany(User::class, 'id', 'head_department');
+    }
+
     //=========== формирование списка отделов ========
 
     public function fetchAllDep()
     {
         $departments = DB::table('departments')
-            ->leftJoin('users', 'users.department_id', '=', 'departments.id')
+            ->leftJoin('users', 'users.id', '=', 'departments.head_department')
             ->select('departments.id', 'name', 'surname', 'title', 'departments.created_at')
             ->latest()
             ->paginate(5);
@@ -48,22 +59,29 @@ class Department extends Model
         } else {
             $status = 400;
         }
-        return response()->json(['data' => $departments, 'status' => $status]);
+        return $departments;
+    }
+
+    public function depIn()
+    {
+        return $this->fetchAllDep();
     }
 
     //=========== /формирование списка отделов ========
 
-    //======== формирование одного отдела =======
-
-    public function showDepInfo($id)
+    public function getMembers()
     {
-        $department = DB::table('departments')
-            ->leftJoin('users', 'users.department_id', '=', 'departments.id')
-            ->where('users.department_id', '=', "{$id}")
-            ->get();
-
-        return $department;
+        return $this::all()->each->members;
     }
+
+    public function getHeader($department)
+    {
+        return $department;
+
+//        return $this::find($id)->each->depHeader;
+    }
+
+    //======== формирование одного отдела =======
 
     //======== /формирование одного отдела =======
 

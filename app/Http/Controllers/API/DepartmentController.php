@@ -10,12 +10,11 @@ use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
 {
-    public function index(): \Illuminate\Http\JsonResponse
+    public function index()
     {
         $dep = new Department;
 
         return $dep->fetchAllDep();
-
     }
 
     public function create()
@@ -35,12 +34,10 @@ class DepartmentController extends Controller
 
     public function show(Department $department)
     {
-        $dep = DB::table('departments')
-            ->leftJoin('users', 'users.department_id', '=', 'departments.id')
-            ->where('users.department_id', '=', "{$department}");
-        dd($dep);
+        $dep = new Department;
 
-        return response()->json($dep, 200);
+
+        return $dep->getHeader($department);
     }
 
     public function edit(Department $department)

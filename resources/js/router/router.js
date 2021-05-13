@@ -148,7 +148,7 @@ const router = new VueRouter({
                     }
                 },
                 {
-                    path: '/departments-management/edit',
+                    path: '/departments-management/edit/',
                     component: DepartmentEdit,
                     name: 'DepartmentEdit',
                     meta: {

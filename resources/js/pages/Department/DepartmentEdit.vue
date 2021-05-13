@@ -28,7 +28,7 @@
                             <ul>
                                 <li>
                                     <label for="name">Название:</label>
-                                    <input type="text" id="name" v-model="title">
+                                    <input type="text" id="name" v-model="title" >
                                 </li>
                                 <li>
                                     <label for="lead">Руководитель:</label>
@@ -44,7 +44,8 @@
                                     <input type="text" id="workersCtr" class="workersCtr" placeholder="16" readonly
                                            @click="showWorkers">
                                     <department-workers-list v-if="isActiveWorkersList"
-                                                             @close="isActiveWorkersList = false"/>
+                                                             @close="isActiveWorkersList = false"
+                                    :department-id="departmentId"/>
                                 </li>
                                 <li class="form-btns">
                                     <button type="button" class="btnSave" @click="this.sendFormData">Сохранить</button>
@@ -72,6 +73,7 @@ export default {
             title: null,
             head_department: null,
             formData: null,
+            departmentId: null,
         }
     },
     components: {
@@ -81,7 +83,7 @@ export default {
         showWorkers() {
             this.isActiveWorkersList = !this.isActiveWorkersList
         },
-        ...mapActions(['fetchLeads', 'createNewDepartment', 'getResStatus']),
+        ...mapActions(['fetchLeads', 'createNewDepartment', 'getResStatus', 'fetchDepartment']),
         async setFormData() {
             this.formData = {
                 title: this.title,
@@ -95,13 +97,21 @@ export default {
             if(this.getResStatus === 200) {
                 await this.$router.push({name: 'DepartmentsManagement'})
             }
-        }
+        },
+        async selectDepartment() {
+            await this.fetchDepartment(this.getDepartmentId);
+            this.title = this.getDepartment.title;
+            this.depHead = this.getDepartment.head_department;
+            this.departmentId = this.getDepartment.id;
+            console.log(this.getDepartment)
+        },
     },
     computed: {
-        ...mapGetters(['getLeads']),
+        ...mapGetters(['getLeads', 'getDepartmentId', 'getDepartment']),
     },
     mounted() {
-        this.fetchLeads()
+        this.selectDepartment()
+
     }
 
 }

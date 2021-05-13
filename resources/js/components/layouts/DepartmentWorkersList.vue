@@ -8,12 +8,12 @@
                     </div>
                     <div class="modal-title">Список сотрудников</div>
                     <ul class="workers_list">
-                        <li v-for="member in getDepMembers">
-                            {{ member.name }} {{member.surname}}
+                        <li v-for="member in getDepMembers" >
+                           <span @click="toDelete(member.id)">{{ member.name }} {{member.surname}} </span>
                         </li>
                     </ul>
                     <div class="btns d-flex">
-                        <button type="submit" class="btnSave">Сохранить</button>
+                        <button type="button" class="btnSave" @click="sendOnDelete">Сохранить</button>
                         <button type="reset" class="btnCancel" @click="$emit('close')">Отмена</button>
                     </div>
                 </div>
@@ -27,14 +27,32 @@ import {mapActions, mapGetters} from 'vuex'
 
 export default {
     name: "DepartmentWorkersList",
+    data(){
+        return {
+            toDeleteUsers: [],
+        }
+    },
     methods: {
-        ...mapActions(['fetchDepMembers'])
+        ...mapActions(['fetchDepMembers', 'deleteUsers']),
+        toDelete($id){
+            this.toDeleteUsers.push($id);
+            console.log(this.toDeleteUsers)
+        },
+
+        async sendOnDelete() {
+            const values = Object.values(this.toDeleteUsers);
+            await values.forEach(value => {
+                this.deleteUsers(value);
+            })
+            this.$emit('close')
+        }
     },
     computed: {
         ...mapGetters(['getDepMembers'])
     },
+    props:['departmentId'],
     created() {
-        this.fetchDepMembers(1)
+        this.fetchDepMembers(this.departmentId)
     }
 }
 </script>

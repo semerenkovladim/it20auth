@@ -91,12 +91,19 @@ class UserController extends Controller
         return response()->json(['data' => $user, 'status' => $status]);
     }
 
+    public function resetDepartment(Request $request, $id)
+    {
+        $user = User::find($id);
+        $user -> department_id = null;
+        $user->save();
+
+    }
+
     public function update(Request $request)
     {
         $id = $request->id;
         $user = User::find($id);
         $data = $request->all();
-
 
         if ($user->email === $data['email']) {
             unset($data['email']);

@@ -8,7 +8,8 @@ export default {
         validationErrs: null,
         leads: null,
         depMembers: null,
-        resStatus: null
+        resStatus: null,
+
     },
 
     mutations: {
@@ -41,6 +42,10 @@ export default {
             state.resStatus = resStatus;
         },
 
+        updateDepartmentId(state, $departmentId) {
+            state.departmentId = $departmentId;
+        },
+
         collectValidErrors(state, err) {
             state.validationErrs = err;
         }
@@ -51,19 +56,25 @@ export default {
             return await axios
                 .get(url)
                 .then(res => {
-                    ctx.commit('updateDepartments', res.data.data.data)
-                    ctx.commit('makePagination', res.data.data)
-
+                    ctx.commit('updateDepartments', res.data.data)
                     console.log(res.data)
+                    ctx.commit('makePagination', res.data)
+
                 })
                 .catch(err => console.log('error:', err))
+        },
+
+        setDepId(ctx, $departmentId) {
+          ctx.commit('updateDepartmentId',$departmentId)
         },
 
         async fetchDepartment(ctx, departmentId) {
 
             return await axios
                 .get(`/api/departments/${departmentId}`)
-                .then((res) => (ctx.commit('updateDepartment', res)))
+                .then(res => {
+                    ctx.commit('updateDepartment', res.data)
+                })
                 .catch(err => console.log('error:', err)
                 );
         },
@@ -99,6 +110,14 @@ export default {
                 .then(res => {
                     ctx.commit('updateResStatus', res.status)
                     console.log(res.status)
+                })
+                .catch(err => console.log(err))
+        },
+        async deleteUsers(ctx, user){
+            await axios
+                .put(`/api/user/reset-department/${user}`)
+                .then(res=> {
+                    console.log('update');
                 })
                 .catch(err => console.log(err))
         },
@@ -142,6 +161,10 @@ export default {
 
         getResStatus(state) {
             return state.resStatus
+        },
+
+        getDepartmentId(state) {
+            return state.departmentId
         }
     },
 }

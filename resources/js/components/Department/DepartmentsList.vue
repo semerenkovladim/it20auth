@@ -13,7 +13,7 @@
                                 <label for="checkbox"></label>
                             </div>
                             <div class="col-4">
-                                <router-link :to="{name: 'DepartmentEdit'}" class="departments_list-edit"></router-link>
+                                <div class="departments_list-edit" @click="getEdit"></div>
                             </div>
                             <div class="col-4">
                                 <div class="departments_list-delete" @click="isActiveConfirmModal=true"></div>
@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from "vuex";
+import {mapActions, mapGetters, mapMutations} from "vuex";
 import DepartmentConfirmModal from "../layouts/DepartmentConfirmModal";
 
 export default {
@@ -95,7 +95,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['fetchDepartments', 'delDepartment']),
+        ...mapActions(['fetchDepartments', 'delDepartment', 'setDepId']),
         gotoNext() {
             this.nextPage = this.getNextPage;
             this.fetchAds(this.nextPage)
@@ -138,6 +138,10 @@ export default {
             for (let i = 0; i < this.checkedDepartments.length; i++) {
                 await this.delDepartment(this.checkedDepartments[i])
             }
+        },
+        getEdit() {
+            this.$store.commit('updateDepartmentId', this.checkedDepartments)
+            this.$router.push({name: 'DepartmentEdit'})
         }
 
     },
@@ -149,9 +153,11 @@ export default {
             });
         }
     },
+    mutations: {
+        ...mapMutations(['updateDepartmentId']),
+    },
     mounted() {
         this.fetchDepartments()
-        console.log(this.getNextPage)
     }
 }
 </script>
