@@ -179,7 +179,8 @@ export default {
         ...mapActions([
             'changeUMSettingStatus',
             'changeUMConfirmStatus',
-            'getUMMessage'
+            'getUMMessage',
+            'getAllDepartments'
 
         ]),
         changeSelectAll() {
@@ -269,8 +270,8 @@ export default {
             }
         },
         getUsers() {
-            if (this.currentDepartment > 1) {
-                this.getUsersInDepartment({id: this.currentDepartment - 1, page: this.currentPage})
+            if (this.currentDepartment > 0) {
+                this.getUsersInDepartment({id: this.currentDepartment, page: this.currentPage})
             } else {
                 this.getUMAllUsers(this.currentPage)
             }
@@ -300,6 +301,7 @@ export default {
             this.getAdminSettings()
         }
         this.getUMAllUsers()
+        this.getAllDepartments()
     }
 }
 </script>
@@ -462,5 +464,17 @@ export default {
 
 .department_col {
     border-right: 2px solid #F5F5F5;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    min-height: 400px;
+}
+.users_management__users_filter {
+    overflow-y: scroll;
+    position: relative;
+    flex: 1 1 100%;
+    &::-webkit-scrollbar {
+        width: 0;
+    }
 }
 </style>
