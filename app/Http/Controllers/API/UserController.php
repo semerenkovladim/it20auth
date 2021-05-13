@@ -17,7 +17,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::paginate(6);
+        $users = User::with('department')->paginate(6);
         if ($users) {
             $status = true;
         } else {
@@ -28,7 +28,7 @@ class UserController extends Controller
 
     public function in_department($id)
     {
-        $users = User::where('department_id', '=', $id)->paginate(6);
+        $users = User::with('department')->where('department_id', '=', $id)->paginate(6);
         if ($users) {
             $status = true;
         } else {

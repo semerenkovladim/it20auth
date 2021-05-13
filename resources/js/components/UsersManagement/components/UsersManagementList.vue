@@ -37,7 +37,7 @@
                         <a :href="'mailto:' + user.email">{{ user.email }}</a>
                     </li>
                     <li class="user_info__item col-2" v-if="settings.position">{{ user.position }}</li>
-                    <li class="user_info__item col-2" v-if="settings.department">{{ user.department_id }}</li>
+                    <li class="user_info__item col-2" v-if="settings.department">{{ user.department.title }}</li>
                     <li class="user_info__item col-2" v-if="settings.date_of_birth">{{ user.birth }}</li>
                     <li class="user_info__item col-2" v-if="settings.modules">{{user.modules ? user.modules : '-'}}</li>
                     <li class="user_info__item col-2" v-if="settings.role">{{user.is_admin ? 'Админ' : 'Пользователь'}}</li>
@@ -49,6 +49,8 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     name: "UsersManagementList",
     props: ['data', 'checkStatus', 'settings'],
@@ -87,6 +89,9 @@ export default {
 
     },
     computed: {
+        ...mapGetters([
+           'ALL_DEPARTMENTS'
+        ]),
         selectUsersLength() {
             return this.selectUsers.length
         }

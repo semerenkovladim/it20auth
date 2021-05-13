@@ -13,13 +13,6 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="label_wrapper">
-                            <!--                            <Cropper :imageProp="imgData"
-                                                        @cropImg="setCropImg">
-                                                        </Cropper>
-                                                        <ImageLoader :imageProp="userData.data.avatar"
-                                                        @imageSelected="imgSelected">
-                                                        </ImageLoader>-->
-
                             <div class="edit_form__label img_input_label" @click="showComponent = !showComponent">
                                 <div class="cropper-wrapper" v-if="showComponent" @click.stop>
                                     <VueCropper
@@ -43,7 +36,7 @@
                             <input type="date" class="styled"
                                    v-model="userData.data.birth"
                                    min="1920-01-01"
-                                   :max="currentData()"
+                                   :max="currentDate"
                                    required>
                         </label>
                     </div>
@@ -73,7 +66,7 @@
                 <label class="edit_form__label">
                     <span class="input_title">Отдел:</span>
                     <select name="department" class="styled" v-model="userData.data.department_id">
-                        <option v-for="department in departmentsData"
+                        <option v-for="department in ALL_DEPARTMENTS"
                                 :key="department.id"
                                 :value="department.id">
                             {{ department.title }}
@@ -97,7 +90,7 @@
                     <input type="date"
                            class="styled"
                            min="2018-01-01"
-                           :max="currentData()"
+                           :max="currentDate"
                            v-model="userData.data.date_start">
                 </label>
             </div>
@@ -185,7 +178,7 @@ import Message from "../../message/Message";
 import Cropper from "../../cropper/Cropper";
 import ImageLoader from "../../cropper/ImageLoader";
 import VueCropper from "../../vue-image-crop/VueCropper";
-import {mapActions} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
     name: "UserEditForm",
@@ -205,6 +198,7 @@ export default {
             confirm: 'Сохранить',
             confirm2: 'Изменить',
             imgChange: false,
+            currentDate: '',
             userData: {
                 data: {
                     is_admin: false
@@ -246,7 +240,9 @@ export default {
     },
     methods: {
         ...mapActions([
-            'getUMMessage'
+            'getUMMessage',
+            'getAllDepartments'
+
         ]),
         setCropImg(data) {
             this.userData.data.avatar = data.path
@@ -321,20 +317,21 @@ export default {
         setData() {
             this.userData.data = this.data
         },
-        currentData() {
+        setCurrentDate() {
             let date = new Date(),
                 year = date.getFullYear(),
                 month,
                 day
             date.getMonth() < 10 ? month = '0' + (date.getMonth() + 1) : month = date.getMonth() + 1
             date.getDate() < 10 ? day = '0' + date.getDate() : day = date.getDate()
+            this.currentDate =  `${year}-${month}-${day}`
 
-            console.log('date', `${year}-${month}-${day}`)
-            return `${year}-${month}-${day}`
-
-        }
+        },
     },
     computed: {
+        ...mapGetters([
+            'ALL_DEPARTMENTS'
+        ]),
         setUserData() {
             return this.data
         }
@@ -346,7 +343,8 @@ export default {
     },
     mounted() {
         this.setData()
-        this.currentData()
+        this.setCurrentDate()
+        this.getAllDepartments()
     }
 }
 </script>
