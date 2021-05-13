@@ -179,6 +179,9 @@ export default {
         passwordRepeate() {
             this.showIconPasswordRepeate = this.passwordRepeate.length > 0;
         },
+        codeWord() {
+            this.showIconCodeWord = this.codeWord.length > 0;
+        }
     },
     computed: {
         ...mapGetters(['resetPasswordEmail']),
@@ -211,6 +214,9 @@ export default {
     right: 40vw;
     left: 40vw;
     height: 100px;
+}
+.flex {
+    display: flex;
 }
 .notification button {
     display: block;
