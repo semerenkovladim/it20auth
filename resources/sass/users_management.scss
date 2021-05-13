@@ -1,4 +1,9 @@
 @import "variables";
+
+* {
+    scroll-behavior: smooth;
+}
+
 .input_checkbox {
     width: 20px;
     height: 20px;
@@ -17,6 +22,7 @@
         border: 2px solid $designColorOne;
     }
 }
+
 .users_management {
     background: $userManagementBgColor;
     //padding-top: calc(#{$headerHeight} + 7px);
