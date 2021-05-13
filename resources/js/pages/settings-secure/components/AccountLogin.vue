@@ -213,7 +213,7 @@
                                             как дополнительный адрес при восстановлении пароля и получения кодов подтверждения)
                                             <form action="#">
                                                 <div class="form-group">
-                                                    <label for="inputReservedEmail">Пароль:</label>
+                                                    <label for="inputReservedEmail">Резервная почта:</label>
                                                     <input type="email" class="form-control" id="inputReservedEmail" aria-describedby="emailHelp"
                                                            placeholder="Резервный email:"
                                                            name="reservedEmail" v-model="reservedEmail">
@@ -612,6 +612,13 @@ export default {
     justify-content: center;
     padding-top: 24px;
     padding-bottom: 14px;
+}
+#reservedEmail .btn-form-group {
+    justify-content: flex-start;
+}
+#reservedEmail .btn-form-group button {
+    margin: 0;
+    margin-right: 10px;
 }
 .btn-form-group button {
     display: flex;

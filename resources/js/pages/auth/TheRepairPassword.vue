@@ -112,6 +112,9 @@ export default {
     color: #606060;
     margin-bottom: 40px;
 }
+.flex {
+    display: flex;
+}
 .form-group {
     margin-bottom: 10px;
 }

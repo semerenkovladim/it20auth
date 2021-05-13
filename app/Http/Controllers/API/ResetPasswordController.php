@@ -116,6 +116,24 @@ class ResetPasswordController extends Controller
         return response()->json([], 200);
     }
 
+    public function resendPasswordCodeReserved(Request $request) {
+        $validated = $request->validate([
+            'email' => 'required|exists:users',
+            'reservedEmail' => 'required'
+        ]);
+
+        $user = User::whereEmail($validated['email'])->with(['backup_date'])->first();
+        $code = Str::random('6');
+
+        Mail::to($user->backup_date->backup_email)->send(new ResetPasswordCode($code, $user->name));
+        $user->code = $code;
+        $user->save();
+
+        ClearCodeReset::dispatch($user)->delay(now()->addMinutes(20));
+
+        return response()->json([], 200);
+    }
+
     public function resetPasswordSecretCode(Request $request)
     {
         $validated = $request->validate([

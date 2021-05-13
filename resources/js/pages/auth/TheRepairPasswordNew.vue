@@ -184,6 +184,9 @@ export default {
     left: 40vw;
     height: 100px;
 }
+.flex {
+    display: flex;
+}
 .notification button {
     display: block;
     background: #1875F0;
