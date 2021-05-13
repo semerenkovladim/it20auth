@@ -14,7 +14,7 @@
                     </ul>
                     <div class="btns d-flex">
                         <button type="button" class="btnSave" @click="sendOnDelete">Сохранить</button>
-                        <button type="reset" class="btnCancel" @click="$emit('close')">Отмена</button>
+                        <button type="button" class="btnCancel" @click="$emit('close')">Отмена</button>
                     </div>
                 </div>
             </div>

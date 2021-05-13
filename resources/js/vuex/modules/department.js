@@ -105,13 +105,16 @@ export default {
             await axios
                 .post('/api/departments', {
                     title: data.title,
-                    head_department: data.head_department,
+                    head_department: data.departmentHead,
                 })
                 .then(res => {
                     ctx.commit('updateResStatus', res.status)
                     console.log(res.status)
                 })
-                .catch(err => console.log(err))
+                .catch(err => {
+                    ctx.commit('updateResStatus', err.error)
+                    console.log(data)
+                })
         },
         async deleteUsers(ctx, user){
             await axios

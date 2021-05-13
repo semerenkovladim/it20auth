@@ -24,15 +24,15 @@
                 </div>
                 <div class="row departments_create__container">
                     <div class="col-12 box-form">
-                        <form @submit.prevent="" method="post">
+                        <form @submit.prevent="sendFormData" method="post">
                             <ul>
                                 <li>
                                     <label for="name">Название:</label>
-                                    <input type="text" id="name" v-model="title">
+                                    <input type="text" id="name" v-model="department.title">
                                 </li>
                                 <li>
                                     <label for="lead">Руководитель:</label>
-                                    <select type="text" id="lead" v-model="depHead">
+                                    <select type="text" id="lead" v-model="department.departmentHead">
                                         <option value="null"></option>
                                         <option v-for="lead in getLeads" :value="lead.id">
                                             {{ lead.name}} {{lead.surname}}
@@ -47,7 +47,7 @@
                                                              @close="isActiveWorkersList = false"/>
                                 </li>
                                 <li class="form-btns">
-                                    <button type="button" class="btnSave" @click="this.sendFormData">Сохранить</button>
+                                    <button type="submit" class="btnSave">Сохранить</button>
                                     <button type="reset" class="btnCancel">Отмена</button>
                                 </li>
                             </ul>
@@ -67,11 +67,11 @@ export default {
     name: "DepartmentCreate",
     data() {
         return {
-            depHead: null,
+            department: {
+                title: "o",
+                departmentHead: 1,
+            },
             isActiveWorkersList: false,
-            title: null,
-            head_department: null,
-            formData: null,
         }
     },
     components: {
@@ -81,24 +81,24 @@ export default {
         showWorkers() {
             this.isActiveWorkersList = !this.isActiveWorkersList
         },
-        ...mapActions(['fetchLeads', 'createNewDepartment', 'getResStatus']),
+        ...mapActions(['fetchLeads', 'createNewDepartment']),
         async setFormData() {
             this.formData = {
                 title: this.title,
                 head_department: this.depHead
             }
         },
-        async sendFormData() {
-            await this.setFormData()
-            await this.createNewDepartment(this.formData);
-            console.log('state' + this.getResStatus)
-            if(this.getResStatus === 200) {
-                await this.$router.push({name: 'DepartmentsManagement'})
+         sendFormData() {
+             this.createNewDepartment(this.department);
+             let $resStatus = this.getResStatus;
+            console.log()
+            if($resStatus === 200) {
+                 this.$router.push({name: 'DepartmentsManagement'})
             }
         }
     },
     computed: {
-        ...mapGetters(['getLeads']),
+        ...mapGetters(['getLeads', 'getResStatus']),
     },
     mounted() {
         this.fetchLeads()
