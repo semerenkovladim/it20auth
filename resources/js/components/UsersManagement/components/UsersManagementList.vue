@@ -32,12 +32,12 @@
                     </li>
                     <li class="user_info__item col-2" v-if="settings.surname">{{ user.surname }}</li>
                     <li class="user_info__item col-2" v-if="settings.name">{{ user.name }}</li>
-                    <li class="user_info__item col-2" v-if="settings.patronymic">{{ user.middle_name }}</li>
+                    <li class="user_info__item col-2" v-if="settings.patronymic">{{ user.middle_name ? user.middle_name: '-' }}</li>
                     <li class="user_info__item col-3" v-if="settings.email">
                         <a :href="'mailto:' + user.email">{{ user.email }}</a>
                     </li>
-                    <li class="user_info__item col-2" v-if="settings.position">{{ user.position }}</li>
-                    <li class="user_info__item col-2" v-if="settings.department">{{ user.department.title }}</li>
+                    <li class="user_info__item col-2" v-if="settings.position">{{ user.position ? user.position: '-' }}</li>
+                    <li class="user_info__item col-2" v-if="settings.department">{{ user.department ? user.department.title : '-'}}</li>
                     <li class="user_info__item col-2" v-if="settings.date_of_birth">{{ user.birth }}</li>
                     <li class="user_info__item col-2" v-if="settings.modules">{{user.modules ? user.modules : '-'}}</li>
                     <li class="user_info__item col-2" v-if="settings.role">{{user.is_admin ? 'Админ' : 'Пользователь'}}</li>
