@@ -27,9 +27,8 @@ class DepartmentController extends Controller
         $dep = new Department;
         $dep->validate($request);
         $dep->store($request);
-        $dep->save();
 
-        return response()->json($dep, 200);
+        return response()->json($dep);
     }
 
     public function show(Department $department)
@@ -47,12 +46,19 @@ class DepartmentController extends Controller
 
     public function update(Request $request, Department $department)
     {
-        //
+        $dep = new Department;
+        $dep->validate($request);
+        $dep->updateDep($request, $department);
+
+        return response()->json($dep);
+;
     }
 
     public function destroy(Department $department)
     {
         $dep = new Department;
         $dep->deleteDepartment($department);
+
+        return $dep->fetchAllDep();
     }
 }

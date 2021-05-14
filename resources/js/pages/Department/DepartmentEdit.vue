@@ -41,15 +41,16 @@
                                 </li>
                                 <li class="anchor_Modal">
                                     <label for="workersCtr">Количество сотрудников:</label>
-                                    <input type="text" id="workersCtr" class="workersCtr" placeholder="16" readonly
+                                    <input type="text" id="workersCtr" class="workersCtr"  v-model="countMembers" readonly
                                            @click="showWorkers">
                                     <department-workers-list v-if="isActiveWorkersList"
                                                              @close="isActiveWorkersList = false"
+                                    :create-members-count="createMembersCount"
                                     :department-id="departmentId"/>
                                 </li>
                                 <li class="form-btns">
                                     <button type="button" class="btnSave" @click="this.sendFormData">Сохранить</button>
-                                    <button type="reset" class="btnCancel">Отмена</button>
+                                    <button type="button" class="btnCancel" @click="this.resetChange">Отмена</button>
                                 </li>
                             </ul>
                         </form>
@@ -74,6 +75,7 @@ export default {
             head_department: null,
             formData: null,
             departmentId: null,
+            countMembers: null
         }
     },
     components: {
@@ -83,31 +85,43 @@ export default {
         showWorkers() {
             this.isActiveWorkersList = !this.isActiveWorkersList
         },
-        ...mapActions(['fetchLeads', 'createNewDepartment', 'getResStatus', 'fetchDepartment']),
+        ...mapActions(['fetchLeads', 'updateDepartment', 'fetchDepartment', 'fetchDepMembers']),
         async setFormData() {
             this.formData = {
+                id: this.departmentId,
                 title: this.title,
                 head_department: this.depHead
             }
         },
         async sendFormData() {
             await this.setFormData()
-            await this.createNewDepartment(this.formData);
-            console.log('state' + this.getResStatus)
-            if(this.getResStatus === 200) {
+            await this.updateDepartment(this.formData);
+            let $resStatus = this.getResStatusEditDep
+            if($resStatus === 200) {
                 await this.$router.push({name: 'DepartmentsManagement'})
             }
         },
+        createMembersCount() {
+            let $ctr = this.getDepMembers;
+            let withoutSymbolLength = Object.keys($ctr);
+            this.countMembers = withoutSymbolLength.length;
+        },
         async selectDepartment() {
             await this.fetchDepartment(this.getDepartmentId);
+            await this.fetchDepMembers(this.getDepartmentId);
+            await this.createMembersCount();
             this.title = this.getDepartment.title;
             this.depHead = this.getDepartment.head_department;
             this.departmentId = this.getDepartment.id;
-            console.log(this.getDepartment)
         },
+        resetChange() {
+            this.title = this.getDepartment.title;
+            this.depHead = this.getDepartment.head_department;
+            this.departmentId = this.getDepartment.id;
+        }
     },
     computed: {
-        ...mapGetters(['getLeads', 'getDepartmentId', 'getDepartment']),
+        ...mapGetters(['getLeads', 'getDepartmentId', 'getDepartment', 'getDepMembers', 'getResStatusEditDep']),
     },
     mounted() {
         this.selectDepartment()

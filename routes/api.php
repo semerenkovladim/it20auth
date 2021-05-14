@@ -55,6 +55,7 @@ Route::put('/user/reset-department/{id}',[UserController::class,'resetDepartment
 Route::apiResource('departments', DepartmentController::class);
 
 
+
 Route::post('/admin-settings/create',[AdminSettingsController::class,'store'])->name('setAdminSettings');
 Route::get('/admin-settings/{id}',[AdminSettingsController::class,'show'])->name('showAdminSettings');
 Route::put('/admin-settings/update',[AdminSettingsController::class,'update'])->name('updateAdminSettings');

@@ -49,17 +49,11 @@ class Department extends Model
 
     public function fetchAllDep()
     {
-        $departments = DB::table('departments')
+        return DB::table('departments')
             ->leftJoin('users', 'users.id', '=', 'departments.head_department')
-            ->select('departments.id', 'name', 'surname', 'title', 'departments.created_at')
+            ->select('departments.id',  'departments.title', 'departments.created_at', 'users.name', 'users.surname')
             ->latest()
             ->paginate(5);
-        if ($departments) {
-            $status = 201;
-        } else {
-            $status = 400;
-        }
-        return $departments;
     }
 
     public function depIn()
@@ -89,6 +83,7 @@ class Department extends Model
 
     public function store($request)
     {
+
         $dep = new Department([
             'title' => $request->get('title'),
             'head_department' => $request->get('head_department')
@@ -107,6 +102,19 @@ class Department extends Model
     }
 
     //========= /удаление отдела =======
+
+    //====== Редактирование отдела ====
+
+    public function updateDep($data, $department) {
+
+        $department->title = $data->get('title');
+        $department->head_department = $data->get('head_department');
+
+        $department -> save();
+
+    }
+
+    //====== /Редактирование отдела ====
 }
 
 
