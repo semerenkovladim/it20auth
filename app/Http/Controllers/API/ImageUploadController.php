@@ -22,5 +22,6 @@ class ImageUploadController extends Controller
         }
         $path = $request->file('file')->store('img/avatars', 'public');
         return response()->json(['path' => '/storage/' . $path]);
+//        return response()->json(['data'=>$request->avatar]);
     }
 }

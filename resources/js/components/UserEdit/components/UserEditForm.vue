@@ -1,5 +1,10 @@
 <template>
     <div class="user_edit_form col-12">
+        <MessagePopup
+            :popup-message="popupMessage"
+            :popup-show="popupShow"
+            @closePopup="popupShow = false">
+        </MessagePopup>
         <Message @confirmEvent="cancelUser(userData)"></Message>
         <form action="#"
               method="post"
@@ -7,32 +12,27 @@
               enctype="multipart/form-data">
             <div class="col-12 edit_form__title">Общая информация</div>
             <div class="col-12 error-message"
-                 v-if="message">Заполните, пожалуйста, все обязательные поля
+                 v-if="message.status">{{ message.text }}
             </div>
             <div class="col-12">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="label_wrapper">
-                            <!--<Cropper :imageProp="imgData"-->
-                            <!--@cropImg="setCropImg">-->
-                            <!--</Cropper>-->
-                            <!--<ImageLoader :imageProp="userData.data.avatar"-->
-                            <!--@imageSelected="imgSelected">-->
-                            <!--</ImageLoader>-->
-                            <label class="edit_form__label img_input_label">
-                                <input type="file"
-                                       accept="image/*"
-                                       name="image"
-                                       ref="file"
-                                       class="d-none"
-                                       @change="handleFileUpload(userData)">
+                            <div class="edit_form__label img_input_label" @click="showComponent = !showComponent">
+                                <div class="cropper-wrapper" v-if="showComponent" @click.stop>
+                                    <VueCropper
+                                        @closeCropper="showComponent = false"
+                                        @uploadSuccess="setCropImg">
+                                    </VueCropper>
+                                </div>
                                 <img :src="userData.data.avatar"
                                      :alt="userData.data.surname + ' ' + userData.data.name + ' фото'"
-                                     v-if="userData.data.avatar">
+                                     v-if="userData.data.avatar"
+                                     v-cloak>
                                 <span class="short-fio" v-else>{{
                                         shortFio(userData.data.surname, userData.data.name)
                                     }}</span>
-                            </label>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -40,6 +40,8 @@
                             <span class="input_title">Дата рождения:</span>
                             <input type="date" class="styled"
                                    v-model="userData.data.birth"
+                                   min="1920-01-01"
+                                   :max="currentDate"
                                    required>
                         </label>
                     </div>
@@ -69,7 +71,7 @@
                 <label class="edit_form__label">
                     <span class="input_title">Отдел:</span>
                     <select name="department" class="styled" v-model="userData.data.department_id">
-                        <option v-for="department in departmentsData"
+                        <option v-for="department in ALL_DEPARTMENTS"
                                 :key="department.id"
                                 :value="department.id">
                             {{ department.title }}
@@ -90,7 +92,10 @@
                 </label>
                 <label class="edit_form__label">
                     <span class="input_title">Дата начала работы:</span>
-                    <input type="date" class="styled"
+                    <input type="date"
+                           class="styled"
+                           min="2018-01-01"
+                           :max="currentDate"
                            v-model="userData.data.date_start">
                 </label>
             </div>
@@ -156,13 +161,15 @@
             <div class="col-12">
                 <div class="btn_wrapper" v-if="$route.path === '/users-management/user-edit'">
                     <ConfirmBtn :text="confirm2"
-                                @confirmEvent="updateUser(userData)">
+                                @confirmEvent="updateUser(userData)"
+                                :btnDisabled="confirmDisabled">
                     </ConfirmBtn>
                     <CancelBtn @cancelEvent="$router.push('/users-management')"></CancelBtn>
                 </div>
                 <div class="btn_wrapper" v-if="$route.path === '/users-management/new-user'">
                     <ConfirmBtn :text="confirm"
-                                @confirmEvent="createUser(userData)">
+                                @confirmEvent="createUser(userData)"
+                                :btnDisabled="confirmDisabled">
                     </ConfirmBtn>
                     <CancelBtn @cancelEvent="cancelUser(userData)"></CancelBtn>
                 </div>
@@ -175,9 +182,9 @@
 import ConfirmBtn from "../../buttons/ConfirmBtn";
 import CancelBtn from "../../buttons/CancelBtn";
 import Message from "../../message/Message";
-import Cropper from "../../cropper/Cropper";
-import ImageLoader from "../../cropper/ImageLoader";
-import {mapActions} from "vuex";
+import VueCropper from "../../vue-image-crop/VueCropper";
+import MessagePopup from "../../message-popup/MessagePopup";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
     name: "UserEditForm",
@@ -186,15 +193,20 @@ export default {
         CancelBtn,
         ConfirmBtn,
         Message,
-        ImageLoader,
-        Cropper
+        VueCropper,
+        MessagePopup
 
     },
     data() {
         return {
+            confirmDisabled: false,
+            popupMessage: '',
+            popupShow: false,
+            showComponent: false,
             confirm: 'Сохранить',
             confirm2: 'Изменить',
             imgChange: false,
+            currentDate: '',
             userData: {
                 data: {
                     is_admin: false
@@ -230,27 +242,33 @@ export default {
             ],
             userId: 0,
             routeBack: false,
-            message: false,
+            message: {
+                status: false,
+                text: 'Заполните, пожалуйста, все обязательные поля'
+            },
             imgData: {}
         }
     },
     methods: {
         ...mapActions([
-            'getUMMessage'
+            'getUMMessage',
+            'getAllDepartments'
+
         ]),
         setCropImg(data) {
-            this.userData.data = data
+            this.userData.data.avatar = data.path
         },
         imgSelected(data) {
             this.imgData = data
         },
         createUser(data) {
+            this.confirmDisabled = true
             return axios.post('/api/user/create', data.data)
                 .then(value => {
                     // this.getUMMessage(value)
-
+                    console.log('confirmDisabled',this.confirmDisabled)
                     if (value.data.status) {
-                        this.message = false
+                        this.message.status = false
                         this.userId = value.data.data.id
                         axios.post('/api/user/permission/create', {
                             user_id: value.data.data.id
@@ -258,22 +276,40 @@ export default {
                         axios.post('/api/user/settings/create', {
                             user_id: value.data.data.id
                         })
-                        this.$router.go()
+                        this.popupShow = true
+                        this.popupMessage = "Данные успешно сохранены"
+
                     } else {
-                        this.message = true
+                        window.scrollTo(0,0)
+                        this.confirmDisabled = true
+                        this.message.status = true
+                        this.message.text = value.data.error
                     }
+                    this.confirmDisabled = false
                 })
+
         },
         updateUser(data) {
+            this.confirmDisabled = true
             return axios.put('/api/user/update/' + data.id, data.data)
                 .then(value => {
+                    if (value.data.status) {
+                        this.message.status = false
+                        this.popupShow = true
+                        this.popupMessage = "Изменения успешно сохранены"
+                    } else {
+                        window.scrollTo(0,0)
+                        this.message.status = true
+                        this.message.text = value.data.error
+                    }
                     // this.getUMMessage(value)
-                    // this.message = false
-                    this.$router.go()
+                    this.confirmDisabled = false
                 })
                 .catch(reason => {
                     // this.getUMMessage('error')
-                    this.message = true
+                    this.message.status = true
+                    this.message.text = 'Ошибка'
+                    this.confirmDisabled = false
                 })
         },
         cancelUser(data) {
@@ -288,7 +324,7 @@ export default {
                 this.$router.push('/users-management')
             }
         },
-        handleFileUpload(data) {
+        /*handleFileUpload(data) {
             if (data.data.avatar !== this.$refs.file.files[0] && this.$refs.file.files[0]) {
                 this.imgChange = true
                 data.data.avatar = this.$refs.file.files[0];
@@ -303,7 +339,7 @@ export default {
                     data.data.avatar = value.data.path
                     console.log('saveImg', value.data.path)
                 })
-        },
+        },*/
         shortFio(last, first) {
             if (last && first) return last.slice(0, 1) + ' ' + first.slice(0, 1)
 
@@ -311,8 +347,21 @@ export default {
         setData() {
             this.userData.data = this.data
         },
+        setCurrentDate() {
+            let date = new Date(),
+                year = date.getFullYear(),
+                month,
+                day
+            date.getMonth() < 10 ? month = '0' + (date.getMonth() + 1) : month = date.getMonth() + 1
+            date.getDate() < 10 ? day = '0' + date.getDate() : day = date.getDate()
+            this.currentDate = `${year}-${month}-${day}`
+
+        },
     },
     computed: {
+        ...mapGetters([
+            'ALL_DEPARTMENTS'
+        ]),
         setUserData() {
             return this.data
         }
@@ -324,6 +373,8 @@ export default {
     },
     mounted() {
         this.setData()
+        this.setCurrentDate()
+        this.getAllDepartments()
     }
 }
 </script>
@@ -331,11 +382,23 @@ export default {
 <style lang="scss">
 @import "resources/sass/variables";
 
+[disabled] {
+    opacity: 0.5;
+}
+
 .user_edit_form {
     background: #FFFFFF;
     max-width: 900px;
     margin: 0 auto;
     padding-bottom: 30px;
+
+    .cropper-wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+    }
 
     .radio_col {
         display: flex;
@@ -409,6 +472,7 @@ export default {
         overflow: hidden;
         transition: none;
         background: rgba(76, 75, 75, 0.5);
+        cursor: pointer;
 
         &:hover {
             &:after {

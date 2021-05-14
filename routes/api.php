@@ -52,6 +52,8 @@ Route::post('/image/upload/avatar', [ImageUploadController::class, 'upload_avata
 Route::post('/user/settings/create',[SettingController::class,'store'])->name('setUserSetting');
 Route::put('/user/reset-department/{id}',[UserController::class,'resetDepartment'])->name('resetDepartment');
 
+Route::get('/departments/all',[DepartmentController::class,'getAllDep'])->name('allDepartment');
+
 Route::apiResource('departments', DepartmentController::class);
 
 

@@ -10,6 +10,12 @@ use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
 {
+    public function getAllDep()
+    {
+        $dep = Department::all();
+        return response()->json($dep);
+    }
+
     public function index()
     {
         $dep = new Department;

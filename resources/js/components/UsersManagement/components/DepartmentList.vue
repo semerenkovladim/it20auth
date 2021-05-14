@@ -1,10 +1,14 @@
 <template>
-    <ul class="row users_management__filter_list">
+    <ul class="users_management__filter_list">
         <li class="col-12 users_management__filter_item"
-            v-for="department in data"
+            :class="current === 0 ? 'filter-active':''"
+            @click="getDepartmentId(0)">Все пользователи
+        </li>
+        <li class="col-12 users_management__filter_item"
+            v-for="department in ALL_DEPARTMENTS"
             :key="department.id"
             :class="current === department.id ? 'filter-active':''"
-            @click="getDepartmentId(department.id)">{{ department.name }}
+            @click="getDepartmentId(department.id)">{{ department.title }}
         </li>
         <li class="col-12 users_management__filter_item"
             v-if="!data">Отделы не найдены
@@ -13,12 +17,14 @@
 </template>
 
 <script>
+import {mapActions, mapGetters} from "vuex";
+
 export default {
     name: "DepartmentList",
     props: ['data'],
     data() {
         return {
-            current: 1
+            current: 0
         }
     },
     methods: {
@@ -28,6 +34,9 @@ export default {
                 this.$emit('sendDepartmentId', {id: id})
             }
         }
+    },
+    computed: {
+        ...mapGetters(['ALL_DEPARTMENTS'])
     }
 }
 </script>
@@ -46,6 +55,7 @@ export default {
     font-weight: 600;
     font-size: 13px;
     color: $lightColor;
+    position: relative;
 
     * {
         transition: 0.2s ease;
@@ -62,10 +72,15 @@ export default {
         color: $darkColor;
     }
 }
+
 .filter-active {
     background: $userManagementFilterActiveBg;
     border-left: 2px solid $designColorOne;
     color: $darkColor;
 }
 
+.users_management__filter_list {
+    width: 100%;
+    position: absolute;
+}
 </style>
