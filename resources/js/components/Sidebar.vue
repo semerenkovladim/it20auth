@@ -48,7 +48,7 @@
                 </div>
             </router-link>
         </li>
-        <li class="link " v-bind:class="{'linkss':show}">
+        <li class="link " v-bind:class="{'linkss':show}" v-if="user.is_admin">
             <a class="wiget" @click.prevent="showMenu = !showMenu">
                 <div v-bind:class="{'flex':show}">
                     <div v-bind:class="{'control2':show, 'control':!show}"></div>
@@ -81,9 +81,22 @@ export default {
     props: ['show'],
     data() {
         return {
-            showMenu: false
+            showMenu: false,
+            user:{
+                is_admin:false
+            }
         }
     },
+    mounted(){
+        this.user=Object.assign(this.user,this.auth_user)
+        console.log('mounted', this.user)
+    },
+    computed:{
+        auth_user(){
+            console.log(this.$store.getters.user)
+            return this.$store.getters.user;
+        }
+    }
 }
 </script>
 
