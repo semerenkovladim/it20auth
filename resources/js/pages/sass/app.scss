@@ -1,0 +1,19 @@
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Variables
+@import 'variables';
+
+@import "normalize.scss";
+
+@import "fonts";
+
+@import "users_management";
+
+@import "../css/app.css";
+
+@import "~slick-slider/slick/slick";
+@import "~slick-slider/slick/slick-theme";

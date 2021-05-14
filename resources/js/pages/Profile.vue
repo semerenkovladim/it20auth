@@ -1,116 +1,130 @@
 <template>
-        <div class="profile">
-            <div class="profile_title">Мой профиль</div>
-            <div class="profile_form">
-                <div class="inform_title">Общая информация</div>
-                <form action="#"
-                    method="post"
-                    class="row user_edit_form__form"
-                    enctype="multipart/form-data">
-                    <div class="container">
-                        <div class="row profile_input">
-                            <div class="col-6">
-                           <div class="label_wrapper">
-                            <label class="edit_form__label img_input_label">
+    <div class="profile">
+        <div class="profile_title">Мой профиль</div>
+        <div class="profile_form">
+            <div class="inform_title">Общая информация</div>
+            <form action="#"
+                  method="post"
+                  class="row user_edit_form__form"
+                  enctype="multipart/form-data">
+                <div class="container">
+                    <div class="row profile_input">
+                        <div class="col-6">
+                            <div class="label_wrapper">
+                                <label class="edit_form__label img_input_label">
 
-                                <input type="file"
-                                       accept="image/*"
-                                       name="image"
-                                       ref="file"
-                                       class="d-none"
-                                       @change="handleFileUpload(user)">
-                                <img :src="user.avatar"
-                                     :alt="user.surname + ' ' + user.name + ' фото'"
-                                     v-if="user.avatar">
-                                <span class="short-fio" v-else>{{
-                                        shortFio(user.surname, user.name)
-                                    }}</span>
-                            </label>
-                        </div>
-                                    <label>Фамилия:</label>
-                                    <input type="text" class="form-control" v-model="user.surname">
-
-                                    <label>Имя:</label>
-                                    <input type="text" class="form-control" v-model="user.name">
-
-                                    <label>Отчество:</label>
-                                    <input type="text" class="form-control" v-model="user.middle_name">
+                                    <input type="file"
+                                           accept="image/*"
+                                           name="image"
+                                           ref="file"
+                                           class="d-none"
+                                           @change="handleFileUpload(user)">
+                                    <img :src="user.avatar"
+                                         :alt="user.surname + ' ' + user.name + ' фото'"
+                                         v-if="user.avatar">
+                                    <span class="short-fio" v-else>{{
+                                            shortFio(user.surname, user.name)
+                                        }}</span>
+                                </label>
                             </div>
-                    <div class="col-6 row_date">
-                        <label>Дата рождения:</label>
-                        <input type="date" class="form-control" v-model="user.birth">
+                            <label>Фамилия:</label>
+                            <input type="text" class="form-control" v-model="user.surname" maxlength="100">
 
-                    <label class="edit_form__label">
-                            <span class="input_title">Отдел:</span>
-                            <select name="department" class="styled" v-model="user.department_id">
-                                <option v-for="department in departmentsData"
-                                        :key="department.id"
-                                        :value="department.id">
-                                    {{ department.title }}
-                                </option>
-                            </select>
-                    </label>
+                            <label>Имя:</label>
+                            <input type="text" class="form-control" v-model="user.name" maxlength="100">
 
-                    <label class="edit_form__label">
-                            <span class="input_title">Должность:</span>
-                            <select name="position" class="styled"
-                                    v-model="user.position"
-                                    required>
-                                <option v-for="position in positions"
-                                        :key="position.title"
-                                        :value="position.title">
-                                    {{ position.title }}
-                                </option>
-                            </select>
-                    </label>
-                        <label>Дата начала работы:</label>
-                        <input type="date"  class="form-control" v-model="user.date_start">
+                            <label>Отчество:</label>
+                            <input type="text" class="form-control" v-model="user.middle_name" maxlength="100">
+                        </div>
+                        <div class="col-6 row_date">
+                            <label>Дата рождения:</label>
+                            <input type="date" class="form-control" v-model="user.birth">
+
+                            <label class="edit_form__label">
+                                <span class="input_title">Отдел:</span>
+                                <select name="department" class="styled" v-model="user.department_id">
+                                    <option v-for="department in departmentsData"
+                                            :key="department.id"
+                                            :value="department.id">
+                                        {{ department.title }}
+                                    </option>
+                                </select>
+                            </label>
+
+                            <label class="edit_form__label">
+                                <span class="input_title">Должность:</span>
+                                <select name="position" class="styled"
+                                        v-model="user.position"
+                                        required>
+                                    <option v-for="position in positions"
+                                            :key="position.title"
+                                            :value="position.title">
+                                        {{ position.title }}
+                                    </option>
+                                </select>
+                            </label>
+                            <label>Дата начала работы:</label>
+                            <input type="date" class="form-control" v-model="user.date_start">
+                        </div>
+                    </div>
+                    <div class="inform_title">Контактная информация</div>
+                    <div class="row profile_input">
+                        <div class="col-6">
+                            <label>E-mail</label>
+                            <input type="text" class="form-control" v-model="user.email" maxlength="255"
+                                   required>
+
+                            <label>Skype:</label>
+                            <input type="text" class="form-control" v-model="user.skype" maxlength="255">
+                        </div>
+                        <div class="col-6">
+                            <label>Мобильный телефон:</label>
+                            <input type="tel" class="form-control" v-model="user.mobile_phone" maxlength="12"
+                                   minlength="10">
+
+                            <label>Рабочий телефон:</label>
+                            <input type="tel" class="form-control" v-model="user.work_phone" maxlength="12"
+                                   minlength="10">
+                        </div>
+                    </div>
+                    <div class="form_button">
+                        <ConfirmBtn :text="confirm"
+                                    @confirmEvent="updateProfile(user)">
+                        </ConfirmBtn>
+                        <CancelBtn @cancelEvent="cancelUser(user)"></CancelBtn>
                     </div>
                 </div>
-                <div class="inform_title">Контактная информация</div>
-                <div class="row profile_input">
-                    <div class="col-6">
-                        <label>E-mail</label>
-                        <input type="text" class="form-control" v-model="user.email">
-
-                        <label>Skype:</label>
-                        <input type="text" class="form-control" v-model="user.skype">
-                    </div>
-                    <div class="col-6">
-                        <label>Мобильный телефон:</label>
-                        <input type="tel" class="form-control" v-model="user.mobile_phone">
-
-                        <label>Рабочий телефон:</label>
-                        <input type="tel"  class="form-control" v-model="user.work_phone">
-                    </div>
-                </div>
-                <div class="form_button">
-                    <button class="btn btn-primary save_btn">СОХРАНИТЬ</button>
-                    <button class="btn cancel_btn">ОТМЕНИТЬ</button>
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-</div>
 </template>
 
 <script>
 import {mapActions} from "vuex";
-    export default {
+import ConfirmBtn from "../components/buttons/ConfirmBtn";
+import CancelBtn from "../components/buttons/CancelBtn";
+
+
+export default {
+    components: {
+        ConfirmBtn,
+        CancelBtn,
+    },
     data() {
-        return{
-            user:{
-                surname:'',
-                name:'',
-                middle_name:'',
-                avatar:'',
-                birth:'',
-                date_start:'',
-                email:'',
-                mobile_phone:'',
-                work_phone:'',
-                skype:'',
-                department_id:''
+        return {
+            confirm: 'Сохранить',
+            user: {
+                surname: '',
+                name: '',
+                middle_name: '',
+                avatar: '',
+                birth: '',
+                date_start: '',
+                email: '',
+                mobile_phone: '',
+                work_phone: '',
+                skype: '',
+                department_id: ''
             },
             departmentsData: [
                 {
@@ -165,17 +179,52 @@ import {mapActions} from "vuex";
         },
         shortFio(last, first) {
             if (last && first) return last.slice(0, 1) + '.' + first.slice(0, 1)
+        },
+        updateProfile(data) {
+            console.log('data', data)
+            return axios.put('/api/user/update',  data)
+                .then(value => {
+                    console.log('updateProfile', value)
+                    // this.getUMMessage(value)
+                    // this.message = false
+                    this.$router.go()
+                })
+                .catch(reason => {
+                    // this.getUMMessage('error')
+                    this.message = true
+                })
+        },
+        cancelUser(data) {
+            let back = true
+            for (let key of Object.keys(data)) {
+                if (data[key] !== '') {
+                    data[key] = ''
+                    back = false
+                }
+            }
+            if (back) {
+                this.$router.push('/profile')
+            }
         }
     },
-    mounted(){
-        this.user=Object.assign(this.user,this.auth_user)
+    mounted() {
+        this.user = Object.assign(this.user, this.auth_user)
         console.log('mounted', this.user)
     },
-    computed:{
-        auth_user(){
+    computed: {
+        auth_user() {
             console.log(this.$store.getters.user)
             return this.$store.getters.user;
         }
     }
-    }
+}
 </script>
+<style lang="scss">
+.profile {
+    .form_button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+</style>

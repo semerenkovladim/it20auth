@@ -1,0 +1,46 @@
+@import "variables";
+
+* {
+    scroll-behavior: smooth;
+}
+
+.input_checkbox {
+    width: 20px;
+    height: 20px;
+    background: #FFFFFF;
+    border: 2px solid #E6E6E6;
+    box-sizing: border-box;
+    border-radius: 4px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+
+    &:checked {
+        background: url('../images/icons/checked.svg') no-repeat center / 70%, $designColorOne;
+        border: 2px solid $designColorOne;
+    }
+}
+
+.users_management {
+    background: $userManagementBgColor;
+    //padding-top: calc(#{$headerHeight} + 7px);
+    padding-top: 7px;
+    min-height: 100vh;
+    @media all and (max-width: $breakpoint) {
+        padding-left: 0;
+    }
+
+    label, ul {
+        margin-bottom: 0;
+    }
+
+    label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+
+}
