@@ -2,7 +2,9 @@
     <div>
         <department-confirm-modal v-if="isActiveConfirmModal"
                                   @close="isActiveConfirmModal = false"
-        :checked-departments="checkedDepartments"/>
+                                  @deleteDeps="deleteDeps"
+                                  :checked-departments="checkedDepartments"
+                                  />
         <div class="list_controls">
             <div class="row">
                 <div class="col-sm-12 col-md-4 col-xl-3 list_control_btns">
@@ -51,17 +53,17 @@
             </div>
             <div class="departments_list-body">
                 <ul>
-                    <li class="departments_list-item" v-for="dep in getDepartments" :key="dep.id">
+                    <li class="departments_list-item" v-for="(dep, id) in getDepartments" :key="id">
                         <ul class="row list-item_info">
                             <li class="col-1 checkbox_section">
                                 <input type="checkbox"
                                        :value="dep.id"
-                                       :id="dep.id"
+                                       :id="id"
                                        v-model="checkedDepartments"
                                        class="checkbox">
-                                <label :for="dep.id"></label>
+                                <label :for="id"></label>
                             </li>
-                            <li class="col-3">{{ dep.title }} </li>
+                            <li class="col-3">{{ dep.title}}</li>
                             <li class="col-4">{{ dep.name }} {{ dep.surname }}</li>
                             <li class="col-4">16</li>
                         </ul>
@@ -96,23 +98,28 @@ export default {
     },
     methods: {
         ...mapActions(['fetchDepartments', 'delDepartment', 'setDepId']),
+
         gotoNext() {
             this.nextPage = this.getNextPage;
             this.fetchAds(this.nextPage)
         },
+
         gotoPrev() {
             this.prevPage = this.getPrevPage;
             this.fetchAds(this.prevPage)
         },
+
         checkAll() {
             this.uncheck = true;
             this.cheked = true;
         },
+
         uncheckAll() {
             if (this.cheked === true) {
                 this.uncheck = false
             }
         },
+
         sortName() {
             if (this.arrowLead === false || this.arrowCtr === false) {
                 this.arrowLead = false;
@@ -120,6 +127,7 @@ export default {
             }
             this.arrowName = !this.arrowName;
         },
+
         sortLead() {
             if (this.arrowName === false || this.arrowCtr === false) {
                 this.arrowName = false;
@@ -127,6 +135,7 @@ export default {
             }
             this.arrowLead = !this.arrowLead;
         },
+
         sortCtr() {
             if (this.arrowName === false || this.arrowLead === false) {
                 this.arrowName = false;
@@ -134,24 +143,38 @@ export default {
             }
             this.arrowCtr = !this.arrowCtr;
         },
+
         async deletePosition() {
             for (let i = 0; i < this.checkedDepartments.length; i++) {
                 await this.delDepartment(this.checkedDepartments[i])
             }
         },
+
         getEdit() {
             this.$store.commit('updateDepartmentId', this.checkedDepartments)
             this.$router.push({name: 'DepartmentEdit'})
+        },
+
+        deleteDeps() {
+            let arr = this.checkedDepartments;
+            let i;
+            for (i = 0; i < arr.length; i++) {
+                this.delDepartment(arr[i])
+                console.log('confirm delete' + ' ' + [i])
+            }
+
+            this.fetchDepartments()
+            this.isActiveConfirmModal = false;
         }
 
     },
     computed: {
         ...mapGetters(['getDepartments', 'getNextPage', 'getPrevPage']),
-        selectAll: function() {
-            return this.users.every(function(user){
+        selectAll: function () {
+            return this.users.every(function (user) {
                 return user.checked;
             });
-        }
+        },
     },
     mutations: {
         ...mapMutations(['updateDepartmentId']),

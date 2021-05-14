@@ -41,8 +41,7 @@
                                 </li>
                                 <li class="anchor_Modal">
                                     <label for="workersCtr">Количество сотрудников:</label>
-                                    <input type="text" id="workersCtr" class="workersCtr" placeholder="16" readonly
-                                           @click="showWorkers">
+                                    <input type="text" id="workersCtr" class="workersCtr" placeholder="0" readonly>
                                     <department-workers-list v-if="isActiveWorkersList"
                                                              @close="isActiveWorkersList = false"/>
                                 </li>
@@ -68,8 +67,8 @@ export default {
     data() {
         return {
             department: {
-                title: "o",
-                departmentHead: 1,
+                title: null,
+                departmentHead: 0,
             },
             isActiveWorkersList: false,
         }
@@ -91,9 +90,11 @@ export default {
          sendFormData() {
              this.createNewDepartment(this.department);
              let $resStatus = this.getResStatus;
-            console.log()
+             console.log($resStatus)
             if($resStatus === 200) {
                  this.$router.push({name: 'DepartmentsManagement'})
+            } else {
+                console.log('error')
             }
         }
     },

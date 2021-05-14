@@ -44,13 +44,14 @@ export default {
             await values.forEach(value => {
                 this.deleteUsers(value);
             })
+            this.createMembersCount();
             this.$emit('close')
         }
     },
     computed: {
         ...mapGetters(['getDepMembers'])
     },
-    props:['departmentId'],
+    props:['createMembersCount', 'departmentId'],
     created() {
         this.fetchDepMembers(this.departmentId)
     }

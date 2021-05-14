@@ -9,6 +9,8 @@ export default {
         leads: null,
         depMembers: null,
         resStatus: null,
+        ctrDepMembers: null,
+        statusEditDep:null
 
     },
 
@@ -42,8 +44,16 @@ export default {
             state.resStatus = resStatus;
         },
 
+        updateResStatusEditDep(state, statusEditDep) {
+            state.statusEditDep = statusEditDep;
+        },
+
         updateDepartmentId(state, $departmentId) {
             state.departmentId = $departmentId;
+        },
+
+        updateCtrDepMembers(state, $ctrDepMembers) {
+            state.ctrDepMembers = $ctrDepMembers;
         },
 
         collectValidErrors(state, err) {
@@ -65,7 +75,7 @@ export default {
         },
 
         setDepId(ctx, $departmentId) {
-          ctx.commit('updateDepartmentId',$departmentId)
+            ctx.commit('updateDepartmentId', $departmentId)
         },
 
         async fetchDepartment(ctx, departmentId) {
@@ -116,10 +126,26 @@ export default {
                     console.log(data)
                 })
         },
-        async deleteUsers(ctx, user){
+        async updateDepartment(ctx, data) {
+            let id = data.id;
+            await axios
+                .put(`/api/departments/${id}`, {
+                    title: data.title,
+                    head_department: data.head_department,
+                })
+                .then(res => {
+                    ctx.commit('updateResStatusEditDep', res.status)
+                    console.log(res.status)
+                })
+                .catch(err => {
+                    ctx.commit('updateResStatusEditDep', err.error)
+                    console.log(data)
+                })
+        },
+        async deleteUsers(ctx, user) {
             await axios
                 .put(`/api/user/reset-department/${user}`)
-                .then(res=> {
+                .then(res => {
                     console.log('update');
                 })
                 .catch(err => console.log(err))
@@ -168,6 +194,14 @@ export default {
 
         getDepartmentId(state) {
             return state.departmentId
-        }
+        },
+
+        getCtrDepMembers(state) {
+            return state.ctrDepMembers
+        },
+
+        getResStatusEditDep(state) {
+            return state.statusEditDep
+        },
     },
 }
