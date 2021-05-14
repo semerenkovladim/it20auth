@@ -460,16 +460,9 @@ export default {
             })
         },
         saveReservedEmail() {
-            if(this.reservedEmail.length > 0)
-        
             	const payload = {
             	    reservedEmail: this.reservedEmail,
             	}
-            } else {
-            	const payload = {
-            	    reservedEmail: "",
-            	}
-            }
             axios.post('/api/settings', payload, {
                 headers: {
                     'Authorization': `Bearer ` + this.access_token
