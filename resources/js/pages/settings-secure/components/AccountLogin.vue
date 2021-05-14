@@ -460,8 +460,15 @@ export default {
             })
         },
         saveReservedEmail() {
-            const payload = {
-                reservedEmail: this.reservedEmail,
+            if(this.reservedEmail.length > 0)
+        
+            	const payload = {
+            	    reservedEmail: this.reservedEmail,
+            	}
+            } else {
+            	const payload = {
+            	    reservedEmail: "",
+            	}
             }
             axios.post('/api/settings', payload, {
                 headers: {
