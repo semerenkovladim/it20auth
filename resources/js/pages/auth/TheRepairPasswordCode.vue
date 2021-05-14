@@ -98,7 +98,7 @@ export default {
         },
         secretCode() {
             const payload = {
-                email: this.email
+                email: this.resetPasswordEmail
             }
             axios.post('/api/login/check-secret', payload).then(() => {
 
