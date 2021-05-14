@@ -44,7 +44,7 @@ Route::get('/users/{id}', [UserController::class, 'in_department'])->name('users
 Route::post('/users/delete', [UserController::class, 'destroy'])->name('usersDelete');
 Route::get('/user/{id}', [UserController::class, 'show'])->name('user');
 Route::post('/user/create', [UserController::class, 'store'])->name('userCreate');
-Route::put('/user/update/{id}', [UserController::class, 'update'])->name('userUpdate');
+Route::put('/user/update', [UserController::class, 'update'])->name('userUpdate');
 Route::post('/user/permission/create', [AccessLevelController::class, 'store'])->name('userPermission');
 Route::get('/user/permission', [AccessLevelController::class, 'show'])->name('userPermissionShow');
 Route::get('/user/permission/update', [AccessLevelController::class, 'update'])->name('userPermissionUpdate');

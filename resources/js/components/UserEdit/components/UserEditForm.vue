@@ -291,7 +291,8 @@ export default {
         },
         updateUser(data) {
             this.confirmDisabled = true
-            return axios.put('/api/user/update/' + data.id, data.data)
+            console.log('data.data',data.data)
+            return axios.put('/api/user/update' , data.data)
                 .then(value => {
                     if (value.data.status) {
                         this.message.status = false
