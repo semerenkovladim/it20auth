@@ -14,37 +14,15 @@ class ProfileController extends Controller
 
     public function index($id)
     {
-        $user = User::find($id);
-        return response()->json([
-            'user'    => $user,
-        ], 200);
+
     }
 
-    public function profile()
-    {
-        return auth('api')->user();
-    }
+
 
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'surname' => 'required|max:255',
-            'name' => 'required|max:255',
-            'middle_name' => 'nullable|max:255',
-            'birth' => 'date|required|before:today',
-            'department_id' => 'int|nullable',
-            'position' => 'required|max:225',
-            'date_start' => 'date|nullable',
-            'is_admin' => 'boolean|nullable',
-            'email' => 'email|required|max:255|unique:users',
-            'mobile_phone' => 'numeric|digits_between:8,12|nullable',
-            'work_phone' => 'numeric|digits_between:8,12|nullable',
-            'skype' => 'max:255|nullable|unique:users'
-        ]);
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors(), 'status' => false]);
-        }
+
     }
 
     /**
@@ -55,8 +33,7 @@ class ProfileController extends Controller
      */
     public function show(User $user)
     {
-        $user = User::find($user);
-        return response()->json(['data' => $user]);
+
     }
 
     /**
@@ -66,9 +43,23 @@ class ProfileController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request)
     {
-        //
+        $user = User::find($request->id);
+        $user->surname = $request->get('surname');
+        $user->name = $request->get('name');
+        $user->middle_name = $request->get('middle_name');
+        $user->birth = $request->get('birth');
+        $user->departament_id = $request->get('departament_id');
+        $user->position = $request->get('position');
+        $user->date_start = $request->get('date_start');
+        $user->email = $request->get('email');
+        $user->mobile_phone = $request->get('mobile_phone');
+        $user->work_phone = $request->get('work_phone');
+        $user->skype = $request->get('skype');
+
+        $user->save();
+        return response(null, \Illuminate\Http\Response::HTTP_OK);
     }
 
     /**
