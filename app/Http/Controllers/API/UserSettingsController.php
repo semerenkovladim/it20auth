@@ -21,7 +21,7 @@ class UserSettingsController extends Controller
             'reservedPassword' => 'bool',
             'useCode' => 'bool',
             'codeWord' => 'string',
-            'reservedEmail' => 'string'
+            'reservedEmail' => 'string|nullable'
         ]);
 
         $userAuth = $request->user();
