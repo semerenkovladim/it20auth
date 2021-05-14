@@ -92,7 +92,7 @@ export default {
         },
         resendCode() {
             axios.post('/api/login/resend-code', {
-                email: this.reservedEmail,
+                email: this.resetPasswordEmail,
             });
             this.startTimer();
         },

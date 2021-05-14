@@ -13,26 +13,26 @@
                                     <router-link :to="{name: 'DepartmentsManagement'}">Отделы</router-link>
                                 </li>
                                 <li>
-                                    <span>Создание отдела</span>
+                                    <span>Редактирование отдела</span>
                                 </li>
                             </ul>
                         </nav>
                     </div>
                     <div class="col-12 departments_management__header-title">
-                        Создание отдела
+                        Редактирование отдела
                     </div>
                 </div>
                 <div class="row departments_create__container">
                     <div class="col-12 box-form">
-                        <form @submit.prevent="sendFormData" method="post">
+                        <form @submit.prevent="" method="post">
                             <ul>
                                 <li>
                                     <label for="name">Название:</label>
-                                    <input type="text" id="name" v-model="department.title">
+                                    <input type="text" id="name" v-model="title" >
                                 </li>
                                 <li>
                                     <label for="lead">Руководитель:</label>
-                                    <select type="text" id="lead" v-model="department.departmentHead">
+                                    <select type="text" id="lead" v-model="depHead">
                                         <option value="null"></option>
                                         <option v-for="lead in getLeads" :value="lead.id">
                                             {{ lead.name}} {{lead.surname}}
@@ -41,13 +41,16 @@
                                 </li>
                                 <li class="anchor_Modal">
                                     <label for="workersCtr">Количество сотрудников:</label>
-                                    <input type="text" id="workersCtr" class="workersCtr" placeholder="0" readonly>
+                                    <input type="text" id="workersCtr" class="workersCtr"  v-model="countMembers" readonly
+                                           @click="showWorkers">
                                     <department-workers-list v-if="isActiveWorkersList"
-                                                             @close="isActiveWorkersList = false"/>
+                                                             @close="isActiveWorkersList = false"
+                                    :create-members-count="createMembersCount"
+                                    :department-id="departmentId"/>
                                 </li>
                                 <li class="form-btns">
-                                    <button type="submit" class="btnSave">Сохранить</button>
-                                    <button type="reset" class="btnCancel">Отмена</button>
+                                    <button type="button" class="btnSave" @click="this.sendFormData">Сохранить</button>
+                                    <button type="button" class="btnCancel" @click="this.resetChange">Отмена</button>
                                 </li>
                             </ul>
                         </form>
@@ -63,14 +66,16 @@ import DepartmentWorkersList from "../../components/layouts/DepartmentWorkersLis
 import {mapActions, mapGetters} from 'vuex';
 
 export default {
-    name: "DepartmentCreate",
+    name: "DepartmentEdit",
     data() {
         return {
-            department: {
-                title: null,
-                departmentHead: 0,
-            },
+            depHead: null,
             isActiveWorkersList: false,
+            title: null,
+            head_department: null,
+            formData: null,
+            departmentId: null,
+            countMembers: null
         }
     },
     components: {
@@ -80,29 +85,47 @@ export default {
         showWorkers() {
             this.isActiveWorkersList = !this.isActiveWorkersList
         },
-        ...mapActions(['fetchLeads', 'createNewDepartment']),
+        ...mapActions(['fetchLeads', 'updateDepartment', 'fetchDepartment', 'fetchDepMembers']),
         async setFormData() {
             this.formData = {
+                id: this.departmentId,
                 title: this.title,
                 head_department: this.depHead
             }
         },
-         sendFormData() {
-             this.createNewDepartment(this.department);
-             let $resStatus = this.getResStatus;
-             console.log($resStatus)
+        async sendFormData() {
+            await this.setFormData()
+            await this.updateDepartment(this.formData);
+            let $resStatus = this.getResStatusEditDep
             if($resStatus === 200) {
-                 this.$router.push({name: 'DepartmentsManagement'})
-            } else {
-                console.log('error')
+                await this.$router.push({name: 'DepartmentsManagement'})
             }
+        },
+        createMembersCount() {
+            let $ctr = this.getDepMembers;
+            let withoutSymbolLength = Object.keys($ctr);
+            this.countMembers = withoutSymbolLength.length;
+        },
+        async selectDepartment() {
+            await this.fetchDepartment(this.getDepartmentId);
+            await this.fetchDepMembers(this.getDepartmentId);
+            await this.createMembersCount();
+            this.title = this.getDepartment.title;
+            this.depHead = this.getDepartment.head_department;
+            this.departmentId = this.getDepartment.id;
+        },
+        resetChange() {
+            this.title = this.getDepartment.title;
+            this.depHead = this.getDepartment.head_department;
+            this.departmentId = this.getDepartment.id;
         }
     },
     computed: {
-        ...mapGetters(['getLeads', 'getResStatus']),
+        ...mapGetters(['getLeads', 'getDepartmentId', 'getDepartment', 'getDepMembers', 'getResStatusEditDep']),
     },
     mounted() {
-        this.fetchLeads()
+        this.selectDepartment()
+
     }
 
 }

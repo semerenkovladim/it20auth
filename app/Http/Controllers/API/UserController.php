@@ -17,7 +17,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::paginate(6);
+        $users = User::with('department')->paginate(6);
         if ($users) {
             $status = true;
         } else {
@@ -28,7 +28,7 @@ class UserController extends Controller
 
     public function in_department($id)
     {
-        $users = User::where('department_id', '=', $id)->paginate(6);
+        $users = User::with('department')->where('department_id', '=', $id)->paginate(6);
         if ($users) {
             $status = true;
         } else {
@@ -39,6 +39,23 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        $requiredValidator = Validator::make($request->all(), [
+            'surname' => 'required',
+            'name' => 'required',
+            'position' => 'required',
+            'birth' => 'date|required|before:today',
+            'email' => 'email|required',
+        ]);
+        if ($requiredValidator->fails()) {
+            return response()->json(['error' => 'Заполните, пожалуйста, все обязательные поля', 'status' => false]);
+        }
+        $uniqueValidator = Validator::make($request->all(), [
+            'email' => 'email|unique:users',
+            'skype' => 'nullable|unique:users'
+        ]);
+        if ($uniqueValidator->fails()) {
+            return response()->json(['error' => 'Данные Email или Skype некорректны или уже используются', 'status' => false]);
+        }
         $validator = Validator::make($request->all(), [
             'surname' => 'required|max:255',
             'name' => 'required|max:255',
@@ -54,7 +71,8 @@ class UserController extends Controller
             'skype' => 'max:255|nullable|unique:users'
         ]);
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors(), 'status' => false]);
+//            return response()->json(['error' => $validator->errors(), 'status' => false]);
+            return response()->json(['errors' => $validator->errors(), 'error' => 'Заполните, пожалуйста, все обязательные поля']);
         }
 
         $user = User::make($request->all());
@@ -91,18 +109,51 @@ class UserController extends Controller
         return response()->json(['data' => $user, 'status' => $status]);
     }
 
+    public function resetDepartment(Request $request, $id)
+    {
+        $user = User::find($id);
+        $user->department_id = null;
+        $user->save();
+
+    }
+
     public function update(Request $request)
     {
         $id = $request->id;
         $user = User::find($id);
         $data = $request->all();
-
+        if ($user->email === $data['email'] || $user->skype === $data['skype']) {
+            $required = false;
+        } else {
+            $required = true;
+        }
 
         if ($user->email === $data['email']) {
             unset($data['email']);
         }
         if ($user->skype === $data['skype']) {
             unset($data['skype']);
+        }
+
+        if ($required) {
+            $requiredValidator = Validator::make($data, [
+                'surname' => 'required',
+                'name' => 'required',
+                'position' => 'required',
+                'birth' => 'date|required|before:today',
+                'email' => 'required',
+            ]);
+            if ($requiredValidator->fails()) {
+                return response()->json(['error' => 'Заполните, пожалуйста, все обязательные поля', 'errors' => $requiredValidator->errors(), 'status' => false]);
+            }
+        }
+
+        $uniqueValidator = Validator::make($data, [
+            'email' => 'email|unique:users',
+            'skype' => 'nullable|unique:users'
+        ]);
+        if ($uniqueValidator->fails()) {
+            return response()->json(['error' => 'Данные Email или Skype некорректны или уже используются', 'status' => false]);
         }
         $validator = Validator::make($data, [
             'surname' => 'required|max:255',

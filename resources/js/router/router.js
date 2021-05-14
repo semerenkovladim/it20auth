@@ -11,8 +11,9 @@ import Home from "../pages/home/Home";
 import MainLayout from "../components/layouts/MainLayout";
 import UserEditPage from "../pages/userEdit/UserEditPage";
 import NewUserPage from "../pages/newUser/NewUserPage";
-import DepartmentsManagementList from "../pages/Department/DepartmentsManagementList";
+import DepartmentsManagement from "../pages/Department/DepartmentsManagement";
 import DepartmentCreate from "../pages/Department/DepartmentCreate";
+import DepartmentEdit from "../pages/Department/DepartmentEdit";
 import TitleComponent from '../components/slider/TitleComponent.vue'
 import SettingsSecure from "../pages/settings-secure/SettingsSecure";
 import AccountLogin from "../pages/settings-secure/components/AccountLogin";
@@ -127,7 +128,8 @@ const router = new VueRouter({
                 },
                 {
                     path: '/departments-management',
-                    component: DepartmentsManagementList,
+                    component: DepartmentsManagement,
+                    name: 'DepartmentsManagement',
                     meta: {
                         middleware: [
                             isLogin
@@ -136,8 +138,19 @@ const router = new VueRouter({
 
                 },
                 {
-                    path: '/departments-create',
+                    path: '/departments-management/create',
                     component: DepartmentCreate,
+                    name: 'DepartmentCreate',
+                    meta: {
+                        middleware: [
+                            isLogin
+                        ]
+                    }
+                },
+                {
+                    path: '/departments-management/edit/',
+                    component: DepartmentEdit,
+                    name: 'DepartmentEdit',
                     meta: {
                         middleware: [
                             isLogin

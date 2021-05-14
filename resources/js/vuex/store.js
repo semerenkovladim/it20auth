@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
+import department from "./modules/department"
 
 Vue.use(Vuex)
 
@@ -58,10 +59,14 @@ const store = new Vuex.Store({
             state.UMMessage.data = message.data.error
             state.UMMessage.status = message.data.status
             state.UMMessage.show = true
-            console.log('message',message)
+            console.log('message', message)
         },
         hideUMMessage(state) {
             state.UMMessage.show = false
+        },
+        //отделы
+        setAllDepartments(state, data) {
+            state.departments = data
         },
         //
         setUser(state, user) {
@@ -125,6 +130,16 @@ const store = new Vuex.Store({
         changeUMPersonalAccess({commit}, status) {
             commit('setUMPersonalAccess', status)
         },
+        //отделы
+        async getAllDepartments({commit}) {
+            return axios.get('/api/departments/all')
+                .then(value => {
+                    commit('setAllDepartments', value.data)
+                })
+                .catch(reason => {
+                    console.log('getAllDepartments --- ошибка ---')
+                })
+        },
         //
         saveUserFromServer({commit}, user) {
             console.log(user);
@@ -151,6 +166,10 @@ const store = new Vuex.Store({
         UM_USERS(state) {
             return state.usersList
         },
+        //отделы
+        ALL_DEPARTMENTS(state) {
+            return state.departments
+        },
         //
         user(state) {
             return state.user;
@@ -167,6 +186,9 @@ const store = new Vuex.Store({
     },
 
     plugins: [createPersistedState()],
+    modules: {
+        department,
+    },
 })
 
 
