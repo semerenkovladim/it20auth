@@ -179,7 +179,7 @@
                     <li class="flex justify-content-between align-items-center settings-item">
                         <div class="title-list" @click="openModal('reservedEmail')">Резервный email</div>
                         <div class="subaction" @click="openModal('reservedEmail')">
-                            {{ reservedEmail ? reservedEmail : 'Не заданно' }}
+                            {{ reservedEmail ? reservedEmail : 'Не указан' }}
                         </div>
                         <div class="tooltip-icon">
                             <svg width="31" height="30" viewBox="0 0 31 30" fill="none" xmlns="http://www.w3.org/2000/svg" @click="openModal('reservedEmail')">
@@ -292,7 +292,7 @@
                             </label>
                         </div>
                         <div class="tooltip-icon">
-                            <svg width="31" height="30" viewBox="0 0 31 30" fill="none" xmlns="http://www.w3.org/2000/svg" @click="openModal('reservedCode')">
+                            <svg width="31" height="30" viewBox="0 0 31 30" fill="none" xmlns="http://www.w3.org/2000/svg" @click="openModal('reservedCodeAlert')">
                                 <mask id="mask1" mask-type="alpha" maskUnits="userSpaceOnUse" x="5" y="4" width="21" height="21">
                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M14.268 20.4864H16.2481V18.5486H14.268V20.4864ZM15.258 4.98442C9.79287 4.98442 5.35742 9.32497 5.35742 14.6731C5.35742 20.0213 9.79287 24.3619 15.258 24.3619C20.7231 24.3619 25.1585 20.0213 25.1585 14.6731C25.1585 9.32497 20.7231 4.98442 15.258 4.98442ZM15.2577 22.4241C10.8915 22.4241 7.33724 18.9459 7.33724 14.6731C7.33724 10.4004 10.8915 6.92216 15.2577 6.92216C19.6238 6.92216 23.1781 10.4004 23.1781 14.6731C23.1781 18.9459 19.6238 22.4241 15.2577 22.4241ZM15.2578 8.85991C13.0698 8.85991 11.2976 10.5942 11.2976 12.7354H13.2777C13.2777 11.6696 14.1687 10.7977 15.2578 10.7977C16.3469 10.7977 17.2379 11.6696 17.2379 12.7354C17.2379 14.6731 14.2677 14.4309 14.2677 17.5798H16.2479C16.2479 15.3998 19.218 15.1576 19.218 12.7354C19.218 10.5942 17.4458 8.85991 15.2578 8.85991Z" fill="white"/>
                                 </mask>
@@ -331,6 +331,30 @@
                                                     <button class="cancel" @click.prevent="clearSecretCode" data-dismiss="modal">Отмена</button>
                                                 </div>
                                             </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Modal -->
+                            <div class="modal fade" id="reservedCodeAlert" data-bs-keyboard="false" tabindex="-1" aria-labelledby="reservedCodeAlertLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="reservedCodeAlertLabel">Кодовое слово при восстановлении пароля</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <mask id="mask25" mask-type="alpha" maskUnits="userSpaceOnUse" x="8" y="8" width="14" height="14">
+                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M22 9.41L20.59 8L15 13.59L9.41 8L8 9.41L13.59 15L8 20.59L9.41 22L15 16.41L20.59 22L22 20.59L16.41 15L22 9.41Z" fill="white"/>
+                                                    </mask>
+                                                    <g mask="url(#mask25)">
+                                                        <rect x="2" y="2" width="26" height="26" fill="#D8D8D8"/>
+                                                    </g>
+                                                </svg>
+
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            После включения данной функции, система позволит изменить Ваш текущий пароль на новый без использования email (при активации функции “Забыли пароль”).
                                         </div>
                                     </div>
                                 </div>
@@ -613,10 +637,12 @@ export default {
     padding-top: 24px;
     padding-bottom: 14px;
 }
-#reservedEmail .btn-form-group {
+#reservedEmail .btn-form-group,
+#reservedCode .btn-form-group, #mainPassword .btn-form-group {
     justify-content: flex-start;
 }
-#reservedEmail .btn-form-group button {
+#reservedEmail .btn-form-group button,
+#reservedCode .btn-form-group button, #mainPassword .btn-form-group button {
     margin: 0;
     margin-right: 10px;
 }
