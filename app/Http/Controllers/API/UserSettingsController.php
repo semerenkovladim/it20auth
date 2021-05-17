@@ -21,7 +21,8 @@ class UserSettingsController extends Controller
             'reservedPassword' => 'bool',
             'useCode' => 'bool',
             'codeWord' => 'string',
-            'reservedEmail' => 'string|nullable'
+            'reservedEmail' => 'string|nullable',
+            'password' => 'min:6|max:16|nullable'
         ]);
 
         $userAuth = $request->user();
@@ -58,6 +59,11 @@ class UserSettingsController extends Controller
             $backup->backup_email = $validated['reservedEmail'];
         }
 
+        if(array_key_exists('password', $validated)) {
+            $user->password = Hash::make($validated['password']);
+            $user->save();
+            $user->refresh();
+        }
         $user->setting()->save($setting);
         $user->backup_date()->save($backup);
         $user->refresh();

@@ -75,16 +75,10 @@ export default {
             }
         },
         logout() {
-            axios.post('/api/logout', {}, {
-                headers: {
-                    'Authorization': `Bearer ` + this.access_token
-                }
-            }).then(() => {
-                this.saveUserFromServer(null);
-                this.saveAccessFromServer(null);
-                this.saveRefreshFromServer(null);
-                this.$router.push({name: 'login.index'});
-            })
+            this.saveUserFromServer(null);
+            this.saveAccessFromServer(null);
+            this.saveRefreshFromServer(null);
+            this.$router.push({name: 'login.index'});
         },
     },
     computed: {

@@ -36,7 +36,7 @@
                                         </div>
                                         <div class="modal-body">
                                             Ввведите, пожалуйста, новый пароль для следующих авторизаций:
-                                            <form action="#">
+                                            <form action="#" :class="{'has-error': hasError, 'incorrect-password': incorrectPassword, 'incorrect-repeat': incorrectRepeat}">
                                                 <div class="form-group password">
                                                     <label for="inputPassword">Новый пароль:</label>
                                                     <input type="password" class="form-control" id="inputPassword" aria-describedby="emailHelp"
@@ -56,6 +56,7 @@
                                                         </g>
                                                     </svg>
                                                 </div>
+                                                <small class="incorrect-password-msg">Пароль должен содержать не менее 6 латинских символов, цифр, букв и знаков препинания</small>
                                                 <div class="form-group password">
                                                     <label for="inputPasswordRepeate">Подтвердите пароль:</label>
                                                     <input type="password" class="form-control" id="inputPasswordRepeate" aria-describedby="emailHelp"
@@ -75,9 +76,10 @@
                                                         </g>
                                                     </svg>
                                                 </div>
+                                                <small class="incorrect-repeat-password-msg">Указанные пароли не совпадают</small>
                                                 <div class="form-group d-flex flex-row btn-form-group">
-                                                    <button @click.prevent="saveReservedEmail">Сохранить</button>
-                                                    <button class="cancel" @click.prevent="clearReservedEmail">Отмена</button>
+                                                    <button @click.prevent="saveNewPassword" data-dismiss="modal">Сохранить</button>
+                                                    <button class="cancel" @click.prevent="clearReservePassword" data-dismiss="modal">Отмена</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -393,6 +395,29 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="savePassword" data-bs-keyboard="false" tabindex="-1" aria-labelledby="savePasswordLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="savePasswordLabel">Изменение пароля</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <mask id="mask30" mask-type="alpha" maskUnits="userSpaceOnUse" x="8" y="8" width="14" height="14">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M22 9.41L20.59 8L15 13.59L9.41 8L8 9.41L13.59 15L8 20.59L9.41 22L15 16.41L20.59 22L22 20.59L16.41 15L22 9.41Z" fill="white"/>
+                            </mask>
+                            <g mask="url(#mask30)">
+                                <rect x="2" y="2" width="26" height="26" fill="#D8D8D8"/>
+                            </g>
+                        </svg>
+
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Ваш пароль успешно изменен
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </template>
 
@@ -413,6 +438,9 @@ export default {
             codeWord: false,
             codeWordText: '',
             reservedEmail: '',
+            incorrectPassword: false,
+            hasError: false,
+            incorrectRepeat: false,
         }
     },
     methods: {
@@ -499,6 +527,43 @@ export default {
         clearReservedEmail() {
             this.reservedEmail = this.user.backup_date.backup_email;
             var myModal = new bootstrap.Modal(document.getElementById('reservedCode'), {
+                keyboard: false
+            })
+            myModal.hide();
+        },
+        saveNewPassword() {
+            const regExp = new RegExp('^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,}$');
+            if(this.password.search(regExp) === -1) {
+                this.incorrectPassword = true;
+            } else if(this.password !== this.passwordRepeate) {
+                this.incorrectRepeat = true;
+                this.incorrectPassword = false;
+            } else {
+                this.incorrectRepeat = false;
+                this.incorrectPassword = false;
+                const payload = {
+                    password: this.password,
+                }
+                axios.post('/api/settings', payload, {
+                    headers: {
+                        'Authorization': `Bearer ` + this.access_token
+                    }
+                }).then(() => {
+                    var myModal = new bootstrap.Modal(document.getElementById('mainPassword'), {
+                        keyboard: false
+                    })
+                    myModal.hide();
+                    myModal = new bootstrap.Modal(document.getElementById('savePassword'), {
+                        keyboard: false
+                    })
+                    myModal.show();
+                })
+            }
+        },
+        clearReservePassword() {
+            this.password = '';
+            this.passwordRepeate= '';
+            var myModal = new bootstrap.Modal(document.getElementById('mainPassword'), {
                 keyboard: false
             })
             myModal.hide();
@@ -754,5 +819,30 @@ export default {
     bottom: 5px;
     right: 10px;
     cursor: pointer;
+}
+.error-msg {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    text-align: center;
+    color: #FF0000;
+    margin-bottom: 10px;
+    display: none;
+}
+.has-error label, .incorrect-password label[for=inputPassword], .incorrect-repeat label[for=inputPasswordRepeate] {
+    color: #FF0000;
+}
+.incorrect-repeat .incorrect-repeat-password-msg {
+    display: block;
+}
+.incorrect-password-msg, .incorrect-repeat-password-msg {
+    display: none;
+}
+.has-error .error-msg {
+    display: block;
+}
+.has-error .subtitle-form {
+    display: none;
 }
 </style>
