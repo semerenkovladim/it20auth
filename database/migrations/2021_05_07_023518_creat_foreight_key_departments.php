@@ -14,7 +14,7 @@ class CreatForeightKeyDepartments extends Migration
     public function up()
     {
         Schema::table('departments', function (Blueprint $table) {
-            $table->foreign('head_department')->references('id')->on('users');
+//            $table->foreign('head_department')->references('id')->on('users');
         });
     }
 
