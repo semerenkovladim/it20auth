@@ -298,9 +298,12 @@ export default {
                 .then(value => {
                     // this.getUMMessage(value)
                     console.log('confirmDisabled', this.confirmDisabled)
+                    console.log('value',value)
                     if (value.data.status) {
                         this.message.status = false
+                        console.log('value.data',value.data)
                         this.userId = value.data.data.id
+                        console.log('this.userId = value.data.data.id',value.data.data.id)
                         axios.post('/api/user/permission/create', {
                             user_id: value.data.data.id
                         })
@@ -309,7 +312,7 @@ export default {
                         })
                         this.popupShow = true
                         this.popupMessage = "Данные успешно сохранены"
-                        this.cancelUser()
+                        this.cancelUser(this.userData)
 
                     } else {
                         this.confirmDisabled = true

@@ -86,9 +86,9 @@
                     </div>
                 </div>
                 <div class="row users_management__paginator_row"
-                     v-if="usersData.data.length">
+                     v-if="usersData">
                     <div class="col-md-3"></div>
-                    <div class="col-md-9">
+                    <div class="col-md-9" v-if="usersData.last_page > 1">
                         <div class="row paginator_row">
                             <paginator :data="usersData"
                                        :data_id="currentDepartment"

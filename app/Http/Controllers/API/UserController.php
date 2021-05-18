@@ -45,7 +45,7 @@ class UserController extends Controller
             'surname' => 'required',
             'name' => 'required',
             'position' => 'required',
-            'birth' => 'required|before:tomorrow',
+            'birth' => 'required',
             'email' => 'required',
         ]);
         if ($requiredValidator->fails()) {
@@ -74,7 +74,7 @@ class UserController extends Controller
         ]);
         if ($validator->fails()) {
 //            return response()->json(['error' => $validator->errors(), 'status' => false]);
-            return response()->json(['errors' => $validator->errors(), 'error' => 'Заполните, пожалуйста, все обязательные поля']);
+            return response()->json(['errors' => $validator->errors(), 'error' => 'Проверьте правильность заполнения обязательных полей']);
         }
 
         $user = User::make($request->all());
