@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatForeightKeyDepartments extends Migration
+class AddIpToUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class CreatForeightKeyDepartments extends Migration
      */
     public function up()
     {
-        Schema::table('departments', function (Blueprint $table) {
-//            $table->foreign('head_department')->references('id')->on('users');
+        Schema::table('users', function (Blueprint $table) {
+            $table->ipAddress('ip')->nullable();
         });
     }
 
@@ -25,6 +25,8 @@ class CreatForeightKeyDepartments extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('ip');
+        });
     }
 }

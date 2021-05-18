@@ -20,30 +20,44 @@
             <li class="user"
                 v-for="user in data"
                 :key="user.id">
+                <label :for="'user_'+ user.id" class="w-100 d-block">
                 <ul class="row user__info flex-nowrap">
                     <li class="user_info__item col-1 user_checkbox">
-                        <label>
-                            <input type="checkbox"
-                                   class="user_check input_checkbox"
-                                   v-model="user.checked"
-                                   @change="changeCheck"
-                            >
-                        </label>
+                        <!--                        <label>-->
+                        <input type="checkbox"
+                               :id="'user_'+ user.id"
+                               class="user_check input_checkbox"
+                               v-model="user.checked"
+                               @change="changeCheck"
+                        >
+                        <!--                        </label>-->
                     </li>
                     <li class="user_info__item col-2" v-if="settings.surname">{{ user.surname }}</li>
                     <li class="user_info__item col-2" v-if="settings.name">{{ user.name }}</li>
-                    <li class="user_info__item col-2" v-if="settings.patronymic">{{ user.middle_name ? user.middle_name: '-' }}</li>
+                    <li class="user_info__item col-2" v-if="settings.patronymic">
+                        {{ user.middle_name ? user.middle_name : '-' }}
+                    </li>
                     <li class="user_info__item col-3" v-if="settings.email">
                         <a :href="'mailto:' + user.email">{{ user.email }}</a>
                     </li>
-                    <li class="user_info__item col-2" v-if="settings.position">{{ user.position ? user.position: '-' }}</li>
-                    <li class="user_info__item col-2" v-if="settings.department">{{ user.department ? user.department.title : '-'}}</li>
+                    <li class="user_info__item col-2" v-if="settings.position">{{
+                            user.position ? user.position : '-'
+                        }}
+                    </li>
+                    <li class="user_info__item col-2" v-if="settings.department">
+                        {{ user.department ? user.department.title : '-' }}
+                    </li>
                     <li class="user_info__item col-2" v-if="settings.date_of_birth">{{ user.birth }}</li>
-                    <li class="user_info__item col-2" v-if="settings.modules">{{user.modules ? user.modules : '-'}}</li>
-                    <li class="user_info__item col-2" v-if="settings.role">{{user.is_admin ? 'Админ' : 'Пользователь'}}</li>
+                    <li class="user_info__item col-2" v-if="settings.modules">{{ user.modules ? user.modules : '-' }}
+                    </li>
+                    <li class="user_info__item col-2" v-if="settings.role">
+                        {{ user.is_admin ? 'Админ' : 'Пользователь' }}
+                    </li>
                 </ul>
+                </label>
             </li>
         </ul>
+
         <div class="not_found" v-else>Пользователи не найдены</div>
     </div>
 </template>
@@ -90,7 +104,7 @@ export default {
     },
     computed: {
         ...mapGetters([
-           'ALL_DEPARTMENTS'
+            'ALL_DEPARTMENTS'
         ]),
         selectUsersLength() {
             return this.selectUsers.length
@@ -145,6 +159,7 @@ export default {
 
     .user_checkbox {
         justify-content: flex-start;
+        padding-left: 30px;
 
         label {
             justify-content: flex-start;
@@ -168,9 +183,11 @@ export default {
 .users_management__list {
     display: flex;
     flex-direction: column;
+
     .sort_item {
         border-bottom: 2px solid #F5F5F5
     }
+
     .wrapper {
         padding: 0 15px;
         margin-right: -15px;
