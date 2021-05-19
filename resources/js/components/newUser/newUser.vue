@@ -11,7 +11,11 @@
                         :data="userData"
                         v-if="UM_SETTINGS_STATUS.personalDataStatus">
                     </UserEditForm>
-                    <UserAccess v-if="UM_SETTINGS_STATUS.personalAccessStatus"></UserAccess>
+                    <UserAccess
+                        :data="userData"
+                        v-if="UM_SETTINGS_STATUS.personalAccessStatus"
+                    @accessUpdate="setUserAccess">
+                    </UserAccess>
                 </div>
             </div>
         </div>
@@ -22,7 +26,7 @@
 import Placeholder from "../placeholder/Placeholder";
 import UserEditForm from "../UserEdit/components/UserEditForm";
 import UserAccess from "../userAccess/UserAccess";
-import {mapGetters} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
     name: "newUser",
@@ -53,8 +57,25 @@ export default {
                 },
             ],
             userData: {
-                avatar:''
+                avatar: '',
+                access_level: {
+                    account: 0,
+                    disk: 0,
+                    mail: 0,
+                    contacts: 0,
+                    calendar: 0,
+                    photo: 0
+                }
             }
+        }
+    },
+    methods: {
+        ...mapActions([
+           'changeUMPersonalDataStatus'
+        ]),
+        setUserAccess(data) {
+            this.userData.access_level = data
+            this.changeUMPersonalDataStatus(true)
         }
     },
     computed: {

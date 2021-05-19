@@ -2,6 +2,7 @@
     <main class="row users_management" v-if="tempUser.is_admin">
         <user-management-settings :data="tempSettings"></user-management-settings>
         <user-management-confirm
+            v-if="UM_SETTINGS_STATUS.confirmStatus"
             @deleteEvent="deleteSelectUsers"
             :userDataLength="selectUsers.length">
         </user-management-confirm>
@@ -216,9 +217,9 @@ export default {
                 })
                     .then(value => {
                         if (value.status) {
+                            this.changeUMConfirmStatus()
                             this.checkAll = false
                             this.getUsers()
-                            this.changeUMConfirmStatus()
                         }
 
                         // this.getUMMessage(value)
@@ -270,6 +271,7 @@ export default {
     computed: {
         ...mapGetters([
             'UM_USERS',
+            'UM_SETTINGS_STATUS',
             'user'
         ]),
         checkSelectAll() {
@@ -306,7 +308,9 @@ export default {
     font-style: normal;
 }
 
-
+.users_management {
+    padding-bottom: 15px;
+}
 .search__row {
     align-items: center;
     background: transparent;
@@ -462,12 +466,45 @@ export default {
 }
 
 .users_management__users_filter {
-    overflow-y: scroll;
+    overflow-y: auto;
     position: relative;
-    flex: 1 1 100%;
+    min-height: 400px;
 
     &::-webkit-scrollbar {
+        width: 5px;
+        cursor: pointer;
+        background: transparent;
+        &:hover {
+            width: 6px;
+        }
+
+
+    }
+
+    &::-webkit-scrollbar-button {
+        display: none;
         width: 0;
+        height: 0;
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-track-piece {
+        background-color: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+        border-radius: 15px;
+        background-color: lighten($designColorOne,20%);
+        cursor: pointer;
+        &:hover {
+            cursor: pointer;
+            background-color: lighten($designColorOne,10%);
+        }
+    }
+    &::-webkit-scrollbar-corner {
+        background-color: #999;
     }
 }
 </style>

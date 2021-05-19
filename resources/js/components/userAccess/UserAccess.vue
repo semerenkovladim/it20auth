@@ -1,53 +1,62 @@
 <template>
     <div class="user_edit_form user_access col-12">
-        <Message></Message>
+        <MessagePopup :popup-show="popup.show"
+                      :popup-message="popup.message"
+                      @closePopup="popup.show = false">
+        </MessagePopup>
         <form action="#" method="post" class="row user_edit_form__form">
             <div class="col-12">
-                <label class="edit_form__label"
-                       v-for="setting in settings"
-                       :key="setting.id">
-                    <span class="input_title">{{ setting.title }}:</span>
+                <label class="edit_form__label">
+                    <span class="input_title">Диск:</span>
                     <select name="position"
                             class="styled"
-                            v-model="setting.status">
+                            v-model="access.disk">
                         <option value="0">Запрещен</option>
                         <option value="1">Разрешен</option>
                     </select>
                 </label>
-                <!--                <label class="edit_form__label">
-                                    <span class="input_title">Почта:</span>
-                                    <select name="position" class="styled">
-                                        <option value="0">{{ userData.email }}</option>
-                                        <option value="1">Разрешен</option>
-                                    </select>
-                                </label>
-                                <label class="edit_form__label">
-                                    <span class="input_title">Календарь:</span>
-                                    <select name="position" class="styled">
-                                        <option value="0">{{ userData.calendar }}</option>
-                                        <option value="1">Разрешен</option>
-                                    </select>
-                                </label>
-                                <label class="edit_form__label">
-                                    <span class="input_title">Фотографии:</span>
-                                    <select name="position" class="styled">
-                                        <option :value="userData.position ">{{ userData.photo }}</option>
-                                        <option value="Разрешен">Разрешен</option>
-                                    </select>
-                                </label>
-                                <label class="edit_form__label">
-                                    <span class="input_title">Контакты:</span>
-                                    <select name="position" class="styled">
-                                        <option :value="userData.position ">{{ userData.contacts }}</option>
-                                        <option value="Разрешен">Разрешен</option>
-                                    </select>
-                                </label>-->
+                <label class="edit_form__label">
+                    <span class="input_title">Почта:</span>
+                    <select name="position"
+                            class="styled"
+                            v-model="access.mail">
+                        <option value="0">Запрещен</option>
+                        <option value="1">Разрешен</option>
+                    </select>
+                </label>
+                <label class="edit_form__label">
+                    <span class="input_title">Календарь:</span>
+                    <select name="position"
+                            class="styled"
+                            v-model="access.calendar">
+                        <option value="0">Запрещен</option>
+                        <option value="1">Разрешен</option>
+                    </select>
+                </label>
+                <label class="edit_form__label">
+                    <span class="input_title">Фотографии:</span>
+                    <select name="position"
+                            class="styled"
+                            v-model="access.photo">
+                        <option value="0">Запрещен</option>
+                        <option value="1">Разрешен</option>
+                    </select>
+                </label>
+                <label class="edit_form__label">
+                    <span class="input_title">Контакты:</span>
+                    <select name="position"
+                            class="styled"
+                            v-model="access.contacts">
+                        <option value="0">Запрещен</option>
+                        <option value="1">Разрешен</option>
+                    </select>
+                </label>
             </div>
             <div class="col-12">
                 <div class="btn_wrapper">
                     <ConfirmBtn :text="confirm"
-                                @confirmEvent=""></ConfirmBtn>
-                    <CancelBtn></CancelBtn>
+                                @confirmEvent="updateAccess"></ConfirmBtn>
+                    <CancelBtn @cancelEvent="$router.push('/users-management')"> </CancelBtn>
                 </div>
             </div>
         </form>
@@ -57,45 +66,86 @@
 <script>
 import ConfirmBtn from "../buttons/ConfirmBtn";
 import CancelBtn from "../buttons/CancelBtn";
-import Message from "../message/Message";
+import MessagePopup from "../message-popup/MessagePopup";
 
 export default {
     name: "UserAccess",
+    props: ['data'],
     components: {
-        ConfirmBtn, CancelBtn, Message
+        ConfirmBtn, CancelBtn, MessagePopup
     },
     data() {
         return {
             confirm: 'Подтвердить',
             settings: [
-                {
-                    id: 1,
-                    title: 'Диск',
-                    status: 0
-                },
-                {
-                    id: 2,
-                    title: 'Почта',
-                    status: 0
-                },
-                {
-                    id: 3,
-                    title: 'Календарь',
-                    status: 0
-                },
-                {
-                    id: 4,
-                    title: 'Фотографии',
-                    status: 0
-                },
-                {
-                    id: 5,
-                    title: 'Контакты',
-                    status: 0
-                },
+                'Диск',
+                'Почта',
+                'Календарь',
+                'Фотографии',
+                'Контакты',
             ],
+            userId: 0,
+            access: {
+                disk: 0,
+                mail: 0,
+                calendar: 0,
+                photo: 0,
+                contacts: 0
+            },
+            popup: {
+                message: '',
+                show: false
+            }
         }
     },
+    methods: {
+        getUserAccess(id) {
+            console.log('getUserAccess', id)
+            return axios.get('/api/user-permission/' + id)
+                .then(value => {
+                    if (value.data.status) {
+                        this.access = value.data.data
+                    }
+                    console.log('this.access', this.access)
+                })
+        },
+        setData() {
+            this.userId = this.data.id
+        },
+        updateAccess() {
+            this.$emit('accessUpdate',this.access)
+        },
+        setAccess(){
+            this.access = {}
+            if (this.data.access_level) {
+                this.access = this.data.access_level
+                console.log('this.access = this.data.access_level')
+            } else {
+                console.log('this.getUserAccess(this.userId)')
+                this.getUserAccess(this.userId)
+            }
+        }
+    },
+    computed: {
+        setUserData() {
+            return this.data.id
+        },
+        changeUserId() {
+            return this.userId
+        }
+    },
+    watch: {
+        setUserData() {
+            this.setData()
+
+        },
+        changeUserId() {
+            this.setAccess()
+        }
+    },
+    created(){
+        this.setAccess()
+    }
 }
 </script>
 

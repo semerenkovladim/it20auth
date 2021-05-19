@@ -3,7 +3,7 @@
         <MessagePopup
             :popup-message="popupMessage"
             :popup-show="popupShow"
-            @closePopup="popupShow = false">
+            @closePopup="toManagement">
         </MessagePopup>
         <Message @confirmEvent="cancelUser(userData)"></Message>
         <form action="#"
@@ -90,16 +90,9 @@
                 </label>
                 <label class="edit_form__label required_field">
                     <span class="input_title">Должность:</span>
-                    <select name="position" class="styled"
-                            v-model="userData.data.position"
-                            required>
-                        <option v-for="position in positions"
-                                :key="position.id"
-                                tabindex="6"
-                                :value="position.title">
-                            {{ position.title }}
-                        </option>
-                    </select>
+                    <input type="text" class="styled"
+                           v-model="userData.data.position"
+                           required>
                 </label>
                 <label class="edit_form__label">
                     <span class="input_title">Дата начала работы:</span>
@@ -226,6 +219,14 @@ export default {
             userData: {
                 data: {
                     is_admin: false
+                },
+                access_levels: {
+                    account: 0,
+                    disk: 0,
+                    mail: 0,
+                    contacts: 0,
+                    photo: 0,
+                    calendar: 0
                 }
             },
             departmentsData: [
@@ -268,9 +269,13 @@ export default {
     methods: {
         ...mapActions([
             'getUMMessage',
-            'getAllDepartments'
+            'getAllDepartments',
+            'changeUMPersonalDataStatus'
 
         ]),
+        toManagement() {
+            this.$router.push('/users-management')
+        },
         setCropImg(data) {
             this.userData.data.avatar = data.path
         },
@@ -282,9 +287,6 @@ export default {
             for (let input of fields) {
                 if (input.value.trim().length < 1) {
                     input.classList.add('empty_field')
-                    setTimeout(function () {
-                        input.classList.remove('empty_field')
-                    }, 1500)
                 } else {
                     input.classList.remove('empty_field')
 
@@ -296,17 +298,9 @@ export default {
             this.confirmDisabled = true
             return axios.post('/api/user/create', data.data)
                 .then(value => {
-                    // this.getUMMessage(value)
-                    console.log('confirmDisabled', this.confirmDisabled)
-                    console.log('value',value)
                     if (value.data.status) {
                         this.message.status = false
-                        console.log('value.data',value.data)
                         this.userId = value.data.data.id
-                        console.log('this.userId = value.data.data.id',value.data.data.id)
-                        axios.post('/api/user/permission/create', {
-                            user_id: value.data.data.id
-                        })
                         axios.post('/api/user/settings/create', {
                             user_id: value.data.data.id
                         })
@@ -327,7 +321,6 @@ export default {
         updateUser(data) {
             this.checkFields()
             this.confirmDisabled = true
-            console.log('data.data', data.data)
             return axios.put('/api/user/update', data.data)
                 .then(value => {
                     if (value.data.status) {
@@ -338,12 +331,10 @@ export default {
                         this.message.status = true
                         this.message.text = value.data.error
                     }
-                    // this.getUMMessage(value)
                     this.confirmDisabled = false
                     window.scrollTo(0, 0)
                 })
                 .catch(reason => {
-                    // this.getUMMessage('error')
                     this.message.status = true
                     this.message.text = 'Ошибка'
                     this.confirmDisabled = false
@@ -361,22 +352,6 @@ export default {
                 this.$router.push('/users-management')
             }
         },
-        /*handleFileUpload(data) {
-            if (data.data.avatar !== this.$refs.file.files[0] && this.$refs.file.files[0]) {
-                this.imgChange = true
-                data.data.avatar = this.$refs.file.files[0];
-                this.saveImg(data.data.avatar, data)
-            }
-        },
-        saveImg(image, data) {
-            let formData = new FormData();
-            formData.append('file', image)
-            return axios.post('/api/image/upload/avatar', formData)
-                .then(value => {
-                    data.data.avatar = value.data.path
-                    console.log('saveImg', value.data.path)
-                })
-        },*/
         shortFio(last, first) {
             if (last && first) return last.slice(0, 1) + ' ' + first.slice(0, 1)
 
@@ -437,6 +412,59 @@ export default {
         width: 100%;
     }
 
+    .edit_form__label {
+        flex-direction: column;
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 15px;
+
+        .styled {
+            padding: 0 25px;
+            display: flex;
+            align-items: center;
+            min-height: 60px;
+            width: 100%;
+            background: #FFFFFF;
+            border: 2px solid #F5F5F5;
+            border-radius: 4px;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 14px;
+            color: #808080;
+            margin-bottom: 10px;
+            &:focus {
+                border: 2px solid darken(#F5F5F5, 10%);
+            }
+        }
+
+        input[type=date] {
+            transition: 0.2s;
+
+            &::-webkit-calendar-picker-indicator {
+                transition: 0.2s ease;
+                color: transparent;
+                opacity: 1;
+                background: url('../../../../images/icons/ic_today.png') no-repeat center;
+                background-size: 26px 26px;
+                cursor: pointer;
+                padding: 5px 0 5px 5px;
+            }
+
+            &::-webkit-datetime-edit-day-field:focus,
+            &::-webkit-datetime-edit-month-field:focus,
+            &::-webkit-datetime-edit-year-field:focus {
+                background-color: transparent;
+                color: $designColorOne;
+                font-weight: 900;
+                font-size: 18px;
+            }
+        }
+
+        .empty_field {
+            border: 2px solid #FF0000;
+        }
+    }
+
     .radio_col {
         display: flex;
         align-items: center;
@@ -451,6 +479,8 @@ export default {
         align-items: center;
         justify-content: flex-start;
         width: 100%;
+        margin-bottom: 10px;
+
     }
 
     .radio_label {
@@ -463,6 +493,7 @@ export default {
         .input_title {
             width: fit-content;
             padding-right: 15px;
+            margin-bottom: 0;
         }
     }
 
@@ -564,65 +595,16 @@ export default {
 
 }
 
-.edit_form__label {
-    flex-direction: column;
-    display: flex;
-
-    .styled {
-        padding: 0 25px;
-        display: flex;
-        align-items: center;
-        min-height: 60px;
-        width: 100%;
-        background: #FFFFFF;
-        border: 2px solid #F5F5F5;
-        border-radius: 4px;
-        font-style: normal;
-        font-weight: bold;
-        font-size: 14px;
-        color: #808080;
-
-        &:focus {
-            border: 2px solid darken(#F5F5F5, 10%);
-        }
-    }
-
-    input[type=date] {
-        transition: 0.2s;
-
-        &::-webkit-calendar-picker-indicator {
-            transition: 0.2s ease;
-            color: transparent;
-            opacity: 1;
-            background: url('../../../../images/icons/ic_today.png') no-repeat center;
-            background-size: 26px 26px;
-            cursor: pointer;
-            padding: 5px 0 5px 5px;
-        }
-
-        &::-webkit-datetime-edit-day-field:focus,
-        &::-webkit-datetime-edit-month-field:focus,
-        &::-webkit-datetime-edit-year-field:focus {
-            background-color: transparent;
-            color: $designColorOne;
-            font-weight: 900;
-            font-size: 18px;
-        }
-    }
-
-    .empty_field {
-        border: 2px solid #FF0000;
-    }
-}
 
 .required_field {
     .input_title {
         position: relative;
+        width: fit-content;
 
         &:before {
             position: absolute;
             top: 2px;
-            left: -8px;
+            right: -8px;
             content: '*';
             color: red;
             display: block;

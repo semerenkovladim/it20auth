@@ -11,7 +11,10 @@
                         :data="userData"
                         v-if="UM_SETTINGS_STATUS.personalDataStatus">
                     </UserEditForm>
-                    <UserAccess v-if="UM_SETTINGS_STATUS.personalAccessStatus"></UserAccess>
+                    <UserAccess
+                        :data="userData"
+                        v-if="UM_SETTINGS_STATUS.personalAccessStatus"
+                        @accessUpdate="setUserAccess"></UserAccess>
                 </div>
             </div>
         </div>
@@ -22,7 +25,7 @@
 import Placeholder from "../placeholder/Placeholder";
 import UserEditForm from "./components/UserEditForm";
 import UserAccess from "../userAccess/UserAccess";
-import {mapGetters} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
     name: "UserEdit",
@@ -37,37 +40,61 @@ export default {
                 {
                     id: 1,
                     name: 'Управление ',
-                    href: '#'
+                    href: '/users-management',
+                    status: true
                 },
                 {
                     id: 2,
                     name: 'Пользователи',
-                    href: '/users-management'
+                    href: '/users-management',
+                    status: true
                 },
                 {
                     id: 3,
                     name: '',
-                    href: '#'
-                },
-                {
-                    id: 4,
-                    name: 'Персональные данные',
-                    href: '#'
-                },
+                    href: '#',
+                    status: true
+                }
             ],
             text: 'Редактирование пользователя',
             placeholderNav: true,
-            userData: {},
+            userData: {
+                access_level: {
+                    account: 0,
+                    disk: 0,
+                    mail: 0,
+                    contacts: 0,
+                    calendar: 0,
+                    photo: 0
+                }
+            },
             userName: ''
         }
     },
     methods: {
+        ...mapActions([
+            'changeUMPersonalAccess',
+            'changeUMPersonalDataStatus'
+        ]),
+        setUserAccess(data) {
+            this.userData.access_level = data
+            this.changeUMPersonalAccess(false)
+            this.changeUMPersonalDataStatus(true)
+
+        },
         getUser() {
             return axios.get('/api/user/' + this.$route.query.id)
                 .then(value => {
                     this.userData = value.data.data
-                    // console.log(value)
-                    // console.log('this.userData', this.userData)
+                    if (!value.data.data.access_level) this.userData.access_level = {
+                        account: 0,
+                        disk: 0,
+                        mail: 0,
+                        contacts: 0,
+                        calendar: 0,
+                        photo: 0
+                    }
+                    console.log('this.userData', this.userData)
                     this.setUserName()
                 })
                 .catch(reason => {
@@ -80,13 +107,13 @@ export default {
             if (this.userData.name) fio.push(this.userData.name)
             if (this.userData.middle_name) fio.push(this.userData.middle_name)
             this.links[2].name = `${fio.join(' ')}`
-            // console.log('this.links[2].name', this.links[2].name)
         }
     },
     computed: {
         ...mapGetters([
-            'UM_SETTINGS_STATUS'
-        ])
+            'UM_SETTINGS_STATUS',
+        ]),
+
     },
     mounted() {
         this.getUser()
