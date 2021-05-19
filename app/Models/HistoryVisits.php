@@ -25,6 +25,6 @@ class HistoryVisits extends Model
     ];
 
     protected $casts = [
-        'date_history' => 'date:dd-mmmm-yyyy',
+        'date_history' => 'date:d-F-Y',
     ];
 }

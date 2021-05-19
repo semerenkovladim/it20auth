@@ -21,41 +21,117 @@
             <li class="history">
                 <ul class="settings">
                     <li class="title">История посещений</li>
-                    <li class="date-title settings-item">21 апреля 2020 года</li>
-                    <li class="settings-item action-list-wrapper">
-                        <div class="flex justify-content-between align-items-center">
-                            <div class="title-list">
-                                <div class="icon-type power-icon"></div>
-                                Выход из системы
-                            </div>
-                            <div class="subaction">Краматорск, Донецкая область, Украина – 26 апреля 10:52</div>
-                        </div>
-                        <div class="flex justify-content-between align-items-center">
-                            <div class="title-list">
-                                <div class="icon-type laptop-icon"></div>
-                                Вход в систему
-                            </div>
-                            <div class="subaction">Краматорск, Донецкая область, Украина – 26 апреля 10:52</div>
-                        </div>
+                    <li class="settings-item" v-for="(item, name) in historyVisits" :key="name">
+                        <div class="date-title">{{ dateToCPU(name) }}</div>
+                        <ul>
+                            <li class="action-list-wrapper flex justify-content-between align-items-center" v-for="action in item" :key="item.id">
+                                <div class="title-list" v-if="action.type === 'login'">
+                                    <div class="icon-type power-icon"></div>
+                                    Вход в систему
+                                </div>
+                                <div class="title-list" v-else>
+                                    <div class="icon-type laptop-icon"></div>
+                                    Выход из системы
+                                </div>
+                                <div class="subaction">{{ getFullDataOfIp(action) }}</div>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
-                <ul class="pagination">
-                    <li class="arrow arrow-left"></li>
-                    <li class="active-page">1</li>
-                    <li>2</li>
-                    <li>3</li>
-                    <li>4</li>
-                    <li>5</li>
-                    <li class="arrow arrow-right"></li>
-                </ul>
+                <Paginator :data="paginationObj" @toPage="setPage"></Paginator>
+<!--                <pagination :data="paginationObj" @pagination-change-page="retriveHistory"></pagination>-->
             </li>
         </ul>
     </div>
 </template>
 
 <script>
+import {mapGetters} from "vuex";
+import Paginator from "../../../components/paginator/Paginator";
+
 export default {
-    name: "HistoryList"
+    name: "HistoryList",
+    components: {Paginator},
+    data() {
+        return {
+            historyVisits: [],
+            paginationObj: {},
+            currentPage: 1,
+        };
+    },
+    created() {
+        this.retriveHistory();
+    },
+    methods: {
+        retriveHistory() {
+            axios.get('/api/history-visits?' + this.currentPage, {
+                headers: {
+                    'Authorization': `Bearer ` + this.access_token
+                }
+            }).then((response) => {
+                this.historyVisits = response.data.data.reduce((acc, value) => {
+                    // Group initialization
+                    if (!acc[value.date_history]) {
+                        acc[value.date_history] = [];
+                    }
+
+                    // Grouping
+                    acc[value.date_history].push(value);
+
+                    return acc;
+                }, {});
+                this.paginationObj = response.data;
+            });
+        },
+        setPage(data) {
+            if(this.paginationObj.last_page >= data.page >= 1) {
+                this.currentPage = data.page;
+                this.retriveHistory()
+            }
+        },
+        dateToCPU(date) {
+            let dateArr = date.split('-');
+            dateArr[1] = this.translateMonth(dateArr[1]);
+            return dateArr.join(' ') + ' года';
+        },
+        dateToDateMonth(date) {
+            let dateArr = date.split('-');
+            return dateArr[0] + ' ' + this.translateMonth(dateArr[1]);
+        },
+        timeTotimeHour(time) {
+            let timeArr = time.split(':');
+            return timeArr[0] + ' ' + timeArr[1];
+        },
+        getFullDataOfIp(item) {
+            return `${item.city}, ${item.state}, ${item.country ? item.country : ''} - ${this.dateToDateMonth(item.date_history)} ${this.timeTotimeHour(item.time_history)}`;
+        },
+        translateMonth(month) {
+            const translate = {
+                'January': 'Января',
+                'February': 'Февраля',
+                'March': 'Марта',
+                'April': 'Апреля',
+                'May': 'Мая',
+                'June': 'Июня',
+                'July': 'Июля',
+                'August': 'Августа',
+                'September': 'Сентября',
+                'October': 'Октября',
+                'November': 'Ноября',
+                'December': 'Декабря',
+            }
+
+            if(translate.hasOwnProperty(month)) {
+                return translate[month];
+            }
+            return month;
+        }
+    },
+    computed: {
+        ...mapGetters([
+            'access_token',
+        ]),
+    }
 }
 </script>
 
@@ -95,11 +171,17 @@ export default {
     padding-bottom: 0;
     padding-left: 40px;
 }
-.settings-item {
+.settings-item, .history .settings-item {
     padding: 15px 0;
     border-bottom: 2px solid #F0F0F0;
 }
-.settings-item:last-child {
+.history .settings-item > ul {
+    padding-top: 10px;
+}
+.history .settings-item {
+    padding: 0;
+}
+.settings-item:last-child, .history .settings-item:last-child {
     border-bottom: 0;
 }
 .title-list {
@@ -125,8 +207,11 @@ export default {
     font-size: 13px;
     color: #666666;
     padding-left: 40px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #F0F0F0;
 }
-.action-list-wrapper > div {
+.action-list-wrapper {
     margin-bottom: 25px;
 }
 .action-list-wrapper > div:last-child {
@@ -142,37 +227,12 @@ export default {
 .laptop-icon {
     background: url("../../../../images/icons/ic_laptop.svg") center no-repeat;
 }
-.pagination {
-    display: flex;
-    border-top: 1.5px solid #DADADA;
-    background: #FFFFFF;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.05);
-    border-radius: 6px;
-}
-.pagination li {
-    padding: 17px 37px;
-    border-right: 3px solid #DADADA;
-    text-align: center;
-    ont-style: normal;
-    font-weight: bold;
-    font-size: 14px;
-    color: #999999;
-    cursor: pointer;
-}
-.pagination li:first-child {
-    padding: 17px 37px 17px 24px;
-}
-.pagination li:last-child {
-    border-right: none;
-}
+
 .arrow-left {
     background: url("../../../../images/icons/ic_arrow_back.svg") center no-repeat;
 }
 .arrow-right {
     background: url("../../../../images/icons/ic_arrow_forward.svg") center no-repeat;
-}
-.active-page {
-    background: #FAFAFA;
 }
 .list-settings > .history {
     padding-bottom: 37px;

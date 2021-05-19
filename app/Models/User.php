@@ -87,12 +87,8 @@ class User extends Authenticatable
             $backup->backup_email = null;
             $backup->code_word = null;
 
-            $historyVisits = new HistoryVisits();
-            $historyVisits->user_id = $user->id;
-
             $user->setting()->save($setting);
             $user->backup_date()->save($backup);
-            $user->history_visits()->save($historyVisits);
 
         });
     }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\DepartmentController;
+use App\Http\Controllers\API\HistoryVisitsController;
 use App\Http\Controllers\API\ResetPasswordController;
 use App\Http\Controllers\API\UserSettingsController;
 use Illuminate\Support\Facades\Route;
@@ -65,6 +66,7 @@ Route::put('/admin-settings/update',[AdminSettingsController::class,'update'])->
 
 Route::middleware('auth:api')->group(function () {
     Route::post('settings', [UserSettingsController::class, 'update']);
+    Route::get('history-visits', [HistoryVisitsController::class, 'index']);
     Route::post('logout', [AuthController::class, 'logout']);
 });
 
