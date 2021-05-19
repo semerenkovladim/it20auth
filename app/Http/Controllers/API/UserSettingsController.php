@@ -22,7 +22,7 @@ class UserSettingsController extends Controller
             'useCode' => 'bool',
             'codeWord' => 'string',
             'reservedEmail' => 'string|nullable',
-            'notification' => 'bool'
+            'suspiciousLoginNotifications' => 'bool'
         ]);
 
         $userAuth = $request->user();
