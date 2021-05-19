@@ -22,7 +22,7 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        $user = User::whereEmail($validated['email'])->with(['department', 'access_level', 'backup_date', 'setting'])->first();
+        $user = User::whereEmail($validated['email'])->with(['department', 'access_level', 'backup_date', 'setting', 'history_visits'])->first();
 
         if (!$user) {
             return response()->json([], 404);
@@ -116,7 +116,7 @@ class AuthController extends Controller
             'twostep_code' => 'required'
         ]);
 
-        $user = User::whereEmail($validated['email'])->with(['department', 'access_level', 'backup_date', 'setting'])->first();
+        $user = User::whereEmail($validated['email'])->with(['department', 'access_level', 'backup_date', 'setting', 'history_visits'])->first();
 
         if (!$user) {
             return response()->json([], 422);
@@ -210,7 +210,7 @@ class AuthController extends Controller
             'reservedPassword' => 'required'
         ]);
 
-        $user = User::whereEmail($validated['email'])->with(['department', 'access_level', 'backup_date', 'setting'])->first();
+        $user = User::whereEmail($validated['email'])->with(['department', 'access_level', 'backup_date', 'setting', 'history_visits'])->first();
 
         if (!$user) {
             return response()->json([], 422);

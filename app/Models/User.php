@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
@@ -52,7 +53,10 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Department::class);
     }
-
+     public function history_visits(): \Illuminate\Database\Eloquent\Relations\HasMany
+     {
+         return $this->hasMany(HistoryVisits::class);
+     }
     public function setting(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(Setting::class);
@@ -83,8 +87,12 @@ class User extends Authenticatable
             $backup->backup_email = null;
             $backup->code_word = null;
 
+            $historyVisits = new HistoryVisits();
+            $historyVisits->user_id = $user->id;
+
             $user->setting()->save($setting);
             $user->backup_date()->save($backup);
+            $user->history_visits()->save($historyVisits);
 
         });
     }
