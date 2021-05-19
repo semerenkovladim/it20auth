@@ -5,6 +5,8 @@ export default {
         department: null,
         nextPage: null,
         prevPage: null,
+        currentPage: null,
+        lastPage: null,
         validationErrs: null,
         leads: null,
         depMembers: null,
@@ -23,13 +25,11 @@ export default {
             state.department = department;
         },
 
-        updateNextPage(state, nextPage) {
-            state.nextPage = nextPage;
-        },
-
         makePagination(state, res) {
             state.nextPage = res.next_page_url;
             state.prevPage = res.prev_page_url;
+            state.currentPage = res.current_page;
+            state.lastPage = res.last_page;
         },
 
         updateLeads(state, leads) {
@@ -172,8 +172,16 @@ export default {
             return state.nextPage
         },
 
+        getLastPage(state) {
+            return state.lastPage
+        },
+
         getPrevPage(state) {
             return state.prevPage
+        },
+
+        getCurrentPage(state) {
+          return state.currentPage
         },
 
         getValidationErrs(state) {

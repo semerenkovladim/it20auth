@@ -40,17 +40,11 @@
                                 <a href="#" class="page-link" aria-label="Previous">
                                 </a>
                             </li>
-                            <li class="page-item">
-                                <a class="page-link activePage" href="#">1</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">2</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">3</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">4</a>
+                            <li class="page-item"
+                                v-for="page in getLastPage"
+                                :key='page'
+                                :class='getCurrentPage'>
+                                <a class="page-link activePage" href="#">{{ page }}</a>
                             </li>
                             <li class="page-item gotoNextPage" @click.prevent="gotoNextPage">
                                 <a href="#" class="page-link" aria-label="Next">
@@ -95,7 +89,12 @@ export default {
         },
     },
     computed: {
-        ...mapGetters(['getPrevPage', 'getNextPage'])
+        ...mapGetters([
+            'getPrevPage',
+            'getNextPage',
+            'getCurrentPage',
+            'getLastPage',
+        ])
     },
 }
 </script>
