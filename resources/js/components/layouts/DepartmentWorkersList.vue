@@ -8,8 +8,13 @@
                     </div>
                     <div class="modal-title">Список сотрудников</div>
                     <ul class="workers_list">
-                        <li v-for="member in getDepMembers" >
-                           <span @click="toDelete(member.id)">{{ member.name }} {{member.surname}} </span>
+                        <li v-for="(member, key) in getDepMembers" :key="key" >
+                            <span>{{ member.name }} {{ member.surname }} </span>
+<!--                            <span @click="toDelete(member.id)">{{ member.name }} {{ member.surname }} </span>-->
+                            <div class="checkbox_section">
+                                <input type="checkbox" :id="key" class="checkbox" :value="member.id" v-model="toDeleteUsers">
+                                <label :for="key" @click="remove"></label>
+                            </div>
                         </li>
                     </ul>
                     <div class="btns d-flex">
@@ -27,16 +32,24 @@ import {mapActions, mapGetters} from 'vuex'
 
 export default {
     name: "DepartmentWorkersList",
-    data(){
+    data() {
         return {
+            checked: [],
             toDeleteUsers: [],
         }
     },
     methods: {
+        test() {
+          console.log(this.checked)
+        },
         ...mapActions(['fetchDepMembers', 'deleteUsers']),
-        toDelete($id){
+        toDelete($id) {
             this.toDeleteUsers.push($id);
             console.log(this.toDeleteUsers)
+        },
+
+        remove() {
+
         },
 
         async sendOnDelete() {
@@ -51,9 +64,9 @@ export default {
     computed: {
         ...mapGetters(['getDepMembers'])
     },
-    props:['createMembersCount', 'departmentId'],
+    props: ['createMembersCount', 'departmentId'],
     created() {
-        this.fetchDepMembers(this.departmentId)
+        this.fetchDepMembers(this.departmentId);
     }
 }
 </script>
@@ -61,6 +74,9 @@ export default {
 <style lang="scss" scoped>
 @import "resources/sass/variables";
 
+label {
+    display: block !important;
+}
 .modal-mask {
     position: absolute;
     z-index: 9998;
@@ -79,12 +95,12 @@ export default {
 
 .modal-container {
     max-width: 445px;
-    max-height: 473px;
+    max-height: 490px;
     margin: 0px auto;
     padding: 20px 30px;
     background-color: #fff;
     border-radius: 2px;
-    overflow-y: auto;
+    overflow-y: clip;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
     transition: all 0.3s ease;
     font-family: Roboto, sans-serif;
@@ -103,19 +119,21 @@ export default {
 }
 
 .modal-title {
+    padding-bottom: 20px;
+    margin-top: 25px;
     color: #666666;
     font-size: 18px;
-    padding-bottom: 20px;
-    margin-top: 50px;
 }
 
 .workers_list {
-        list-style: none;
-        color: #808080;
-        box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.05);
-        padding: 0;
+    max-height: 308px;
+    overflow-y: scroll;
+    list-style: none;
+    color: #808080;
+    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.05);
+    padding: 0;
 
-    &  li {
+    & li {
         display: flex;
         position: relative;
         justify-content: center;
@@ -127,15 +145,42 @@ export default {
             border-bottom: none;
         }
 
-        &::after {
-            content: '';
-            display: inline-block;
-            position: absolute;
-            right: 15px;
-            height: 25px;
-            width: 25px;
-            background: url("/images/ic_clear.svg") no-repeat center;
-            cursor: pointer;
+        //&::after {
+        //    content: '';
+        //    display: inline-block;
+        //    position: absolute;
+        //    right: 15px;
+        //    height: 25px;
+        //    width: 25px;
+        //    background: url("/images/ic_clear.svg") no-repeat center;
+        //    cursor: pointer;
+        //}
+        .checkbox {
+            display: none;
+
+            & + label::after {
+                content: '';
+                position: absolute;
+                right: 15px;
+                display: block !important;
+                width: 20px;
+                height: 20px;
+                //border: 2px solid #E6E6E6;
+                background: url("/images/ic_clear.svg") no-repeat center;
+                //border-radius: 4px;
+                transition: .4s ease;
+                cursor: pointer;
+
+            }
+
+            &:checked + label::after {
+                //display: none;
+                //position: absolute;
+                //right: 15px;
+                //border-color: #0b76ef;
+                //background-color: #0b76ef;
+                //background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e");
+            }
         }
     }
 }

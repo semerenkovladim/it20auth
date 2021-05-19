@@ -57,7 +57,6 @@ class DepartmentController extends Controller
         $dep->updateDep($request, $department);
 
         return response()->json($dep);
-;
     }
 
     public function destroy(Department $department)
@@ -66,5 +65,13 @@ class DepartmentController extends Controller
         $dep->deleteDepartment($department);
 
         return $dep->fetchAllDep();
+    }
+
+    public function search(Request $request)
+    {
+       $dep = new Department;
+       $dep->search($request);
+
+        return response()->json($dep);
     }
 }

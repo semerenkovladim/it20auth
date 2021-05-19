@@ -115,6 +115,17 @@ class Department extends Model
     }
 
     //====== /Редактирование отдела ====
+
+    //====== Поиск отдела ====
+
+    public function search($request)
+    {
+       return $result = Department::where('name', $request->keywords)->get();
+    }
+
+    //====== /Поиск отдела ====
+
+
 }
 
 

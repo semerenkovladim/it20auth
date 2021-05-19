@@ -52,16 +52,14 @@ Route::post('/image/upload/avatar', [ImageUploadController::class, 'upload_avata
 Route::post('/user/settings/create',[SettingController::class,'store'])->name('setUserSetting');
 Route::put('/user/reset-department/{id}',[UserController::class,'resetDepartment'])->name('resetDepartment');
 
+//  ===== Отделы =====
 Route::get('/departments/all',[DepartmentController::class,'getAllDep'])->name('allDepartment');
-
 Route::apiResource('departments', DepartmentController::class);
-
-
+//  ===== /Отделы =====
 
 Route::post('/admin-settings/create',[AdminSettingsController::class,'store'])->name('setAdminSettings');
 Route::get('/admin-settings/{id}',[AdminSettingsController::class,'show'])->name('showAdminSettings');
 Route::put('/admin-settings/update',[AdminSettingsController::class,'update'])->name('updateAdminSettings');
-
 
 Route::middleware('auth:api')->group(function () {
     Route::post('settings', [UserSettingsController::class, 'update']);

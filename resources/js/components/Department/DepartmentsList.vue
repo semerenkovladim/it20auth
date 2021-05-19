@@ -15,7 +15,7 @@
                                 <label for="checkbox"></label>
                             </div>
                             <div class="col-4">
-                                <div class="departments_list-edit" @click="getEdit"></div>
+                                <div class="departments_list-edit" :hidden="disableEditButton" @click="getEdit"></div>
                             </div>
                             <div class="col-4">
                                 <div class="departments_list-delete" @click="isActiveConfirmModal=true"></div>
@@ -27,7 +27,7 @@
                       action="#">
                     <div class="row">
                         <div class="col-10 col-sm-8 col-md-10">
-                            <input type="text" placeholder="Поиск">
+                            <input type="text" v-model="search" placeholder="Поиск">
                         </div>
                         <div class="col-2 col-sm-4 col-md-2 search-btn">
                         </div>
@@ -53,7 +53,7 @@
             </div>
             <div class="departments_list-body">
                 <ul>
-                    <li class="departments_list-item" v-for="(dep, id) in getDepartments" :key="id">
+                    <li class="departments_list-item" v-for="(dep, id) in searchByTitle" :key="id">
                         <ul class="row list-item_info">
                             <li class="col-1 checkbox_section">
                                 <input type="checkbox"
@@ -85,15 +85,18 @@ export default {
     },
     data() {
         return {
-            nextPage: '',
-            prevPage: '',
+            search: '',
+            nextPage: null,
+            prevPage: null,
             uncheck: false,
             cheked: false,
+            disableEditButton: false,
             arrowName: false,
             arrowLead: false,
             arrowCtr: false,
             isActiveConfirmModal: false,
             checkedDepartments: [],
+            list: [],
         }
     },
     methods: {
@@ -144,43 +147,71 @@ export default {
             this.arrowCtr = !this.arrowCtr;
         },
 
-        async deletePosition() {
-            for (let i = 0; i < this.checkedDepartments.length; i++) {
-                await this.delDepartment(this.checkedDepartments[i])
-            }
-        },
-
         getEdit() {
             this.$store.commit('updateDepartmentId', this.checkedDepartments)
             this.$router.push({name: 'DepartmentEdit'})
         },
 
-        deleteDeps() {
+        async deleteDeps() {
             let arr = this.checkedDepartments;
             let i;
             for (i = 0; i < arr.length; i++) {
-                this.delDepartment(arr[i])
-                console.log('confirm delete' + ' ' + [i])
+                await this.delDepartment(arr[i])
             }
 
-            this.fetchDepartments()
+            await this.formList()
             this.isActiveConfirmModal = false;
+        },
+        getDepartmentsList() {
+            this.list = this.getDepartments;
+        },
+        async formList() {
+            await this.fetchDepartments();
+            await this.getDepartmentsList();
         }
-
     },
+
     computed: {
         ...mapGetters(['getDepartments', 'getNextPage', 'getPrevPage']),
-        selectAll: function () {
-            return this.users.every(function (user) {
-                return user.checked;
-            });
+        searchByTitle() {
+            let searchStr = this.search;
+            searchStr = searchStr.trim();
+            searchStr = searchStr.toLowerCase();
+            let searchByTitle = this.list.filter(item => item.title.toLowerCase().indexOf(searchStr) !== -1);
+
+            let searchByName = this.list.filter(item => item.name.toLowerCase().indexOf(searchStr) !== -1);
+            if (searchByName.length > 0) {
+
+                return searchByName;
+            }
+            let searchBySurname = this.list.filter(item => item.surname.toLowerCase().indexOf(searchStr) !== -1);
+            if (searchBySurname.length > 0) {
+
+                return searchBySurname;
+            }
+            let searchByCount = this.list.filter(item => item.title.toLowerCase().indexOf(searchStr) !== -1);
+            if (searchByCount.length > 0) {
+
+                return searchByCount;
+            }
+            return searchByTitle
         },
     },
+
     mutations: {
         ...mapMutations(['updateDepartmentId']),
     },
     mounted() {
-        this.fetchDepartments()
+        this.formList()
+    },
+
+    watch: {
+        disableButton(){
+            if(this.checkedDepartments.length > 1) {
+                this.disableEditButton = true;
+                console.log('it work')
+            }
+        }
     }
 }
 </script>
