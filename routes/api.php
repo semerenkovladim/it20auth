@@ -45,9 +45,12 @@ Route::post('/users/delete', [UserController::class, 'destroy'])->name('usersDel
 Route::get('/user/{id}', [UserController::class, 'show'])->name('user');
 Route::post('/user/create', [UserController::class, 'store'])->name('userCreate');
 Route::put('/user/update', [UserController::class, 'update'])->name('userUpdate');
-Route::post('/user/permission/create', [AccessLevelController::class, 'store'])->name('userPermission');
-Route::get('/user/permission', [AccessLevelController::class, 'show'])->name('userPermissionShow');
-Route::get('/user/permission/update', [AccessLevelController::class, 'update'])->name('userPermissionUpdate');
+
+Route::get('/users-permission',[AccessLevelController::class, 'index'])->name('usersPermission');
+Route::post('/user-permission/create', [AccessLevelController::class, 'store'])->name('userPermission');
+Route::get('/user-permission/{id}', [AccessLevelController::class, 'show'])->name('userPermissionShow');
+Route::put('/user-permission/update/{id}', [AccessLevelController::class, 'update'])->name('userPermissionUpdate');
+
 Route::post('/image/upload/avatar', [ImageUploadController::class, 'upload_avatar'])->name('userAvatar');
 Route::post('/user/settings/create',[SettingController::class,'store'])->name('setUserSetting');
 Route::put('/user/reset-department/{id}',[UserController::class,'resetDepartment'])->name('resetDepartment');

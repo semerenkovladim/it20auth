@@ -51,7 +51,7 @@ export default {
     align-items: center;
     display: flex;
     cursor: pointer;
-    border-left: 2px solid transparent;
+    //border-left: 2px solid transparent;
     font-weight: 600;
     font-size: 13px;
     color: $lightColor;
@@ -68,15 +68,31 @@ export default {
 
     &:hover {
         background: $userManagementFilterActiveBg;
-        border-left: 2px solid $designColorOne;
         color: $darkColor;
+        &:before {
+            content: '';
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-left: 2px solid $designColorOne;
+        }
     }
 }
 
 .filter-active {
     background: $userManagementFilterActiveBg;
-    border-left: 2px solid $designColorOne;
+    //border-left: 2px solid $designColorOne;
     color: $darkColor;
+    &:before {
+        content: '';
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-left: 2px solid $designColorOne;
+        z-index: 2;
+    }
 }
 
 .users_management__filter_list {
