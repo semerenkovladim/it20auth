@@ -36,55 +36,66 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <label class="edit_form__label">
+                        <label class="edit_form__label required_field">
                             <span class="input_title">Дата рождения:</span>
                             <input type="date" class="styled"
                                    v-model="userData.data.birth"
                                    min="1920-01-01"
                                    :max="currentDate"
-                                   required>
+                                   required
+                                   tabindex="1">
                         </label>
                     </div>
                 </div>
             </div>
             <div class="col-md-6">
-                <label class="edit_form__label">
+                <label class="edit_form__label required_field">
                     <span class="input_title">Фамилия:</span>
                     <input type="text" class="styled"
                            v-model="userData.data.surname"
-                           maxlength="100">
+                           maxlength="100"
+                           required
+                           tabindex="2">
                 </label>
-                <label class="edit_form__label">
+                <label class="edit_form__label required_field">
                     <span class="input_title">Имя:</span>
                     <input type="text" class="styled"
                            v-model="userData.data.name"
-                           maxlength="100">
+                           maxlength="100"
+                           required
+                           tabindex="3">
                 </label>
                 <label class="edit_form__label">
                     <span class="input_title">Отчество:</span>
                     <input type="text" class="styled"
                            v-model="userData.data.middle_name"
-                           maxlength="100">
+                           maxlength="100"
+                           tabindex="4">
                 </label>
             </div>
             <div class="col-md-6">
                 <label class="edit_form__label">
                     <span class="input_title">Отдел:</span>
-                    <select name="department" class="styled" v-model="userData.data.department_id">
+                    <select name="department"
+                            class="styled"
+                            v-model="userData.data.department_id"
+                            tabindex="5">
                         <option v-for="department in ALL_DEPARTMENTS"
                                 :key="department.id"
-                                :value="department.id">
+                                :value="department.id"
+                        >
                             {{ department.title }}
                         </option>
                     </select>
                 </label>
-                <label class="edit_form__label">
+                <label class="edit_form__label required_field">
                     <span class="input_title">Должность:</span>
                     <select name="position" class="styled"
                             v-model="userData.data.position"
                             required>
                         <option v-for="position in positions"
                                 :key="position.id"
+                                tabindex="6"
                                 :value="position.title">
                             {{ position.title }}
                         </option>
@@ -96,7 +107,8 @@
                            class="styled"
                            min="2018-01-01"
                            :max="currentDate"
-                           v-model="userData.data.date_start">
+                           v-model="userData.data.date_start"
+                           tabindex="7">
                 </label>
             </div>
             <div class="col-12">
@@ -128,18 +140,20 @@
             </div>
             <div class="col-12 edit_form__title">Контактная информация</div>
             <div class="col-md-6">
-                <label class="edit_form__label">
+                <label class="edit_form__label required_field">
                     <span class="input_title">E-mail</span>
                     <input type="email" class="styled"
                            v-model="userData.data.email"
                            maxlength="255"
-                           required>
+                           required
+                           tabindex="8">
                 </label>
                 <label class="edit_form__label">
                     <span class="input_title">Skype:</span>
                     <input type="text" class="styled"
                            v-model="userData.data.skype"
-                           maxlength="255">
+                           maxlength="255"
+                           tabindex="9">
                 </label>
             </div>
             <div class="col-md-6">
@@ -148,14 +162,16 @@
                     <input type="tel" class="styled"
                            v-model="userData.data.mobile_phone"
                            maxlength="12"
-                           minlength="10">
+                           minlength="10"
+                           tabindex="10">
                 </label>
                 <label class="edit_form__label">
                     <span class="input_title">Рабочий телефон:</span>
                     <input type="tel" class="styled"
                            v-model="userData.data.work_phone"
                            maxlength="12"
-                           minlength="10">
+                           minlength="10"
+                           tabindex="11">
                 </label>
             </div>
             <div class="col-12">
@@ -261,15 +277,33 @@ export default {
         imgSelected(data) {
             this.imgData = data
         },
+        checkFields() {
+            let fields = document.querySelectorAll('.required_field > [required]')
+            for (let input of fields) {
+                if (input.value.trim().length < 1) {
+                    input.classList.add('empty_field')
+                    setTimeout(function () {
+                        input.classList.remove('empty_field')
+                    }, 1500)
+                } else {
+                    input.classList.remove('empty_field')
+
+                }
+            }
+        },
         createUser(data) {
+            this.checkFields()
             this.confirmDisabled = true
             return axios.post('/api/user/create', data.data)
                 .then(value => {
                     // this.getUMMessage(value)
-                    console.log('confirmDisabled',this.confirmDisabled)
+                    console.log('confirmDisabled', this.confirmDisabled)
+                    console.log('value',value)
                     if (value.data.status) {
                         this.message.status = false
+                        console.log('value.data',value.data)
                         this.userId = value.data.data.id
+                        console.log('this.userId = value.data.data.id',value.data.data.id)
                         axios.post('/api/user/permission/create', {
                             user_id: value.data.data.id
                         })
@@ -278,33 +312,35 @@ export default {
                         })
                         this.popupShow = true
                         this.popupMessage = "Данные успешно сохранены"
+                        this.cancelUser(this.userData)
 
                     } else {
-                        window.scrollTo(0,0)
                         this.confirmDisabled = true
                         this.message.status = true
                         this.message.text = value.data.error
                     }
                     this.confirmDisabled = false
+                    window.scrollTo(0, 0)
                 })
 
         },
         updateUser(data) {
+            this.checkFields()
             this.confirmDisabled = true
-            console.log('data.data',data.data)
-            return axios.put('/api/user/update' , data.data)
+            console.log('data.data', data.data)
+            return axios.put('/api/user/update', data.data)
                 .then(value => {
                     if (value.data.status) {
                         this.message.status = false
                         this.popupShow = true
                         this.popupMessage = "Изменения успешно сохранены"
                     } else {
-                        window.scrollTo(0,0)
                         this.message.status = true
                         this.message.text = value.data.error
                     }
                     // this.getUMMessage(value)
                     this.confirmDisabled = false
+                    window.scrollTo(0, 0)
                 })
                 .catch(reason => {
                     // this.getUMMessage('error')
@@ -545,6 +581,10 @@ export default {
         font-weight: bold;
         font-size: 14px;
         color: #808080;
+
+        &:focus {
+            border: 2px solid darken(#F5F5F5, 10%);
+        }
     }
 
     input[type=date] {
@@ -567,6 +607,25 @@ export default {
             color: $designColorOne;
             font-weight: 900;
             font-size: 18px;
+        }
+    }
+
+    .empty_field {
+        border: 2px solid #FF0000;
+    }
+}
+
+.required_field {
+    .input_title {
+        position: relative;
+
+        &:before {
+            position: absolute;
+            top: 2px;
+            left: -8px;
+            content: '*';
+            color: red;
+            display: block;
         }
     }
 }

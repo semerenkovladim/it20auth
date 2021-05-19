@@ -7,6 +7,8 @@ use App\Mail\SendUserPassword;
 use App\Models\AccessLevel;
 use App\Models\Setting;
 use App\Models\User;
+use Carbon\Carbon;
+use Cassandra\Date;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -17,7 +19,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::with('department')->paginate(6);
+        $users = User::with('department')->paginate(15);
         if ($users) {
             $status = true;
         } else {
@@ -28,7 +30,7 @@ class UserController extends Controller
 
     public function in_department($id)
     {
-        $users = User::with('department')->where('department_id', '=', $id)->paginate(6);
+        $users = User::with('department')->where('department_id', '=', $id)->paginate(15);
         if ($users) {
             $status = true;
         } else {
@@ -43,8 +45,8 @@ class UserController extends Controller
             'surname' => 'required',
             'name' => 'required',
             'position' => 'required',
-            'birth' => 'date|required|before:today',
-            'email' => 'email|required',
+            'birth' => 'required',
+            'email' => 'required',
         ]);
         if ($requiredValidator->fails()) {
             return response()->json(['error' => 'Заполните, пожалуйста, все обязательные поля', 'status' => false]);
@@ -60,7 +62,7 @@ class UserController extends Controller
             'surname' => 'required|max:255',
             'name' => 'required|max:255',
             'middle_name' => 'nullable|max:255',
-            'birth' => 'date|required|before:today',
+            'birth' => 'date|required|before:tomorrow',
             'department_id' => 'int|nullable',
             'position' => 'required|max:225',
             'date_start' => 'date|nullable',
@@ -72,7 +74,7 @@ class UserController extends Controller
         ]);
         if ($validator->fails()) {
 //            return response()->json(['error' => $validator->errors(), 'status' => false]);
-            return response()->json(['errors' => $validator->errors(), 'error' => 'Заполните, пожалуйста, все обязательные поля']);
+            return response()->json(['errors' => $validator->errors(), 'error' => 'Проверьте правильность заполнения обязательных полей']);
         }
 
         $user = User::make($request->all());
@@ -122,11 +124,6 @@ class UserController extends Controller
         $id = $request->id;
         $user = User::find($id);
         $data = $request->all();
-        if ($user->email === $data['email'] || $user->skype === $data['skype']) {
-            $required = false;
-        } else {
-            $required = true;
-        }
 
         if ($user->email === $data['email']) {
             unset($data['email']);
@@ -134,32 +131,17 @@ class UserController extends Controller
         if ($user->skype === $data['skype']) {
             unset($data['skype']);
         }
-
-        if ($required) {
-            $requiredValidator = Validator::make($data, [
-                'surname' => 'required',
-                'name' => 'required',
-                'position' => 'required',
-                'birth' => 'date|required|before:today',
-                'email' => 'required',
-            ]);
-            if ($requiredValidator->fails()) {
-                return response()->json(['error' => 'Заполните, пожалуйста, все обязательные поля', 'errors' => $requiredValidator->errors(), 'status' => false]);
-            }
+        if (!$user->name || !$user->birth || !$user->surname || !$user->position || !$user->email) {
+            return response()->json(['error' => 'Заполните, пожалуйста, все обязательные поля', 'data' => $data,'status' => false]);
         }
 
-        $uniqueValidator = Validator::make($data, [
-            'email' => 'email|unique:users',
-            'skype' => 'nullable|unique:users'
-        ]);
-        if ($uniqueValidator->fails()) {
-            return response()->json(['error' => 'Данные Email или Skype некорректны или уже используются', 'status' => false]);
-        }
+        $currentDate = Carbon::today()->format('d.m.Y');
+
         $validator = Validator::make($data, [
             'surname' => 'required|max:255',
             'name' => 'required|max:255',
             'middle_name' => 'nullable|max:255',
-            'birth' => 'date|required',
+            'birth' => "date|required|before:${currentDate}",
             'department_id' => 'int|nullable',
             'position' => 'required|max:225',
             'date_start' => 'date|nullable',
@@ -170,7 +152,8 @@ class UserController extends Controller
             'skype' => 'max:255|nullable|unique:users'
         ]);
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors(), 'status' => false]);
+//            return response()->json(['error' => $validator->errors(), 'status' => false]);
+            return response()->json(['error' => 'Проверьте правильность заполнения обязательных полей','data' => $data, 'status' => false]);
         }
         $user->fill($data)->save();
 

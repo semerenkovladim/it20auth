@@ -21,7 +21,8 @@ class UserSettingsController extends Controller
             'reservedPassword' => 'bool',
             'useCode' => 'bool',
             'codeWord' => 'string',
-            'reservedEmail' => 'string|nullable'
+            'reservedEmail' => 'string|nullable',
+            'suspiciousLoginNotifications' => 'bool'
         ]);
 
         $userAuth = $request->user();
@@ -58,6 +59,9 @@ class UserSettingsController extends Controller
             $backup->backup_email = $validated['reservedEmail'];
         }
 
+        if(array_key_exists('suspiciousLoginNotifications', $validated)) {
+            $setting->suspiciousLoginNotifications = $validated['suspiciousLoginNotifications'];
+        }
         $user->setting()->save($setting);
         $user->backup_date()->save($backup);
         $user->refresh();

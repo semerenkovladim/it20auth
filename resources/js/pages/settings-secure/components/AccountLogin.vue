@@ -443,7 +443,8 @@ export default {
         save() {
             const data = {
                 twoFactor: this.twofactor,
-                reservedPassword: this.reservedPassword
+                reservedPassword: this.reservedPassword,
+                suspiciousLoginNotifications: this.notification,
             }
             axios.post('/api/settings', data, {
                 headers: {

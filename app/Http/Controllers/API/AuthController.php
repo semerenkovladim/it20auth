@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\ClearCodeReset;
+use App\Mail\SuspiciousMail;
 use App\Mail\TwoStepCode;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -21,10 +22,10 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        $user = User::whereEmail($validated['email'])->with(['department', 'access_level', 'backup_date', 'setting'])->first();
+        $user = User::whereEmail($validated['email'])->with(['department', 'access_level', 'backup_date', 'setting', 'history_visits'])->first();
 
         if (!$user) {
-            return response()->json([], 422);
+            return response()->json([], 404);
         }
 
         // Если пользователь с таким email адресом найден - проверим совпадает
@@ -68,6 +69,14 @@ class AuthController extends Controller
             ], 422);
         }
 
+        if($user->ip) {
+            if($user->setting->suspiciousLoginNotifications && $user->getIp() !== $user->ip) {
+                Mail::to($user->email)->send(new SuspiciousMail($user->name));
+            }
+        } else {
+            $user->ip = $user->getIp();
+            $user->save();
+        }
         // Вытаскиваем данные из ответа
         $data = json_decode($response->getContent(), true);
         // Формируем окончательный ответ в нужном формате
@@ -107,7 +116,7 @@ class AuthController extends Controller
             'twostep_code' => 'required'
         ]);
 
-        $user = User::whereEmail($validated['email'])->with(['department', 'access_level', 'backup_date', 'setting'])->first();
+        $user = User::whereEmail($validated['email'])->with(['department', 'access_level', 'backup_date', 'setting', 'history_visits'])->first();
 
         if (!$user) {
             return response()->json([], 422);
@@ -153,6 +162,14 @@ class AuthController extends Controller
                 'status' => 422
             ], 422);
         }
+        if($user->ip) {
+            if($user->setting->suspiciousLoginNotifications && $request->ip() !== $user->ip) {
+                Mail::to($user->email)->send(new SuspiciousMail($user->name));
+            }
+        } else {
+            $user->ip = $request->ip();
+            $user->save();
+        }
 
         // Вытаскиваем данные из ответа
         $data = json_decode($response->getContent(), true);
@@ -193,7 +210,7 @@ class AuthController extends Controller
             'reservedPassword' => 'required'
         ]);
 
-        $user = User::whereEmail($validated['email'])->with(['department', 'access_level', 'backup_date', 'setting'])->first();
+        $user = User::whereEmail($validated['email'])->with(['department', 'access_level', 'backup_date', 'setting', 'history_visits'])->first();
 
         if (!$user) {
             return response()->json([], 422);
@@ -243,6 +260,14 @@ class AuthController extends Controller
         // Вытаскиваем данные из ответа
         $data = json_decode($response->getContent(), true);
 
+        if($user->ip) {
+            if($user->setting->suspiciousLoginNotifications && $request->ip() !== $user->ip) {
+                Mail::to($user->email)->send(new SuspiciousMail($user->name));
+            }
+        } else {
+            $user->ip = $request->ip();
+            $user->save();
+        }
 
         // Формируем окончательный ответ в нужном формате
         return response()->json([

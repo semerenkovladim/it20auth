@@ -30,6 +30,7 @@
                                     <label>
                                         <input type="checkbox"
                                                class="select_all input_checkbox"
+                                               :class="0 < usersCount ? 'middle_position':''"
                                                @change="changeSelectAll"
                                                v-model="checkAll">
                                     </label>
@@ -85,9 +86,9 @@
                     </div>
                 </div>
                 <div class="row users_management__paginator_row"
-                     v-if="usersData.data.length">
+                     v-if="usersData">
                     <div class="col-md-3"></div>
-                    <div class="col-md-9">
+                    <div class="col-md-9" v-if="usersData.last_page > 1">
                         <div class="row paginator_row">
                             <paginator :data="usersData"
                                        :data_id="currentDepartment"
@@ -126,6 +127,7 @@ export default {
             usersData: {
                 data: []
             },
+            departments: {},
             settingsStatus: false,
             placeholderText: 'Управление пользователями',
             links: [
@@ -140,31 +142,9 @@ export default {
                     href: '/users-management'
                 },
             ],
-            departments: [
-                {
-                    id: 1,
-                    name: 'Все пользователи',
-                    status: true
-                },
-                {
-                    id: 2,
-                    name: 'Отдел сайтов',
-                    status: false
-                },
-                {
-                    id: 3,
-                    name: 'Отдел разработки проектов',
-                    status: false
-                },
-                {
-                    id: 4,
-                    name: 'Отдел дизайна',
-                    status: false
-                },
-            ],
             checkAll: false,
             checkStatus: false,
-            usersCount: '',
+            usersCount: 0,
             selectUsers: [],
             currentDepartment: 0,
             currentPage: 1,
@@ -187,13 +167,15 @@ export default {
             for (let user in this.usersData.data) {
                 this.usersData.data[user].checked = this.checkAll;
                 if (this.checkAll) {
-                    this.selectUsers.push(this.usersData.data[user])
+                    if (this.selectUsers.findIndex(x => x.id === this.usersData.data[user].id) === -1) this.selectUsers.push(this.usersData.data[user])
                 } else {
-                    this.selectUsers = []
+                    this.selectUsers.length = 0
+                    this.usersCount = 0
                 }
             }
             this.usersCount = this.selectUsers.length
             this.checkStatus = !this.checkStatus
+            console.log('this.usersData data', this.usersData.data.length)
         },
         async getUMAllUsers(page = 1) {
             axios.get('/api/users', {
@@ -243,6 +225,7 @@ export default {
                     })
                 usersId.length = 0
                 this.selectUsers.length = 0
+                this.usersCount = 0
             }
         },
         setDepartmentId(data) {
@@ -253,6 +236,7 @@ export default {
         userCount(data) {
             this.usersCount = data.length
             this.selectUsers = data.data
+            console.log('this.usersCount', this.usersCount)
         },
         setAllCheck(data) {
             this.checkAll = data.status
@@ -308,6 +292,7 @@ export default {
         this.getAdminSettings()
         this.getUMAllUsers()
         this.getAllDepartments()
+        console.log('select users length', this.selectUsers.length)
     }
 }
 </script>
@@ -475,10 +460,12 @@ export default {
     padding: 0;
     min-height: 400px;
 }
+
 .users_management__users_filter {
     overflow-y: scroll;
     position: relative;
     flex: 1 1 100%;
+
     &::-webkit-scrollbar {
         width: 0;
     }
