@@ -15,7 +15,7 @@ const store = new Vuex.Store({
             settingStatus: false,
             confirmStatus: false,
             confirm: false,
-            personalDataStatus: true,
+            personalDataStatus: false,
             personalAccessStatus: false
         },
         UMMessage: {

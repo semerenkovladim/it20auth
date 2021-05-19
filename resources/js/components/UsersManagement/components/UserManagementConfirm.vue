@@ -6,15 +6,15 @@
         <div class="wrapper">
             <div class="title_row">
                 <div class="title">Подтверждение удаления</div>
-                <div class="description" v-if="userDataLength === 1">Вы уверены, что хотите удалить данную запись?</div>
-                <div class="description" v-if="userDataLength > 1">Вы уверены, что хотите удалить данные записи?</div>
+                <div class="description" v-if="counter === 1">Вы уверены, что хотите удалить данную запись?</div>
+                <div class="description" v-if="counter > 1">Вы уверены, что хотите удалить данные записи?</div>
             </div>
             <div class="btn_wrapper confirm__btn_wrapper">
                 <confirm-btn
                     :text="removeBtnText"
-                    v-on:confirmEvent="removeItem">
+                    @confirmEvent="remove">
                 </confirm-btn>
-                <cancel-btn v-on:cancelEvent="changeConfirm"></cancel-btn>
+                <cancel-btn @cancelEvent="changeConfirm"></cancel-btn>
             </div>
         </div>
     </div>
@@ -27,14 +27,15 @@ import {mapActions, mapGetters} from "vuex";
 
 export default {
     name: "UserManagementConfirm",
-    props:['userDataLength'],
+    props: ['userDataLength'],
     components: {
         'cancel-btn': CancelBtn,
         'confirm-btn': ConfirmBtn
     },
     data() {
         return {
-            removeBtnText: 'Удалить'
+            removeBtnText: 'Удалить',
+            counter: 0
         }
     },
     methods: {
@@ -47,14 +48,23 @@ export default {
         changeConfirm() {
             this.changeUMConfirmStatus()
         },
-        removeItem() {
+        remove() {
             this.$emit('deleteEvent')
+            // this.changeUMConfirmStatus()
+        },
+        setCounter() {
+            this.counter = this.userDataLength
+            console.log('this.counter',this.counter)
         }
     },
     computed: {
         ...mapGetters([
             'UM_SETTINGS_STATUS'
-        ])
+        ]),
+    },
+    created() {
+        this.setCounter()
+
     }
 }
 </script>

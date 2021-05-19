@@ -7,15 +7,34 @@
                     :key="link.id">
                     <router-link :to="link.href">{{ link.name }}</router-link>
                 </li>
+                <li class="breadcrumbs-item" v-if="$route.path !=='/users-management'">
+                    <router-link v-if="UM_SETTINGS_STATUS.personalDataStatus" to="#">Персональные данные</router-link>
+                    <router-link v-if="UM_SETTINGS_STATUS.personalAccessStatus" to="#">Доступы</router-link>
+                </li>
             </ul>
         </nav>
     </div>
 </template>
 
 <script>
+import {mapGetters, mapActions} from "vuex";
+
 export default {
     name: "Breadcrumbs",
-    props: ['links']
+    props: ['links'],
+    methods:{
+      ...mapActions([
+          'changeUMPersonalDataStatus'
+      ])
+    },
+    computed: {
+        ...mapGetters([
+            'UM_SETTINGS_STATUS'
+        ])
+    },
+    created(){
+        // this.changeUMPersonalDataStatus(false)
+    }
 }
 </script>
 
