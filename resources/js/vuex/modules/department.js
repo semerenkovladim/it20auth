@@ -7,12 +7,12 @@ export default {
         prevPage: null,
         currentPage: null,
         lastPage: null,
-        validationErrs: null,
         leads: null,
         depMembers: null,
         resStatus: null,
         ctrDepMembers: null,
-        statusEditDep:null
+        statusEditDep:null,
+        showPopup: false,
 
     },
 
@@ -56,8 +56,8 @@ export default {
             state.ctrDepMembers = $ctrDepMembers;
         },
 
-        collectValidErrors(state, err) {
-            state.validationErrs = err;
+        updateShowPopup(state, status) {
+            state.showPopup = status;
         }
     },
     actions: {
@@ -119,11 +119,11 @@ export default {
                 })
                 .then(res => {
                     ctx.commit('updateResStatus', res.status)
-                    console.log(res.status)
+                    ctx.commit('updateShowPopup', true)
                 })
-                .catch(err => {
-                    ctx.commit('updateResStatus', err.error)
-                    console.log(data)
+                .catch(res => {
+                    ctx.commit('updateResStatus', res.status)
+                    console.log(res.status)
                 })
         },
         async updateDepartment(ctx, data) {
@@ -211,5 +211,9 @@ export default {
         getResStatusEditDep(state) {
             return state.statusEditDep
         },
+
+        getShowPopup(state) {
+            return state.showPopup
+        }
     },
 }

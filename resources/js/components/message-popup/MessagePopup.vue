@@ -24,7 +24,7 @@ export default {
     },
     data() {
         return {
-            btnText: 'ОК'
+            btnText: 'ОК',
         }
     },
     methods: {

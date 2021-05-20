@@ -8,17 +8,17 @@
                     </div>
                     <div class="modal-title">Список сотрудников</div>
                     <ul class="workers_list">
-                        <li v-for="(member, key) in getDepMembers" :key="key" >
+                        <li v-for="(member, key) in list" :key="member.id" v-show="!member.hide" >
                             <span>{{ member.name }} {{ member.surname }} </span>
 <!--                            <span @click="toDelete(member.id)">{{ member.name }} {{ member.surname }} </span>-->
                             <div class="checkbox_section">
-                                <input type="checkbox" :id="key" class="checkbox" :value="member.id" v-model="toDeleteUsers">
-                                <label :for="key" @click="remove"></label>
+                                <input type="checkbox" :id="member.id" class="checkbox" :value="member.id">
+                                <label :for="member.id" @click="change(member.id)"></label>
                             </div>
                         </li>
                     </ul>
                     <div class="btns d-flex">
-                        <button type="button" class="btnSave" @click="sendOnDelete">Сохранить</button>
+                        <button type="button" class="btnSave" @click="$emit('close')">Сохранить</button>
                         <button type="button" class="btnCancel" @click="$emit('close')">Отмена</button>
                     </div>
                 </div>
@@ -34,39 +34,33 @@ export default {
     name: "DepartmentWorkersList",
     data() {
         return {
-            checked: [],
-            toDeleteUsers: [],
+            list: null,
         }
     },
     methods: {
-        test() {
-          console.log(this.checked)
-        },
         ...mapActions(['fetchDepMembers', 'deleteUsers']),
-        toDelete($id) {
-            this.toDeleteUsers.push($id);
-            console.log(this.toDeleteUsers)
+        hideItem(id){
+            this.list.forEach(i => i.id === id ? i.hide = true : true);
         },
-
-        remove() {
-
+        addToDel(id) {
+            this.toDeleteUsers.push(id);
         },
-
-        async sendOnDelete() {
-            const values = Object.values(this.toDeleteUsers);
-            await values.forEach(value => {
-                this.deleteUsers(value);
-            })
-            this.createMembersCount();
-            this.$emit('close')
-        }
+        change(id){
+            this.addToDel(id);
+            this.hideItem(id)
+        },
+        formList(){
+            this.list = this.getDepMembers;
+        },
     },
     computed: {
-        ...mapGetters(['getDepMembers'])
+        ...mapGetters(['getDepMembers']),
     },
-    props: ['createMembersCount', 'departmentId'],
-    created() {
-        this.fetchDepMembers(this.departmentId);
+    props: ['createMembersCount', 'departmentId', 'toDeleteUsers'],
+    async created() {
+        await this.fetchDepMembers(this.departmentId);
+        await this.formList();
+        this.list.map(item => Vue.set(item, 'hide', false))
     }
 }
 </script>
