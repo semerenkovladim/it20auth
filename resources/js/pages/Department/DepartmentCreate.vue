@@ -119,14 +119,15 @@ export default {
 
         validation() {
             let title = this.department.title;
-            let head_department = this.department.depHead;
+            let head_department = this.department.departmentHead;
+            if ( head_department == null || head_department < 1) {
+                this.errors.push('Поле "Руководитель" обязательно для заполнения.')
+            }
+
             if (title < 3 || title === null) {
                 this.errors.push('Поле "Название" должно содержать не менее 3х символов.')
             }
 
-            if (head_department === null || head_department < 1) {
-                this.errors.push('Поле "Руководитель" должно содержать не менее 3х символов.')
-            }
         },
     },
     computed: {

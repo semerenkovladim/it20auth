@@ -156,12 +156,12 @@ export default {
         validation() {
             let title = this.title;
             let head_department = this.depHead;
+            console.log(head_department)
             if (title < 3 || title === null) {
                 this.errors.push('Поле "Название" должно содержать не менее 3х символов.')
             }
-
-            if (head_department === null) {
-                this.errors.push('Поле "Руководитель" должно содержать не менее 3х символов.')
+            if (head_department < 1 || head_department === null) {
+                this.errors.push('Поле "Руководитель" обязательно для заполнения.')
             }
         },
     },

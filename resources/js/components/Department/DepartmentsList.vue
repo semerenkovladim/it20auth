@@ -51,7 +51,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="departments_list-body">
+            <div class="departments_list-body" v-if="successfulSearch">
                 <ul>
                     <li class="departments_list-item" v-for="(dep, id) in getSearch" :key="id">
                         <ul class="row list-item_info">
@@ -70,6 +70,7 @@
                     </li>
                 </ul>
             </div>
+            <div>Ничего не найдено</div>
         </div>
     </div>
 </template>
@@ -88,7 +89,7 @@ export default {
             search: '',
             nextPage: null,
             prevPage: null,
-            uncheck: false,
+            successfulSearch: true,
             disableEditButton: false,
             arrowName: false,
             arrowLead: false,
@@ -160,34 +161,35 @@ export default {
         async formList() {
             await this.fetchDepartments();
             await this.getDepartmentsList()
-            console.log('uc' + '' + this.getDepartmentsList());
         }
     },
 
     computed: {
-        ...
-            mapGetters(['getDepartments', 'getNextPage', 'getPrevPage']),
+        ...mapGetters(['getDepartments', 'getNextPage', 'getPrevPage']),
         getSearch() {
             let searchStr = this.search;
             searchStr = searchStr.trim();
             searchStr = searchStr.toLowerCase();
-            let searchByTitle = this.list.filter(item => item.title.toLowerCase().indexOf(searchStr) !== -1);
 
+            let searchByTitle = this.list.filter(item => item.title.toLowerCase().indexOf(searchStr) !== -1);
+            let searchBySurname = this.list.filter(item => item.surname.toLowerCase().indexOf(searchStr) !== -1);
             let searchByName = this.list.filter(item => item.name.toLowerCase().indexOf(searchStr) !== -1);
+
             if (searchByName.length > 0) {
 
                 return searchByName;
             }
-            let searchBySurname = this.list.filter(item => item.surname.toLowerCase().indexOf(searchStr) !== -1);
+
             if (searchBySurname.length > 0) {
 
                 return searchBySurname;
             }
-            let searchByCount = this.list.filter(item => item.title.toLowerCase().indexOf(searchStr) !== -1);
-            if (searchByCount.length > 0) {
 
-                return searchByCount;
-            }
+            // let searchByCount = this.list.filter(item => item.count.indexOf(searchStr) !== -1);
+            // if (searchByCount.length > 0) {
+            //
+            //     return searchByCount;
+            // }
             return searchByTitle
         },
     },
