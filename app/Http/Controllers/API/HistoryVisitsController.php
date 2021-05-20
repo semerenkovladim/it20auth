@@ -16,10 +16,14 @@ class HistoryVisitsController extends Controller
      */
     public function index(Request $request)
     {
-        $historyVisits = HistoryVisits::where('user_id', $request->user()->id)->orderBy('date_history')->paginate(10);
+        $historyVisits = HistoryVisits::where('user_id', $request->user()->id)->orderBy('id', 'DESC')->paginate(10);
 //        $grouped = collect($historyVisits->data)->groupBy('date_history');
 //        $historyVisits->data = $grouped;
-
-        return response()->json($historyVisits, 200);
+        $historyVisitsArray = collect($historyVisits->items());
+        return response()->json(
+            [
+                'dataPaginate' => $historyVisits,
+                'dataArray' => $historyVisitsArray
+            ], 200);
     }
 }

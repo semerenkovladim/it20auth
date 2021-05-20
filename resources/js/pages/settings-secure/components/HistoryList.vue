@@ -64,12 +64,12 @@ export default {
     },
     methods: {
         retriveHistory() {
-            axios.get('/api/history-visits?' + this.currentPage, {
+            axios.get('/api/history-visits?page=' + this.currentPage, {
                 headers: {
                     'Authorization': `Bearer ` + this.access_token
                 }
             }).then((response) => {
-                this.historyVisits = response.data.data.reduce((acc, value) => {
+                this.historyVisits = response.data.dataArray.reduce((acc, value) => {
                     // Group initialization
                     if (!acc[value.date_history]) {
                         acc[value.date_history] = [];
@@ -80,7 +80,7 @@ export default {
 
                     return acc;
                 }, {});
-                this.paginationObj = response.data;
+                this.paginationObj = response.data.dataPaginate;
             });
         },
         setPage(data) {
