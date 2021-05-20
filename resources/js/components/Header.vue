@@ -57,8 +57,7 @@ export default {
             show: false,
             user: {
                 name: '',
-                surname: '',
-                middle_name: ''
+                surname: ''
             }
         }
     },
@@ -92,13 +91,11 @@ export default {
             'access_token',
         ]),
         auth_user() {
-            console.log(this.$store.getters.user)
             return this.$store.getters.user;
         }
     },
     mounted() {
         this.user = Object.assign(this.user, this.auth_user)
-        console.log('mounted', this.user)
     }
 
 }
