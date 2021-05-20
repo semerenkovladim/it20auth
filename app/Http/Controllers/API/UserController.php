@@ -7,8 +7,6 @@ use App\Mail\SendUserPassword;
 use App\Models\AccessLevel;
 use App\Models\Setting;
 use App\Models\User;
-use Carbon\Carbon;
-use Cassandra\Date;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -17,20 +15,28 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::with('department', 'access_level')->paginate(15);
+        if ($request->desc === 'true'){
+            $users = User::with('department', 'access_level')->orderByDesc($request->orderBy)->paginate(15);
+        } else {
+            $users = User::with('department', 'access_level')->orderBy($request->orderBy)->paginate(15);
+        }
         if ($users) {
             $status = true;
         } else {
             $status = false;
         }
-        return response()->json(['data' => $users, 'status' => $status]);
+        return response()->json(['data' => $users, 'request'=>$request->all(),'status' => $status]);
     }
 
-    public function in_department($id)
+    public function in_department(Request $request, $id)
     {
-        $users = User::with('department','access_level')->where('department_id', '=', $id)->paginate(15);
+        if ($request->desc === 'true'){
+            $users = User::with('department','access_level')->where('department_id', '=', $id)->orderByDesc($request->orderBy)->paginate(15);
+        } else {
+            $users = User::with('department','access_level')->where('department_id', '=', $id)->orderBy($request->orderBy)->paginate(15);
+        }
         if ($users) {
             $status = true;
         } else {

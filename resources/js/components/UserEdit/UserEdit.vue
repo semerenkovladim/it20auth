@@ -94,11 +94,11 @@ export default {
                         calendar: 0,
                         photo: 0
                     }
-                    console.log('this.userData', this.userData)
+
                     this.setUserName()
                 })
                 .catch(reason => {
-                    // // console.log(reason)
+
                 })
         },
         setUserName() {
