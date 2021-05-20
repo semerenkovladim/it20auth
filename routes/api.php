@@ -57,7 +57,6 @@ Route::put('/user/reset-department/{id}',[UserController::class,'resetDepartment
 
 //  ===== Отделы =====
 Route::get('/departments/all',[DepartmentController::class,'getAllDep'])->name('allDepartment');
-Route::get('/departments/count-members/{id}',[DepartmentController::class,'countMembers'])->name('allDepartment');
 Route::apiResource('departments', DepartmentController::class);
 //  ===== /Отделы =====
 

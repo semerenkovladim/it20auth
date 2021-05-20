@@ -25,9 +25,6 @@ export default {
         updateDepartment(state, department) {
             state.department = department;
         },
-        updateMembersCount(state, count) {
-            state.membersCount = count;
-        },
 
         makePagination(state, res) {
             state.nextPage = res.next_page_url;
@@ -218,9 +215,5 @@ export default {
         getShowPopup(state) {
             return state.showPopup
         },
-
-        getDepMembersCount(state) {
-            return state.membersCount
-        }
     },
 }
