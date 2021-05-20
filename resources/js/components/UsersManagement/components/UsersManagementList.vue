@@ -44,8 +44,8 @@
                 </li>
                 <li class="col-2 sort_item"
                     v-if="settings.role"
-                    @click="setOrder('role')">
-                    <span :class="order ==='role' ? 'ordered':''">Роль</span>
+                    @click="setOrder('is_admin')">
+                    <span :class="order ==='id_admin' ? 'ordered':''">Роль</span>
                 </li>
             </ul>
         </div>
