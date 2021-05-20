@@ -17,7 +17,7 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        if ($request->desc === 'true'){
+        if ($request->desc === 'true') {
             $users = User::with('department', 'access_level')->orderByDesc($request->orderBy)->paginate(15);
         } else {
             $users = User::with('department', 'access_level')->orderBy($request->orderBy)->paginate(15);
@@ -27,15 +27,15 @@ class UserController extends Controller
         } else {
             $status = false;
         }
-        return response()->json(['data' => $users, 'request'=>$request->all(),'status' => $status]);
+        return response()->json(['data' => $users, 'request' => $request->all(), 'status' => $status]);
     }
 
     public function in_department(Request $request, $id)
     {
-        if ($request->desc === 'true'){
-            $users = User::with('department','access_level')->where('department_id', '=', $id)->orderByDesc($request->orderBy)->paginate(15);
+        if ($request->desc === 'true') {
+            $users = User::with('department', 'access_level')->where('department_id', '=', $id)->orderByDesc($request->orderBy)->paginate(15);
         } else {
-            $users = User::with('department','access_level')->where('department_id', '=', $id)->orderBy($request->orderBy)->paginate(15);
+            $users = User::with('department', 'access_level')->where('department_id', '=', $id)->orderBy($request->orderBy)->paginate(15);
         }
         if ($users) {
             $status = true;
@@ -178,6 +178,17 @@ class UserController extends Controller
 
         return response()->json(['data' => $data, 'status' => true]);
 
+    }
+
+    public function search(Request $request)
+    {
+        $result = User::search($request->data)->paginate(15);
+        $result->load('access_level','department');
+
+        if (!$result) {
+            return response()->json(['error' => 'По данному запросу записей не найдено', 'data' => $result, 'status' => false]);
+        }
+        return response()->json(['data' => $result, 'status' => true]);
     }
 
     public function destroy(Request $request)

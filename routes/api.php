@@ -47,6 +47,8 @@ Route::get('/user/{id}', [UserController::class, 'show'])->name('user');
 Route::post('/user/create', [UserController::class, 'store'])->name('userCreate');
 Route::put('/user/update', [UserController::class, 'update'])->name('userUpdate');
 
+Route::get('/users-search',[UserController::class,'search'])->name('userSearch');
+
 Route::get('/users-permission',[AccessLevelController::class, 'index'])->name('usersPermission');
 Route::post('/user-permission/create', [AccessLevelController::class, 'store'])->name('userPermission');
 Route::get('/user-permission/{id}', [AccessLevelController::class, 'show'])->name('userPermissionShow');
