@@ -81,7 +81,8 @@
                             :checkStatus="checkStatus"
                             :settings="tempSettings"
                             @allChecked="setAllCheck"
-                            @changeUsersLength="userCount">
+                            @changeUsersLength="userCount"
+                            @orderEvent="setOrder">
                         </users-management-list>
                         <div class="not_found" v-else>Пользователи не найдены</div>
                     </div>
@@ -152,7 +153,9 @@ export default {
             tempUser: {
                 is_admin: true
             },
-            tempSettings: []
+            tempSettings: [],
+            order: 'id',
+            desc: false
 
         }
     },
@@ -164,6 +167,11 @@ export default {
             'getAllDepartments'
 
         ]),
+        setOrder(data) {
+            this.order = data.order
+            this.desc = data.desc
+            this.getUsers()
+        },
         changeSelectAll() {
             for (let user in this.usersData.data) {
                 this.usersData.data[user].checked = this.checkAll;
@@ -176,12 +184,14 @@ export default {
             }
             this.usersCount = this.selectUsers.length
             this.checkStatus = !this.checkStatus
-            console.log('this.usersData data', this.usersData.data.length)
+
         },
-        async getUMAllUsers(page = 1) {
+        async getUMAllUsers(page = 1, orderBy = 'id', desc = false) {
             axios.get('/api/users', {
                 params: {
-                    page: page
+                    page: page,
+                    orderBy: orderBy,
+                    desc: desc
                 }
             })
                 .then(value => {
@@ -193,10 +203,17 @@ export default {
                     }
                 )
         },
-        async getUsersInDepartment(data = {id: 1, page: 1}) {
+        async getUsersInDepartment(data = {
+            id: 1,
+            page: 1,
+            orderBy: 'id',
+            desc: false
+        }) {
             axios.get('/api/users/' + data.id, {
                 params: {
-                    page: data.page
+                    page: data.page,
+                    orderBy: data.orderBy,
+                    desc: data.desc
                 }
             })
                 .then(value => {
@@ -237,7 +254,7 @@ export default {
         userCount(data) {
             this.usersCount = data.length
             this.selectUsers = data.data
-            console.log('this.usersCount', this.usersCount)
+
         },
         setAllCheck(data) {
             this.checkAll = data.status
@@ -256,9 +273,14 @@ export default {
         },
         getUsers() {
             if (this.currentDepartment > 0) {
-                this.getUsersInDepartment({id: this.currentDepartment, page: this.currentPage})
+                this.getUsersInDepartment({
+                    id: this.currentDepartment,
+                    page: this.currentPage,
+                    orderBy: this.order,
+                    desc: this.desc
+                })
             } else {
-                this.getUMAllUsers(this.currentPage)
+                this.getUMAllUsers(this.currentPage, this.order, this.desc)
             }
         },
         getAdminSettings() {
@@ -294,7 +316,7 @@ export default {
         this.getAdminSettings()
         this.getUMAllUsers()
         this.getAllDepartments()
-        console.log('select users length', this.selectUsers.length)
+
     }
 }
 </script>
@@ -311,6 +333,7 @@ export default {
 .users_management {
     padding-bottom: 15px;
 }
+
 .search__row {
     align-items: center;
     background: transparent;
@@ -467,6 +490,7 @@ export default {
 
 .users_management__users_filter {
     overflow-y: auto;
+    overflow-x: hidden;
     position: relative;
     min-height: 400px;
 
@@ -474,6 +498,7 @@ export default {
         width: 5px;
         cursor: pointer;
         background: transparent;
+
         &:hover {
             width: 6px;
         }
@@ -494,15 +519,18 @@ export default {
     &::-webkit-scrollbar-track-piece {
         background-color: transparent;
     }
+
     &::-webkit-scrollbar-thumb {
         border-radius: 15px;
-        background-color: lighten($designColorOne,20%);
+        background-color: lighten($designColorOne, 20%);
         cursor: pointer;
+
         &:hover {
             cursor: pointer;
-            background-color: lighten($designColorOne,10%);
+            background-color: lighten($designColorOne, 10%);
         }
     }
+
     &::-webkit-scrollbar-corner {
         background-color: #999;
     }
