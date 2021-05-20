@@ -140,6 +140,13 @@ const store = new Vuex.Store({
                     console.log('getAllDepartments --- ошибка ---')
                 })
         },
+        //редактирование пользователя
+        async getProfile({commit}, id){
+            return axios.get(`api/user/${id}`)
+                .then(response => {
+                    commit('setUser', response.data.data)
+                })
+        },
         //
         saveUserFromServer({commit}, user) {
             console.log(user);

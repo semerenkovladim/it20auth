@@ -66,7 +66,7 @@ export default {
             'saveUserFromServer',
             'saveAccessFromServer',
             'saveRefreshFromServer',
-            ''
+            'getProfile'
         ]),
         setInitials(surname, name) {
             if (surname && name) {
@@ -94,7 +94,8 @@ export default {
             return this.$store.getters.user;
         }
     },
-    mounted() {
+    async mounted() {
+        await this.getProfile(this.auth_user.id)
         this.user = Object.assign(this.user, this.auth_user)
     }
 
