@@ -51,7 +51,10 @@ export default {
 
 <style lang="scss">
 @import "resources/sass/variables";
-
+.users_management__filter_list {
+    width: 100%;
+    position: absolute;
+}
 
 .users_management__filter_item {
   border-bottom: 2px solid #F5F5F5;
@@ -59,7 +62,6 @@ export default {
   align-items: center;
   display: flex;
   cursor: pointer;
-  //border-left: 2px solid transparent;
   font-weight: 600;
   font-size: 13px;
   color: $lightColor;
@@ -67,10 +69,6 @@ export default {
 
   * {
     transition: 0.2s ease;
-  }
-
-  &:first-child {
-    border-top: 2px solid #F5F5F5;
   }
 
 
@@ -104,8 +102,5 @@ export default {
   }
 }
 
-.users_management__filter_list {
-  width: 100%;
-  position: absolute;
-}
+
 </style>

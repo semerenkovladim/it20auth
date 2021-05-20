@@ -326,7 +326,6 @@ export default {
 
 .users_management__sort {
     .users_management__sort_list {
-        border-top: 2px solid #F5F5F5;
         min-height: 55px;
     }
 

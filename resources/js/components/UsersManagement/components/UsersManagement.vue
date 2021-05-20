@@ -427,10 +427,20 @@ export default {
 .users_management__add_user, .users_management__edit {
     min-height: 88px;
     align-items: center;
+
+
+}
+
+.users_management__add_user {
+    border-bottom: 2px solid #F5F5F5;
 }
 
 .users_management__edit {
+    > .row {
+        border-bottom: 2px solid #F5F5F5;
+    }
     .row {
+
         flex-wrap: nowrap;
         height: 100%;
         @media all and (max-width: $breakpoint) {
