@@ -23,11 +23,6 @@ class DepartmentController extends Controller
         return $dep->fetchAllDep();
     }
 
-    public function create()
-    {
-        //
-    }
-
     public function store(Request $request)
     {
         $dep = new Department;
@@ -43,11 +38,6 @@ class DepartmentController extends Controller
 
 
         return $dep->getHeader($department);
-    }
-
-    public function edit(Department $department)
-    {
-        //
     }
 
     public function update(Request $request, Department $department)
@@ -73,5 +63,11 @@ class DepartmentController extends Controller
        $dep->search($request);
 
         return response()->json($dep);
+    }
+
+    public function countMembers($id) {
+        $dep = new Department;
+
+        return $dep->countMembers($id);
     }
 }

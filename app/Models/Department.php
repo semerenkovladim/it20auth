@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Laravel\Passport\HasApiTokens;
 use App\Http\Controllers\API\DepartmentController;
+use phpDocumentor\Reflection\Types\Object_;
 
 class Department extends Model
 {
@@ -49,11 +50,31 @@ class Department extends Model
 
     public function fetchAllDep()
     {
-        return DB::table('departments')
+        $list = DB::table('departments')
             ->leftJoin('users', 'users.id', '=', 'departments.head_department')
-            ->select('departments.id',  'departments.title', 'departments.created_at', 'users.name', 'users.surname')
+            ->select('departments.id', 'departments.title', 'departments.created_at', 'users.name', 'users.surname')
             ->latest()
             ->paginate(5);
+
+        foreach ($list as $item) {
+            $id = $item->id;
+            $item->count = DB::table('departments')
+                ->select('departments.id', 'users.department_id', 'users.id as users_id')
+                ->rightJoinWhere('users', 'users.department_id', '=', 'departments.id')
+                ->where('users.department_id', '=', "${id}")
+                ->count('users.id');;
+        }
+
+        return $list;
+    }
+
+    public function countMembers($id)
+    {
+        return DB::table('departments')
+            ->select('departments.id', 'users.department_id', 'users.id as users_id')
+            ->rightJoinWhere('users', 'users.department_id', '=', 'departments.id')
+            ->where('users.department_id', '=', "${id}")
+            ->count('users.id');
     }
 
     public function depIn()
@@ -105,12 +126,13 @@ class Department extends Model
 
     //====== Редактирование отдела ====
 
-    public function updateDep($data, $department) {
+    public function updateDep($data, $department)
+    {
 
         $department->title = $data->get('title');
         $department->head_department = $data->get('head_department');
 
-        $department -> save();
+        $department->save();
 
     }
 
@@ -120,7 +142,7 @@ class Department extends Model
 
     public function search($request)
     {
-       return $result = Department::where('name', $request->keywords)->get();
+        return $result = Department::where('name', $request->keywords)->get();
     }
 
     //====== /Поиск отдела ====

@@ -8,6 +8,7 @@ export default {
         currentPage: null,
         lastPage: null,
         leads: null,
+        membersCount: null,
         depMembers: null,
         resStatus: null,
         ctrDepMembers: null,
@@ -23,6 +24,9 @@ export default {
 
         updateDepartment(state, department) {
             state.department = department;
+        },
+        updateMembersCount(state, count) {
+            state.membersCount = count;
         },
 
         makePagination(state, res) {
@@ -67,7 +71,6 @@ export default {
                 .get(url)
                 .then(res => {
                     ctx.commit('updateDepartments', res.data.data)
-                    console.log(res.data)
                     ctx.commit('makePagination', res.data)
 
                 })
@@ -214,6 +217,10 @@ export default {
 
         getShowPopup(state) {
             return state.showPopup
+        },
+
+        getDepMembersCount(state) {
+            return state.membersCount
         }
     },
 }

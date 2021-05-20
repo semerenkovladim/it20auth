@@ -4,7 +4,7 @@
                                   @close="isActiveConfirmModal = false"
                                   @deleteDeps="deleteDeps"
                                   :checked-departments="checkedDepartments"
-                                  />
+        />
         <div class="list_controls">
             <div class="row">
                 <div class="col-sm-12 col-md-4 col-xl-3 list_control_btns">
@@ -15,10 +15,10 @@
                                 <label for="checkbox"></label>
                             </div>
                             <div class="col-4">
-                                <div class="departments_list-edit" :hidden="disableEditButton" @click="getEdit"></div>
+                                <button class="departments_list-edit" :disabled="checkedDepartments.length !==1" @click="getEdit"></button>
                             </div>
                             <div class="col-4">
-                                <div class="departments_list-delete" @click="isActiveConfirmModal=true"></div>
+                                <button class="departments_list-delete" @click="isActiveConfirmModal=true"></button>
                             </div>
                         </div>
                     </div>
@@ -53,7 +53,7 @@
             </div>
             <div class="departments_list-body">
                 <ul>
-                    <li class="departments_list-item" v-for="(dep, id) in searchByTitle" :key="id">
+                    <li class="departments_list-item" v-for="(dep, id) in getSearch" :key="id">
                         <ul class="row list-item_info">
                             <li class="col-1 checkbox_section">
                                 <input type="checkbox"
@@ -63,9 +63,9 @@
                                        class="checkbox">
                                 <label :for="id"></label>
                             </li>
-                            <li class="col-3">{{ dep.title}}</li>
+                            <li class="col-3">{{ dep.title }}</li>
                             <li class="col-4">{{ dep.name }} {{ dep.surname }}</li>
-                            <li class="col-4">16</li>
+                            <li class="col-4">{{ dep.count }}</li>
                         </ul>
                     </li>
                 </ul>
@@ -89,7 +89,6 @@ export default {
             nextPage: null,
             prevPage: null,
             uncheck: false,
-            cheked: false,
             disableEditButton: false,
             arrowName: false,
             arrowLead: false,
@@ -101,16 +100,6 @@ export default {
     },
     methods: {
         ...mapActions(['fetchDepartments', 'delDepartment', 'setDepId']),
-
-        gotoNext() {
-            this.nextPage = this.getNextPage;
-            this.fetchAds(this.nextPage)
-        },
-
-        gotoPrev() {
-            this.prevPage = this.getPrevPage;
-            this.fetchAds(this.prevPage)
-        },
 
         checkAll() {
             this.uncheck = true;
@@ -129,6 +118,9 @@ export default {
                 this.arrowCtr = false;
             }
             this.arrowName = !this.arrowName;
+            this.list = this.list.sort((a,b)=>a.title.localeCompare(b))
+            console.log('itme' + this.list)
+            return this.list
         },
 
         sortLead() {
@@ -167,13 +159,15 @@ export default {
         },
         async formList() {
             await this.fetchDepartments();
-            await this.getDepartmentsList();
+            await this.getDepartmentsList()
+            console.log('uc' + '' + this.getDepartmentsList());
         }
     },
 
     computed: {
-        ...mapGetters(['getDepartments', 'getNextPage', 'getPrevPage']),
-        searchByTitle() {
+        ...
+            mapGetters(['getDepartments', 'getNextPage', 'getPrevPage']),
+        getSearch() {
             let searchStr = this.search;
             searchStr = searchStr.trim();
             searchStr = searchStr.toLowerCase();
@@ -199,15 +193,16 @@ export default {
     },
 
     mutations: {
-        ...mapMutations(['updateDepartmentId']),
+        ...
+            mapMutations(['updateDepartmentId']),
     },
     mounted() {
         this.formList()
     },
 
     watch: {
-        disableButton(){
-            if(this.checkedDepartments.length > 1) {
+        disableButton() {
+            if (this.checkedDepartments.length > 1) {
                 this.disableEditButton = true;
                 console.log('it work')
             }
