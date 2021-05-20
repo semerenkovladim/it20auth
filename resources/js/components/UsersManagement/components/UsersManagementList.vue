@@ -15,8 +15,8 @@
                 </li>
                 <li class="col-2 sort_item"
                     v-if="settings.patronymic"
-                    @click="setOrder('patronymic')">
-                    <span :class="order ==='patronymic' && desc ? 'ordered':''">Отчество</span>
+                    @click="setOrder('middle_name')">
+                    <span :class="order ==='middle_name' && desc ? 'ordered':''">Отчество</span>
                 </li>
                 <li class="col-3 sort_item"
                     v-if="settings.email"
@@ -35,8 +35,8 @@
                 </li>
                 <li class="col-2 sort_item"
                     v-if="settings.date_of_birth"
-                    @click="setOrder('date_of_birth')">
-                    <span :class="order ==='date_of_birth' && desc ? 'ordered':''">Дата рождения</span>
+                    @click="setOrder('birth')">
+                    <span :class="order ==='birth' && desc ? 'ordered':''">Дата рождения</span>
                 </li>
                 <li class="col-3 sort_item non_sorted"
                     v-if="settings.modules">
