@@ -25,6 +25,7 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "laravel-vue-pagination": "^2.3.1",
         "slick-slider": "^1.8.2",
         "vue-advanced-cropper": "^1.5.2",
         "vue-image-crop-upload": "^3.0.3",
