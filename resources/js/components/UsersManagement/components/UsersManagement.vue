@@ -20,6 +20,7 @@
                         </div>
                         <div class="users_management__users_filter">
                             <department-list :data="departments"
+                                             :currentDep="currentDepartment"
                                              @sendDepartmentId="setDepartmentId">
                             </department-list>
                         </div>
@@ -63,14 +64,21 @@
                                         </li>
                                     </ul>
                                 </div>
-                                <form action="#" method="get" class="search_user">
+                                <form action="#"
+                                      method="get"
+                                      class="search_user"
+                                      autocomplete="off"
+                                      @submit.prevent="searchUser(searchInput)">
                                     <div class="row search__row flex-nowrap">
                                         <label class="col-10">
                                             <input type="search"
                                                    name="search"
-                                                   placeholder="Поиск">
+                                                   placeholder="Поиск"
+                                                   v-model="searchInput">
                                         </label>
-                                        <button class="col-2 search_btn" type="button"></button>
+                                        <button class="col-2 search_btn"
+                                                type="button"
+                                                @click="searchUser(searchInput)"></button>
                                     </div>
                                 </form>
                             </div>
@@ -80,11 +88,11 @@
                             :data="usersData.data"
                             :checkStatus="checkStatus"
                             :settings="tempSettings"
+                            :notFoundMessage="notFoundUsers"
                             @allChecked="setAllCheck"
                             @changeUsersLength="userCount"
                             @orderEvent="setOrder">
                         </users-management-list>
-                        <div class="not_found" v-else>Пользователи не найдены</div>
                     </div>
                 </div>
                 <div class="row users_management__paginator_row"
@@ -155,7 +163,10 @@ export default {
             },
             tempSettings: [],
             order: 'id',
-            desc: false
+            desc: false,
+            searchInput: '',
+            searchStatus: false,
+            notFoundUsers: 'Пользователи не найдены'
 
         }
     },
@@ -268,8 +279,14 @@ export default {
         setCurrentPage(data) {
             if (this.usersData.last_page >= data.page >= 1) {
                 this.currentPage = data.page
+            }
+            if (!this.searchStatus) {
                 this.getUsers()
             }
+            if (this.searchStatus) {
+                this.searchUser(this.searchInput, this.currentPage)
+            }
+
         },
         getUsers() {
             if (this.currentDepartment > 0) {
@@ -289,6 +306,25 @@ export default {
                     this.tempSettings = value.data.data
                 })
         },
+        searchUser(data, page) {
+            this.currentDepartment = -1
+            if (data.length) {
+                return axios.get('/api/users-search', {
+                    params: {
+                        data: data,
+                        page: page
+                    }
+                })
+                    .then(value => {
+                        if (value.data.status) this.usersData = value.data.data
+                        this.searchStatus = true
+                        if (value.data.data.data.length < 1) {
+                            this.notFoundUsers = 'По данному запросу записей не найдено'
+
+                        }
+                    })
+            }
+        }
     },
     computed: {
         ...mapGetters([
@@ -345,6 +381,7 @@ export default {
         font-style: normal;
         color: $lightColor;
         font-size: 14px;
+        -webkit-appearance: textfield;
 
         &::placeholder {
             color: #CCCCCC;
@@ -402,7 +439,6 @@ export default {
                 padding-top: 5px;
                 padding-bottom: 5px;
             }
-
         }
     }
 }
@@ -476,8 +512,6 @@ export default {
 
 .edit__action_checkbox {
     flex: none;
-    //width: 77.33px;
-    //max-width: unset;
 }
 
 .department_col {
@@ -492,7 +526,7 @@ export default {
     overflow-y: auto;
     overflow-x: hidden;
     position: relative;
-    min-height: 400px;
+    min-height: 385px;
 
     &::-webkit-scrollbar {
         width: 5px;
@@ -502,8 +536,10 @@ export default {
         &:hover {
             width: 6px;
         }
+    }
 
-
+    &::-webkit-scrollbar {
+        background-color: lighten($designColorOne, 42%);
     }
 
     &::-webkit-scrollbar-button {
@@ -530,9 +566,14 @@ export default {
             background-color: lighten($designColorOne, 10%);
         }
     }
+}
 
-    &::-webkit-scrollbar-corner {
-        background-color: #999;
-    }
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:active,
+input:-webkit-autofill:focus {
+    background-color: #FFFFFF !important;
+    color: $lightColor !important;
+    -webkit-text-fill-color: darken($lightColor, 15%) !important;
 }
 </style>

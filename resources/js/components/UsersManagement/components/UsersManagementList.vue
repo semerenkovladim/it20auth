@@ -95,7 +95,7 @@
             </li>
         </ul>
 
-        <div class="not_found" v-else>Пользователи не найдены</div>
+        <div class="not_found" v-else>{{notFoundMessage}}</div>
     </div>
 </template>
 
@@ -104,7 +104,7 @@ import {mapGetters} from "vuex";
 
 export default {
     name: "UsersManagementList",
-    props: ['data', 'checkStatus', 'settings'],
+    props: ['data', 'checkStatus', 'settings','notFoundMessage'],
     data() {
         return {
             selectUsers: [],
@@ -260,7 +260,7 @@ export default {
         &::-webkit-scrollbar {
             height: 6px;
             cursor: pointer;
-            background: transparent;
+            background-color: lighten($designColorOne, 42%);
         }
 
         &::-webkit-scrollbar-button {
