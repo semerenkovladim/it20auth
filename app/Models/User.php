@@ -106,4 +106,9 @@ class User extends Authenticatable
         }
         return request()->getClientIp();
     }
+
+    public function action_recent()
+    {
+        return $this->hasOne(ActionRecentModel::class);
+    }
 }

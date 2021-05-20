@@ -4,17 +4,29 @@
             <li>
                 <ul class="settings">
                     <li class="title">Вход в аккаунт</li>
-                    <li class="flex justify-content-between align-items-center settings-item">
-                        <div class="title-list">Включена двухэтапная аутентификация</div>
-                        <div class="subaction">Краматорск, Донецкая область, Украина – 26 апреля 10:52</div>
+                    <li class="flex justify-content-between align-items-center settings-item" v-if="actionHostory.modify_password">
+                        <div class="title-list">{{ actionHostory.modify_password.action }}</div>
+                        <div class="subaction">{{ getFullDataOfIPForAction(actionHostory.modify_password) }}</div>
                     </li>
-                    <li class="flex justify-content-between align-items-center settings-item">
-                        <div class="title-list">Добалвен резервный e-mail</div>
-                        <div class="subaction">Краматорск, Донецкая область, Украина – 21 апреля 10:55</div>
+                    <li class="flex justify-content-between align-items-center settings-item" v-if="actionHostory.modify_reserved_email">
+                        <div class="title-list">{{ actionHostory.modify_reserved_email.action }} резервная почта</div>
+                        <div class="subaction">{{ getFullDataOfIPForAction(actionHostory.modify_reserved_email) }}</div>
                     </li>
-                    <li class="flex justify-content-between align-items-center settings-item">
-                        <div class="title-list">Изменен пароль</div>
-                        <div class="subaction">Краматорск, Донецкая область, Украина – 16 апреля 11:06</div>
+                    <li class="flex justify-content-between align-items-center settings-item" v-if="actionHostory.modify_reserved_password">
+                        <div class="title-list">{{ actionHostory.modify_reserved_password.action }} резервный пароль</div>
+                        <div class="subaction">{{ getFullDataOfIPForAction(actionHostory.modify_reserved_password) }}</div>
+                    </li>
+                    <li class="flex justify-content-between align-items-center settings-item" v-if="actionHostory.modify_twostep">
+                        <div class="title-list">{{ actionHostory.modify_twostep.action }} двухэтапная авторизация</div>
+                        <div class="subaction">{{ getFullDataOfIPForAction(actionHostory.modify_twostep) }}</div>
+                    </li>
+                    <li class="flex justify-content-between align-items-center settings-item" v-if="actionHostory.modify_codeword">
+                        <div class="title-list">{{ actionHostory.modify_codeword.action }} кодовое слово</div>
+                        <div class="subaction">{{ getFullDataOfIPForAction(actionHostory.modify_codeword) }}</div>
+                    </li>
+                    <li class="flex justify-content-between align-items-center settings-item" v-if="actionHostory.modify_notification">
+                        <div class="title-list">{{ actionHostory.modify_notification.action }} уведомление о подозрительных входах</div>
+                        <div class="subaction">{{ getFullDataOfIPForAction(actionHostory.modify_notification) }}</div>
                     </li>
                 </ul>
             </li>
@@ -39,7 +51,6 @@
                     </li>
                 </ul>
                 <Paginator :data="paginationObj" @toPage="setPage"></Paginator>
-<!--                <pagination :data="paginationObj" @pagination-change-page="retriveHistory"></pagination>-->
             </li>
         </ul>
     </div>
@@ -57,10 +68,12 @@ export default {
             historyVisits: [],
             paginationObj: {},
             currentPage: 1,
+            actionHostory: [],
         };
     },
     created() {
         this.retriveHistory();
+        this.retriveAction();
     },
     methods: {
         retriveHistory() {
@@ -81,6 +94,15 @@ export default {
                     return acc;
                 }, {});
                 this.paginationObj = response.data.dataPaginate;
+            });
+        },
+        retriveAction() {
+            axios.get('/api/action-resent', {
+                headers: {
+                    'Authorization': `Bearer ` + this.access_token
+                }
+            }).then((response) => {
+                this.actionHostory = response.data;
             });
         },
         setPage(data) {
@@ -104,6 +126,9 @@ export default {
         },
         getFullDataOfIp(item) {
             return `${item.city}, ${item.state}, ${item.country ? item.country : ''} - ${this.dateToDateMonth(item.date_history)} ${this.timeTotimeHour(item.time_history)}`;
+        },
+        getFullDataOfIPForAction(item) {
+            return `${item.city}, ${item.state}, ${item.country ? item.country : ''} - ${this.dateToDateMonth(item.date)} ${this.timeTotimeHour(item.time)}`;
         },
         translateMonth(month) {
             const translate = {
