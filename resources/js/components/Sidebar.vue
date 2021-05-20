@@ -89,11 +89,9 @@ export default {
     },
     mounted(){
         this.user=Object.assign(this.user,this.auth_user)
-        console.log('mounted', this.user)
     },
     computed:{
         auth_user(){
-            console.log(this.$store.getters.user)
             return this.$store.getters.user;
         }
     }

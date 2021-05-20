@@ -2,7 +2,16 @@
     <div class="profile">
         <div class="profile_title">Мой профиль</div>
         <div class="profile_form">
+            <MessagePopup
+                :popup-message="popupMessage"
+                :popup-show="popupShow"
+                @closePopup="popupShow = false">
+            </MessagePopup>
+            <Message @confirmEvent="cancelUser(user)"></Message>
             <div class="inform_title">Общая информация</div>
+            <div class="col-12 error-message"
+                 v-if="message.status">{{ message.text }}
+            </div>
             <form action="#"
                   method="post"
                   class="row user_edit_form__form"
@@ -11,33 +20,33 @@
                     <div class="row profile_input">
                         <div class="col-6">
                             <div class="label_wrapper">
-                                <label class="edit_form__label img_input_label">
-
-                                    <input type="file"
-                                           accept="image/*"
-                                           name="image"
-                                           ref="file"
-                                           class="d-none"
-                                           @change="handleFileUpload(user)">
+                                <label class="edit_form__label img_input_label" @click="showComponent = !showComponent">
+                                    <div class="cropper-wrapper" v-if="showComponent" @click.stop>
+                                        <VueCropper
+                                            @closeCropper="showComponent = false"
+                                            @uploadSuccess="setCropImg">
+                                        </VueCropper>
+                                    </div>
                                     <img :src="user.avatar"
                                          :alt="user.surname + ' ' + user.name + ' фото'"
-                                         v-if="user.avatar">
+                                         v-if="user.avatar"
+                                         v-cloak>
                                     <span class="short-fio" v-else>{{
                                             shortFio(user.surname, user.name)
                                         }}</span>
                                 </label>
                             </div>
-                            <label>Фамилия:</label>
+                            <label class="required_field">Фамилия:</label>
                             <input type="text" class="form-control" v-model="user.surname" maxlength="100">
 
-                            <label>Имя:</label>
+                            <label class="required_field">Имя:</label>
                             <input type="text" class="form-control" v-model="user.name" maxlength="100">
 
                             <label>Отчество:</label>
                             <input type="text" class="form-control" v-model="user.middle_name" maxlength="100">
                         </div>
                         <div class="col-6 row_date">
-                            <label>Дата рождения:</label>
+                            <label class="required_field">Дата рождения:</label>
                             <input type="date" class="form-control" v-model="user.birth">
 
                             <label class="edit_form__label">
@@ -52,16 +61,8 @@
                             </label>
 
                             <label class="edit_form__label">
-                                <span class="input_title">Должность:</span>
-                                <select name="position" class="styled"
-                                        v-model="user.position"
-                                        required>
-                                    <option v-for="position in positions"
-                                            :key="position.title"
-                                            :value="position.title">
-                                        {{ position.title }}
-                                    </option>
-                                </select>
+                                <span class="input_title required_field">Должность:</span>
+                                <input type="text" class="form-control" v-model="user.position">
                             </label>
                             <label>Дата начала работы:</label>
                             <input type="date" class="form-control" v-model="user.date_start">
@@ -70,7 +71,7 @@
                     <div class="inform_title">Контактная информация</div>
                     <div class="row profile_input">
                         <div class="col-6">
-                            <label>E-mail</label>
+                            <label class="required_field">E-mail</label>
                             <input type="text" class="form-control" v-model="user.email" maxlength="255"
                                    required>
 
@@ -89,7 +90,7 @@
                     </div>
                     <div class="form_button">
                         <ConfirmBtn :text="confirm"
-                                    @confirmEvent="updateProfile(user)">
+                                    @confirmEvent="updateProfile(user)" :btnDisabled="confirmDisabled">
                         </ConfirmBtn>
                         <CancelBtn @cancelEvent="cancelUser(user)"></CancelBtn>
                     </div>
@@ -103,16 +104,26 @@
 import {mapActions} from "vuex";
 import ConfirmBtn from "../components/buttons/ConfirmBtn";
 import CancelBtn from "../components/buttons/CancelBtn";
-
+import VueCropper from "../components/vue-image-crop/VueCropper";
+import Message from "../components/message/Message";
+import MessagePopup from "../components/message-popup/MessagePopup";
 
 export default {
     components: {
         ConfirmBtn,
         CancelBtn,
+        VueCropper,
+        Message,
+        MessagePopup
     },
     data() {
         return {
             confirm: 'Сохранить',
+            popupMessage: '',
+            confirmDisabled: false,
+            popupShow: false,
+            showComponent: false,
+            imgChange: false,
             user: {
                 surname: '',
                 name: '',
@@ -140,28 +151,42 @@ export default {
                     title: 'Отдел дизайна'
                 }
             ],
-            positions: [
-                {
-                    title: 'Design'
-                },
-                {
-                    title: 'Developer'
-                },
-                {
-                    title: 'Meneger'
-                }
-            ],
-            imgChange: false,
+            message: {
+                status: false,
+                text: 'Заполните, пожалуйста, все обязательные поля'
+            },
             imgData: {}
         }
+
     },
     methods: {
         ...mapActions([
             'saveUserFromServer',
             'saveAccessFromServer',
-            'saveRefreshFromServer'
+            'saveRefreshFromServer',
+            'getUMMessage'
         ]),
-        handleFileUpload(data) {
+        setCropImg(data) {
+            this.user.avatar = data.path
+        },
+        imgSelected(data) {
+            this.imgData = data
+        },
+        checkFields() {
+            let fields = document.querySelectorAll('.required_field > [required]')
+            for (let input of fields) {
+                if (input.value.trim().length < 1) {
+                    input.classList.add('form-control')
+                    setTimeout(function () {
+                        input.classList.remove('empty_field')
+                    }, 1500)
+                } else {
+                    input.classList.remove('empty_field')
+
+                }
+            }
+        },
+        /*handleFileUpload(data) {
             console.log('handleFileUpload', data)
             if (data.avatar !== this.$refs.file.files[0] && this.$refs.file.files[0]) {
                 this.imgChange = true
@@ -176,22 +201,32 @@ export default {
                 .then(value => {
                     data.avatar = value.data.path
                 })
-        },
+        },*/
         shortFio(last, first) {
             if (last && first) return last.slice(0, 1) + '.' + first.slice(0, 1)
         },
         updateProfile(data) {
+            this.checkFields()
+            this.confirmDisabled = true
             console.log('data', data)
             return axios.put('/api/user/update',  data)
                 .then(value => {
                     console.log('updateProfile', value)
-                    // this.getUMMessage(value)
-                    // this.message = false
-                    this.$router.go()
+                    if (value.data.status) {
+                        this.message.status = false
+                        this.popupShow = true
+                        this.popupMessage = "Изменения успешно сохранены"
+                    } else {
+                        this.message.status = true
+                        this.message.text = value.data.error
+                    }
+                    this.confirmDisabled = false
+                    window.scrollTo(0, 0)
                 })
                 .catch(reason => {
-                    // this.getUMMessage('error')
-                    this.message = true
+                    this.message.status = true
+                    this.message.text = 'Ошибка'
+                    this.confirmDisabled = false
                 })
         },
         cancelUser(data) {
@@ -209,22 +244,17 @@ export default {
     },
     mounted() {
         this.user = Object.assign(this.user, this.auth_user)
-        console.log('mounted', this.user)
+        console.log('User', this.user)
     },
     computed: {
         auth_user() {
-            console.log(this.$store.getters.user)
             return this.$store.getters.user;
         }
     }
 }
 </script>
 <style lang="scss">
-.profile {
-    .form_button {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+[disabled] {
+    opacity: 0.5;
 }
 </style>
