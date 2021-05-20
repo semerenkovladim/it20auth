@@ -37,24 +37,28 @@
                                 </label>
                             </div>
                             <label class="required_field">Фамилия:</label>
-                            <input type="text" class="form-control" v-model="user.surname" maxlength="100">
+                            <input type="text" class="form-control" v-model="user.surname" maxlength="255" required>
 
                             <label class="required_field">Имя:</label>
-                            <input type="text" class="form-control" v-model="user.name" maxlength="100">
+                            <input type="text" class="form-control" v-model="user.name" maxlength="255" required>
 
                             <label>Отчество:</label>
-                            <input type="text" class="form-control" v-model="user.middle_name" maxlength="100">
+                            <input type="text" class="form-control" v-model="user.middle_name" maxlength="255">
                         </div>
                         <div class="col-6 row_date">
                             <label class="required_field">Дата рождения:</label>
-                            <input type="date" class="form-control" v-model="user.birth">
+                            <input type="date" class="form-control" v-model="user.birth" required>
 
                             <label class="edit_form__label">
                                 <span class="input_title">Отдел:</span>
-                                <select name="department" class="styled" v-model="user.department_id">
-                                    <option v-for="department in departmentsData"
+                                <select name="department"
+                                        class="styled"
+                                        v-model="user.department_id"
+                                        tabindex="5">
+                                    <option v-for="department in ALL_DEPARTMENTS"
                                             :key="department.id"
-                                            :value="department.id">
+                                            :value="department.id"
+                                    >
                                         {{ department.title }}
                                     </option>
                                 </select>
@@ -62,7 +66,7 @@
 
                             <label class="edit_form__label">
                                 <span class="input_title required_field">Должность:</span>
-                                <input type="text" class="form-control" v-model="user.position">
+                                <input type="text" class="form-control" v-model="user.position" maxlength="255" required>
                             </label>
                             <label>Дата начала работы:</label>
                             <input type="date" class="form-control" v-model="user.date_start">
@@ -101,7 +105,7 @@
 </template>
 
 <script>
-import {mapActions} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 import ConfirmBtn from "../components/buttons/ConfirmBtn";
 import CancelBtn from "../components/buttons/CancelBtn";
 import VueCropper from "../components/vue-image-crop/VueCropper";
@@ -135,22 +139,9 @@ export default {
                 mobile_phone: '',
                 work_phone: '',
                 skype: '',
-                department_id: ''
+                department_id: '',
+
             },
-            departmentsData: [
-                {
-                    id: 1,
-                    title: 'Отдел сайтов'
-                },
-                {
-                    id: 2,
-                    title: 'Отдел разработки проектов'
-                },
-                {
-                    id: 3,
-                    title: 'Отдел дизайна'
-                }
-            ],
             message: {
                 status: false,
                 text: 'Заполните, пожалуйста, все обязательные поля'
@@ -164,7 +155,9 @@ export default {
             'saveUserFromServer',
             'saveAccessFromServer',
             'saveRefreshFromServer',
-            'getUMMessage'
+            'getUMMessage',
+            'getAllDepartments',
+            'getProfile'
         ]),
         setCropImg(data) {
             this.user.avatar = data.path
@@ -211,11 +204,11 @@ export default {
             console.log('data', data)
             return axios.put('/api/user/update',  data)
                 .then(value => {
-                    console.log('updateProfile', value)
                     if (value.data.status) {
                         this.message.status = false
                         this.popupShow = true
                         this.popupMessage = "Изменения успешно сохранены"
+
                     } else {
                         this.message.status = true
                         this.message.text = value.data.error
@@ -242,19 +235,68 @@ export default {
             }
         }
     },
-    mounted() {
+    async mounted() {
+        await this.getProfile(this.auth_user.id)
         this.user = Object.assign(this.user, this.auth_user)
         console.log('User', this.user)
+        this.getAllDepartments()
+
     },
     computed: {
         auth_user() {
             return this.$store.getters.user;
-        }
+        },
+        ...mapGetters([
+            'ALL_DEPARTMENTS'
+        ])
     }
 }
 </script>
 <style lang="scss">
 [disabled] {
     opacity: 0.5;
+}
+.edit_form__title {
+    font-weight: 500;
+    font-size: 18px;
+    min-height: 87px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 2px solid #F5F5F5;;
+    margin-bottom: 15px;
+
+}
+.input_title {
+    font-weight: 500;
+    font-size: 14px;
+    display: flex;
+    min-height: 30px;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    margin-bottom: 10px;
+}
+.styled {
+    padding: 0 25px;
+    display: flex;
+    align-items: center;
+    min-height: 60px;
+    width: 100%;
+    background: #FFFFFF;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    color: #495057;
+    margin-bottom: 10px;
+}
+.profile {
+    .form_button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 }
 </style>

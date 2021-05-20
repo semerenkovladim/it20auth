@@ -119,6 +119,11 @@ class UserController extends Controller
 
     }
 
+    public function updateUser($id){
+        $user = User::find($id);
+        return response()->json($user);
+    }
+
     public function show($id)
     {
         $user = User::with('access_level')->find($id);
