@@ -85,6 +85,8 @@ export default {
         DepartmentConfirmModal,
     },
 
+    props: ['pagList'],
+
     data() {
         return {
             search: '',
@@ -138,6 +140,7 @@ export default {
             }
 
             this.arrowLead = !this.arrowLead;
+
             this.setOrder('surname')
         },
 
@@ -169,7 +172,7 @@ export default {
             this.isActiveConfirmModal = false;
         },
 
-        getDepartmentsList() {
+        getDepartmentsList(list = this.getDepartments) {
             this.list = this.getDepartments;
         },
 
