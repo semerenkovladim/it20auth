@@ -7,7 +7,7 @@
                     <li class="title">Вход в аккаунт</li>
                     <li class="flex justify-content-between align-items-center settings-item">
                         <div class="title-list">Пароль:</div>
-                        <div class="subaction">Последнее изменение: 4 апреля</div>
+                        <div class="subaction">Последнее изменение: {{ actionHostory.modify_password ? dateToDateMonth(actionHostory.modify_password.date) : 'Никогда'}}</div>
                         <div class="tooltip-icon">
                             <svg width="31" height="30" viewBox="0 0 31 30" fill="none" xmlns="http://www.w3.org/2000/svg" @click="openModal('mainPassword')">
                                 <mask id="mask0" mask-type="alpha" maskUnits="userSpaceOnUse" x="11" y="8" width="9" height="13">
@@ -76,7 +76,7 @@
                                                     </svg>
                                                 </div>
                                                 <div class="form-group d-flex flex-row btn-form-group">
-                                                    <button @click.prevent="savePassword">Сохранить</button>
+                                                    <button @click.prevent="savePassword" data-dismiss="modal">Сохранить</button>
                                                     <button class="cancel" @click.prevent="clearPassword">Отмена</button>
                                                 </div>
                                             </form>
@@ -413,6 +413,7 @@ export default {
             codeWord: false,
             codeWordText: '',
             reservedEmail: '',
+            actionHostory: {},
         }
     },
     methods: {
@@ -441,10 +442,21 @@ export default {
             document.querySelector('input[name=repeate]').setAttribute('type', 'password');
         },
         save() {
-            const data = {
-                twoFactor: this.twofactor,
-                reservedPassword: this.reservedPassword,
-                suspiciousLoginNotifications: this.notification,
+            let data = {}
+            if(this.twofactor !== this.user.setting.useTwoStepAuth) {
+                data.twofactor = this.twofactor;
+            }
+            if(this.reservedPassword !== this.user.setting.useReservedPassword) {
+                data.reservedPassword = this.reservedPassword;
+            }
+            if(this.notification !== this.user.setting.suspiciousLoginNotifications) {
+                data.suspiciousLoginNotifications = this.notification;
+            }
+            if(this.codeWord !== this.user.setting.useCodeWord) {
+                data.useCode = this.codeWord;
+            }
+            if(this.codeWordText !== this.user.backup_date.code_word) {
+                data.codeWord = this.codeWordText;
             }
             axios.post('/api/settings', data, {
                 headers: {
@@ -497,12 +509,60 @@ export default {
                 this.openModal('saveSettings');
             })
         },
+        savePassword() {
+            const payload = {
+                password: this.password
+            }
+
+            axios.post('/api/settings', payload, {
+                headers: {
+                    'Authorization': `Bearer ` + this.access_token
+                }
+            }).then((response) => {
+                this.saveUserFromServer(response.data);
+                this.openModal('saveSettings');
+            })
+        },
         clearReservedEmail() {
             this.reservedEmail = this.user.backup_date.backup_email;
             var myModal = new bootstrap.Modal(document.getElementById('reservedCode'), {
                 keyboard: false
             })
             myModal.hide();
+        },
+        dateToDateMonth(date) {
+            let dateArr = date.split('-');
+            return dateArr[0] + ' ' + this.translateMonth(dateArr[1]);
+        },
+        retriveAction() {
+            axios.get('/api/action-resent', {
+                headers: {
+                    'Authorization': `Bearer ` + this.access_token
+                }
+            }).then((response) => {
+                this.actionHostory = response.data;
+            });
+        },
+        translateMonth(month) {
+            const translate = {
+                'January': 'Января',
+                'February': 'Февраля',
+                'March': 'Марта',
+                'April': 'Апреля',
+                'May': 'Мая',
+                'June': 'Июня',
+                'July': 'Июля',
+                'August': 'Августа',
+                'September': 'Сентября',
+                'October': 'Октября',
+                'November': 'Ноября',
+                'December': 'Декабря',
+            }
+
+            if(translate.hasOwnProperty(month)) {
+                return translate[month];
+            }
+            return month;
         }
     },
     computed: {
@@ -525,7 +585,7 @@ export default {
                 })
                 myModal.show();
             }
-        }
+        },
     },
     created() {
         this.twofactor = this.user.setting.useTwoStepAuth;
@@ -534,6 +594,7 @@ export default {
         this.codeWord = this.user.setting.useCodeWord;
         this.codeWordText = this.user.backup_date.code_word;
         this.reservedEmail = this.user.backup_date.backup_email;
+        this.retriveAction();
     }
 }
 </script>
