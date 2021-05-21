@@ -15,7 +15,8 @@
                                 <label for="checkbox"></label>
                             </div>
                             <div class="col-4">
-                                <button class="departments_list-edit" :disabled="checkedDepartments.length !==1" @click="getEdit"></button>
+                                <button class="departments_list-edit" :disabled="checkedDepartments.length !==1"
+                                        @click="getEdit"></button>
                             </div>
                             <div class="col-4">
                                 <button class="departments_list-delete" @click="isActiveConfirmModal=true"></button>
@@ -40,7 +41,7 @@
                 <ul class="row">
                     <li class="col-1"></li>
                     <li class="col-3">
-                        <span :class="[arrowName ? 'with_sort_active' : 'with_sort']" @click="sortName">Название</span>
+                        <span :class="[arrowName ? 'with_sort_active' : 'with_sort']" @click="sortTitle">Название</span>
                     </li>
                     <li class="col-4">
                         <span :class="[arrowLead ? 'with_sort_active' : 'with_sort']"
@@ -94,13 +95,16 @@ export default {
             arrowName: false,
             arrowLead: false,
             arrowCtr: false,
+            sortByTitle: 'asc',
+            sortByLead: 'asc',
+            sortByCount: 'asc',
             isActiveConfirmModal: false,
             checkedDepartments: [],
             list: [],
         }
     },
     methods: {
-        ...mapActions(['fetchDepartments', 'delDepartment', 'setDepId']),
+        ...mapActions(['fetchDepartments', 'delDepartment', 'setDepId', 'sortListBy']),
 
         checkAll() {
             this.uncheck = true;
@@ -113,23 +117,39 @@ export default {
             }
         },
 
-        sortName() {
+        sortTitle() {
             if (this.arrowLead === false || this.arrowCtr === false) {
                 this.arrowLead = false;
                 this.arrowCtr = false;
             }
+
             this.arrowName = !this.arrowName;
-            this.list = this.list.sort((a,b)=>a.title.localeCompare(b))
-            console.log('itme' + this.list)
-            return this.list
+
+            if (this.sortByTitle === 'asc') {
+                this.sortListBy('title', 'desc')
+                this.list = this.getSortedList;
+            } else {
+                this.sortListBy('title', 'asc')
+                this.list = this.getSortedList;
+            }
+
         },
 
-        sortLead() {
+        async sortLead() {
             if (this.arrowName === false || this.arrowCtr === false) {
                 this.arrowName = false;
                 this.arrowCtr = false;
             }
+
             this.arrowLead = !this.arrowLead;
+
+            if (this.sortByLead === 'asc') {
+                await this.sortListBy('name', 'desc')
+                this.list = this.getSortedList;
+            } else {
+                await this.sortListBy('name', 'asc')
+                this.list = this.getSortedList;
+            }
         },
 
         sortCtr() {
@@ -137,7 +157,16 @@ export default {
                 this.arrowName = false;
                 this.arrowLead = false;
             }
+
             this.arrowCtr = !this.arrowCtr;
+
+            if (this.sortByCount === 'asc') {
+                this.sortListBy('count', 'desc')
+                this.list = this.getSortedList;
+            } else {
+                this.sortListBy('count', 'asc')
+                this.list = this.getSortedList;
+            }
         },
 
         getEdit() {
@@ -155,17 +184,11 @@ export default {
             await this.formList()
             this.isActiveConfirmModal = false;
         },
+
         getDepartmentsList() {
             this.list = this.getDepartments;
         },
-        async formList() {
-            await this.fetchDepartments();
-            await this.getDepartmentsList()
-        }
-    },
 
-    computed: {
-        ...mapGetters(['getDepartments', 'getNextPage', 'getPrevPage']),
         getSearch() {
             let searchStr = this.search;
             searchStr = searchStr.trim();
@@ -192,6 +215,34 @@ export default {
             // }
             return searchByTitle
         },
+        async formList() {
+            await this.fetchDepartments();
+            await this.getDepartmentsList();
+            await this.getSearch();
+        },
+    },
+
+    computed: {
+        ...mapGetters(['getDepartments', 'getNextPage', 'getPrevPage', 'getSortedList']),
+
+
+
+        // sortTitle() {
+        //     if (this.arrowLead === false || this.arrowCtr === false) {
+        //         this.arrowLead = false;
+        //         this.arrowCtr = false;
+        //     }
+        //
+        //     this.arrowName = !this.arrowName;
+        //
+        //     if (this.sortByTitle === 'asc') {
+        //         this.sortListBy('title', 'desc')
+        //         this.list = this.getSortedList;
+        //     } else {
+        //         this.sortListBy('title', 'asc')
+        //         this.list = this.getSortedList;
+        //     }
+        // },
     },
 
     mutations: {

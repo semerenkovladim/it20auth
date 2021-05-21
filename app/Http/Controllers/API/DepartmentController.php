@@ -13,6 +13,7 @@ class DepartmentController extends Controller
     public function getAllDep()
     {
         $dep = Department::all();
+
         return response()->json($dep);
     }
 
@@ -32,10 +33,17 @@ class DepartmentController extends Controller
         return response()->json($dep);
     }
 
+    public function sortListBy($key, $direct): Department
+    {
+        $dep = new Department;
+        $dep->sortListBy($key, $direct);
+
+        return $dep;
+    }
+
     public function show(Department $department)
     {
         $dep = new Department;
-
 
         return $dep->getHeader($department);
     }
@@ -59,13 +67,14 @@ class DepartmentController extends Controller
 
     public function search(Request $request)
     {
-       $dep = new Department;
-       $dep->search($request);
+        $dep = new Department;
+        $dep->search($request);
 
         return response()->json($dep);
     }
 
-    public function countMembers($id) {
+    public function countMembers($id)
+    {
         $dep = new Department;
 
         return $dep->countMembers($id);

@@ -50,6 +50,7 @@ class Department extends Model
 
     public function fetchAllDep()
     {
+
         $list = DB::table('departments')
             ->leftJoin('users', 'users.id', '=', 'departments.head_department')
             ->select('departments.id', 'departments.title', 'departments.created_at', 'users.name', 'users.surname')
@@ -62,19 +63,30 @@ class Department extends Model
                 ->select('departments.id', 'users.department_id', 'users.id as users_id')
                 ->rightJoinWhere('users', 'users.department_id', '=', 'departments.id')
                 ->where('users.department_id', '=', "${id}")
-                ->count('users.id');;
+                ->count('users.id');
         }
 
         return $list;
     }
 
-    public function countMembers($id)
+    public function sortListBy($key, $direct)
     {
         return DB::table('departments')
+            ->leftJoin('users', 'users.id', '=', 'departments.head_department')
+            ->select('departments.id', 'departments.title', 'departments.created_at', 'users.name', 'users.surname')
+            ->orderBy("${key}", "${direct}")
+            ->paginate(5);
+    }
+
+    public function countMembers($id)
+    {
+        $list = DB::table('departments')
             ->select('departments.id', 'users.department_id', 'users.id as users_id')
             ->rightJoinWhere('users', 'users.department_id', '=', 'departments.id')
             ->where('users.department_id', '=', "${id}")
             ->count('users.id');
+
+        return $list;
     }
 
     public function depIn()

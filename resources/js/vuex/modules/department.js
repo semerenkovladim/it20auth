@@ -12,7 +12,8 @@ export default {
         depMembers: null,
         resStatus: null,
         ctrDepMembers: null,
-        statusEditDep:null,
+        statusEditDep: null,
+        sortedList: null,
         showPopup: false,
 
     },
@@ -59,7 +60,11 @@ export default {
 
         updateShowPopup(state, status) {
             state.showPopup = status;
-        }
+        },
+
+        updateSortedList(state, list) {
+            state.sortedList = list;
+        },
     },
     actions: {
         async fetchDepartments(ctx, url = `api/departments`) {
@@ -106,6 +111,18 @@ export default {
                 .get(`/api/users/${departmentId}`)
                 .then(res => {
                     ctx.commit('updateDepMembers', res.data.data.data)
+                })
+                .catch(err => console.log('error:', err)
+                );
+        },
+
+        async sortListBy(ctx, key, direct) {
+
+            return await axios
+                .get(`/api//departments/sort/${key}/${direct}'`)
+                .then(res => {
+                    ctx.commit('updateSortedList', res.data.data)
+                    console.log(res)
                 })
                 .catch(err => console.log('error:', err)
                 );
@@ -181,7 +198,7 @@ export default {
         },
 
         getCurrentPage(state) {
-          return state.currentPage
+            return state.currentPage
         },
 
         getValidationErrs(state) {
@@ -214,6 +231,10 @@ export default {
 
         getShowPopup(state) {
             return state.showPopup
+        },
+
+        getSortedList(state) {
+            return state.sortedList
         },
     },
 }
