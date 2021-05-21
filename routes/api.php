@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\ActionResentController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\DepartmentController;
 use App\Http\Controllers\API\HistoryVisitsController;
@@ -70,6 +71,7 @@ Route::put('/admin-settings/update',[AdminSettingsController::class,'update'])->
 Route::middleware('auth:api')->group(function () {
     Route::post('settings', [UserSettingsController::class, 'update']);
     Route::get('history-visits', [HistoryVisitsController::class, 'index']);
+    Route::get('action-resent', [ActionResentController::class, 'index']);
     Route::post('logout', [AuthController::class, 'logout']);
 });
 
