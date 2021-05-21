@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\DepartmentController;
+use App\Http\Controllers\API\HistoryVisitsController;
 use App\Http\Controllers\API\ResetPasswordController;
 use App\Http\Controllers\API\UserSettingsController;
 use Illuminate\Support\Facades\Route;
@@ -45,26 +46,30 @@ Route::post('/users/delete', [UserController::class, 'destroy'])->name('usersDel
 Route::get('/user/{id}', [UserController::class, 'show'])->name('user');
 Route::post('/user/create', [UserController::class, 'store'])->name('userCreate');
 Route::put('/user/update', [UserController::class, 'update'])->name('userUpdate');
-Route::post('/user/permission/create', [AccessLevelController::class, 'store'])->name('userPermission');
-Route::get('/user/permission', [AccessLevelController::class, 'show'])->name('userPermissionShow');
-Route::get('/user/permission/update', [AccessLevelController::class, 'update'])->name('userPermissionUpdate');
+
+Route::get('/users-search',[UserController::class,'search'])->name('userSearch');
+
+Route::get('/users-permission',[AccessLevelController::class, 'index'])->name('usersPermission');
+Route::post('/user-permission/create', [AccessLevelController::class, 'store'])->name('userPermission');
+Route::get('/user-permission/{id}', [AccessLevelController::class, 'show'])->name('userPermissionShow');
+Route::put('/user-permission/update/{id}', [AccessLevelController::class, 'update'])->name('userPermissionUpdate');
+
 Route::post('/image/upload/avatar', [ImageUploadController::class, 'upload_avatar'])->name('userAvatar');
 Route::post('/user/settings/create',[SettingController::class,'store'])->name('setUserSetting');
 Route::put('/user/reset-department/{id}',[UserController::class,'resetDepartment'])->name('resetDepartment');
 
+//  ===== Отделы =====
 Route::get('/departments/all',[DepartmentController::class,'getAllDep'])->name('allDepartment');
-
 Route::apiResource('departments', DepartmentController::class);
-
-
+//  ===== /Отделы =====
 
 Route::post('/admin-settings/create',[AdminSettingsController::class,'store'])->name('setAdminSettings');
 Route::get('/admin-settings/{id}',[AdminSettingsController::class,'show'])->name('showAdminSettings');
 Route::put('/admin-settings/update',[AdminSettingsController::class,'update'])->name('updateAdminSettings');
 
-
 Route::middleware('auth:api')->group(function () {
     Route::post('settings', [UserSettingsController::class, 'update']);
+    Route::get('history-visits', [HistoryVisitsController::class, 'index']);
     Route::post('logout', [AuthController::class, 'logout']);
 });
 

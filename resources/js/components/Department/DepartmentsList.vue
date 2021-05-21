@@ -4,7 +4,7 @@
                                   @close="isActiveConfirmModal = false"
                                   @deleteDeps="deleteDeps"
                                   :checked-departments="checkedDepartments"
-                                  />
+        />
         <div class="list_controls">
             <div class="row">
                 <div class="col-sm-12 col-md-4 col-xl-3 list_control_btns">
@@ -15,10 +15,11 @@
                                 <label for="checkbox"></label>
                             </div>
                             <div class="col-4">
-                                <div class="departments_list-edit" @click="getEdit"></div>
+                                <button class="departments_list-edit" :disabled="checkedDepartments.length !==1"
+                                        @click="getEdit"></button>
                             </div>
                             <div class="col-4">
-                                <div class="departments_list-delete" @click="isActiveConfirmModal=true"></div>
+                                <button class="departments_list-delete" @click="isActiveConfirmModal=true"></button>
                             </div>
                         </div>
                     </div>
@@ -27,7 +28,7 @@
                       action="#">
                     <div class="row">
                         <div class="col-10 col-sm-8 col-md-10">
-                            <input type="text" placeholder="Поиск">
+                            <input type="text" v-model="search" placeholder="Поиск">
                         </div>
                         <div class="col-2 col-sm-4 col-md-2 search-btn">
                         </div>
@@ -40,20 +41,20 @@
                 <ul class="row">
                     <li class="col-1"></li>
                     <li class="col-3">
-                        <span :class="[arrowName ? 'with_sort_active' : 'with_sort']" @click="sortName">Название</span>
+                        <span :class="[arrowName ? 'with_sort_active' : 'with_sort']" @click="sortTitle">Название</span>
                     </li>
                     <li class="col-4">
                         <span :class="[arrowLead ? 'with_sort_active' : 'with_sort']"
                               @click="sortLead">Руководитель</span>
                     </li>
                     <li class="col-4">
-                        <span :class="[arrowCtr ? 'with_sort_active' : 'with_sort']" @click="sortCtr">Количество сотрудников</span>
+                        <span>Количество сотрудников</span>
                     </li>
                 </ul>
             </div>
-            <div class="departments_list-body">
+            <div class="departments_list-body" v-if="successfulSearch">
                 <ul>
-                    <li class="departments_list-item" v-for="(dep, id) in getDepartments" :key="id">
+                    <li class="departments_list-item" v-for="(dep, id) in getSearch" :key="id">
                         <ul class="row list-item_info">
                             <li class="col-1 checkbox_section">
                                 <input type="checkbox"
@@ -63,9 +64,9 @@
                                        class="checkbox">
                                 <label :for="id"></label>
                             </li>
-                            <li class="col-3">{{ dep.title}}</li>
-                            <li class="col-4">{{ dep.name }} {{ dep.surname }}</li>
-                            <li class="col-4">16</li>
+                            <li class="col-3">{{ dep.title }}</li>
+                            <li class="col-4">{{ dep.surname }} {{ dep.name }}</li>
+                            <li class="col-4">{{ dep.count }}</li>
                         </ul>
                     </li>
                 </ul>
@@ -83,31 +84,27 @@ export default {
     components: {
         DepartmentConfirmModal,
     },
+
     data() {
         return {
-            nextPage: '',
-            prevPage: '',
-            uncheck: false,
-            cheked: false,
+            search: '',
+            order: "id",
+            nextPage: null,
+            prevPage: null,
+            successfulSearch: true,
+            disableEditButton: false,
             arrowName: false,
             arrowLead: false,
             arrowCtr: false,
+            desc: true,
             isActiveConfirmModal: false,
             checkedDepartments: [],
+            list: []
         }
     },
+
     methods: {
         ...mapActions(['fetchDepartments', 'delDepartment', 'setDepId']),
-
-        gotoNext() {
-            this.nextPage = this.getNextPage;
-            this.fetchAds(this.nextPage)
-        },
-
-        gotoPrev() {
-            this.prevPage = this.getPrevPage;
-            this.fetchAds(this.prevPage)
-        },
 
         checkAll() {
             this.uncheck = true;
@@ -120,12 +117,18 @@ export default {
             }
         },
 
-        sortName() {
+        async sortTitle() {
             if (this.arrowLead === false || this.arrowCtr === false) {
                 this.arrowLead = false;
                 this.arrowCtr = false;
             }
+
             this.arrowName = !this.arrowName;
+
+            this.desc = !this.desc
+
+            await this.setOrder('title')
+
         },
 
         sortLead() {
@@ -133,7 +136,9 @@ export default {
                 this.arrowName = false;
                 this.arrowCtr = false;
             }
+
             this.arrowLead = !this.arrowLead;
+            this.setOrder('surname')
         },
 
         sortCtr() {
@@ -141,13 +146,10 @@ export default {
                 this.arrowName = false;
                 this.arrowLead = false;
             }
-            this.arrowCtr = !this.arrowCtr;
-        },
 
-        async deletePosition() {
-            for (let i = 0; i < this.checkedDepartments.length; i++) {
-                await this.delDepartment(this.checkedDepartments[i])
-            }
+            this.arrowCtr = !this.arrowCtr;
+
+            this.setOrder('count')
         },
 
         getEdit() {
@@ -155,32 +157,96 @@ export default {
             this.$router.push({name: 'DepartmentEdit'})
         },
 
-        deleteDeps() {
+        async deleteDeps() {
             let arr = this.checkedDepartments;
             let i;
             for (i = 0; i < arr.length; i++) {
-                this.delDepartment(arr[i])
-                console.log('confirm delete' + ' ' + [i])
+                await this.delDepartment(arr[i])
             }
 
-            this.fetchDepartments()
+            await this.formList()
             this.isActiveConfirmModal = false;
-        }
+        },
+
+        getDepartmentsList() {
+            this.list = this.getDepartments;
+        },
+
+        async formList() {
+            if (this.desc === false) {
+                await this.fetchDepartments( this.order, "false");
+            }
+
+            if (this.desc === true) {
+                await this.fetchDepartments( this.order, "true");
+            }
+
+            await this.getDepartmentsList();
+        },
+
+        async setOrder(order) {
+            if (this.order === order) {
+                this.desc = !this.desc
+            } else {
+                this.desc = false
+            }
+            this.order = order
+            await this.formList()
+        },
 
     },
+
     computed: {
-        ...mapGetters(['getDepartments', 'getNextPage', 'getPrevPage']),
-        selectAll: function () {
-            return this.users.every(function (user) {
-                return user.checked;
-            });
+        ...mapGetters(['getDepartments', 'getNextPage', 'getPrevPage', 'getSortedList']),
+
+        getSearch() {
+            let searchStr = this.search;
+            searchStr = searchStr.trim();
+            searchStr = searchStr.toLowerCase();
+
+            let searchByTitle = this.list.filter(item => item.title.toLowerCase().indexOf(searchStr) !== -1);
+            let searchBySurname = this.list.filter(item => item.surname.toLowerCase().indexOf(searchStr) !== -1);
+            let searchByName = this.list.filter(item => item.name.toLowerCase().indexOf(searchStr) !== -1);
+
+            if (searchByName.length > 0) {
+
+                return searchByName;
+            }
+
+            if (searchBySurname.length > 0) {
+
+                return searchBySurname;
+            }
+
+            return searchByTitle
         },
     },
+
     mutations: {
-        ...mapMutations(['updateDepartmentId']),
+        ...
+            mapMutations(['updateDepartmentId']),
     },
     mounted() {
-        this.fetchDepartments()
+        this.setOrder()
+    },
+
+    watch: {
+        disableButton() {
+            if (this.checkedDepartments.length > 1) {
+                this.disableEditButton = true;
+            }
+        },
+        sortParams() {
+            this.$emit('sortParams', {
+                order: this.order,
+                desc: this.desc,
+                nextPage: this.getNextPage,
+                prevPage: this.getPrevPage,
+            })
+        }
+    },
+    created() {
+
     }
 }
 </script>

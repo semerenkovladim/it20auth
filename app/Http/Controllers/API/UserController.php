@@ -7,8 +7,6 @@ use App\Mail\SendUserPassword;
 use App\Models\AccessLevel;
 use App\Models\Setting;
 use App\Models\User;
-use Carbon\Carbon;
-use Cassandra\Date;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -17,20 +15,28 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::with('department')->paginate(15);
+        if ($request->desc === 'true') {
+            $users = User::with('department', 'access_level')->orderByDesc($request->orderBy)->paginate(15);
+        } else {
+            $users = User::with('department', 'access_level')->orderBy($request->orderBy)->paginate(15);
+        }
         if ($users) {
             $status = true;
         } else {
             $status = false;
         }
-        return response()->json(['data' => $users, 'status' => $status]);
+        return response()->json(['data' => $users, 'request' => $request->all(), 'status' => $status]);
     }
 
-    public function in_department($id)
+    public function in_department(Request $request, $id)
     {
-        $users = User::with('department')->where('department_id', '=', $id)->paginate(15);
+        if ($request->desc === 'true') {
+            $users = User::with('department', 'access_level')->where('department_id', '=', $id)->orderByDesc($request->orderBy)->paginate(15);
+        } else {
+            $users = User::with('department', 'access_level')->where('department_id', '=', $id)->orderBy($request->orderBy)->paginate(15);
+        }
         if ($users) {
             $status = true;
         } else {
@@ -56,7 +62,7 @@ class UserController extends Controller
             'skype' => 'nullable|unique:users'
         ]);
         if ($uniqueValidator->fails()) {
-            return response()->json(['error' => 'Данные Email или Skype некорректны или уже используются', 'status' => false]);
+            return response()->json(['error' => 'Данные некорректны или уже используются', 'status' => false]);
         }
         $validator = Validator::make($request->all(), [
             'surname' => 'required|max:255',
@@ -73,11 +79,11 @@ class UserController extends Controller
             'skype' => 'max:255|nullable|unique:users'
         ]);
         if ($validator->fails()) {
-//            return response()->json(['error' => $validator->errors(), 'status' => false]);
             return response()->json(['errors' => $validator->errors(), 'error' => 'Проверьте правильность заполнения обязательных полей']);
         }
-
-        $user = User::make($request->all());
+        $userData = $request->all();
+        unset($userData->access_level);
+        $user = User::make($userData);
 
         $password = Str::random(8);
         $user->password = Hash::make($password);
@@ -95,14 +101,32 @@ class UserController extends Controller
 
         $user->save();
 
+        $user_id = $user->id;
+
+        $access = AccessLevel::make([
+            'account' => $request->access_level['account'],
+            'disk' => $request->access_level['disk'],
+            'mail' => $request->access_level['mail'],
+            'calendar' => $request->access_level['calendar'],
+            'photo' => $request->access_level['photo'],
+            'contacts' => $request->access_level['contacts'],
+            'user_id' => $user_id,
+        ]);
+        $access->save();
+
         return response()->json(['data' => $user, 'status' => true]);
 
 
     }
 
+    public function updateUser($id){
+        $user = User::find($id);
+        return response()->json($user);
+    }
+
     public function show($id)
     {
-        $user = User::find($id);
+        $user = User::with('access_level')->find($id);
         if (!$user) {
             $status = 404;
         } else {
@@ -132,16 +156,14 @@ class UserController extends Controller
             unset($data['skype']);
         }
         if (!$user->name || !$user->birth || !$user->surname || !$user->position || !$user->email) {
-            return response()->json(['error' => 'Заполните, пожалуйста, все обязательные поля', 'data' => $data,'status' => false]);
+            return response()->json(['error' => 'Заполните, пожалуйста, все обязательные поля', 'data' => $data, 'status' => false]);
         }
-
-        $currentDate = Carbon::today()->format('d.m.Y');
 
         $validator = Validator::make($data, [
             'surname' => 'required|max:255',
             'name' => 'required|max:255',
             'middle_name' => 'nullable|max:255',
-            'birth' => "date|required|before:${currentDate}",
+            'birth' => "date|required|before:tomorrow",
             'department_id' => 'int|nullable',
             'position' => 'required|max:225',
             'date_start' => 'date|nullable',
@@ -152,13 +174,26 @@ class UserController extends Controller
             'skype' => 'max:255|nullable|unique:users'
         ]);
         if ($validator->fails()) {
-//            return response()->json(['error' => $validator->errors(), 'status' => false]);
-            return response()->json(['error' => 'Проверьте правильность заполнения обязательных полей','data' => $data, 'status' => false]);
+            return response()->json(['error' => 'Проверьте правильность заполнения обязательных полей', 'data' => $data, 'status' => false]);
         }
+        $access = AccessLevel::find($request->access_level['id']);
+        $accessData = $request->access_level;
+        $access->fill($accessData)->save();
         $user->fill($data)->save();
 
         return response()->json(['data' => $data, 'status' => true]);
 
+    }
+
+    public function search(Request $request)
+    {
+        $result = User::search($request->data)->paginate(15);
+        $result->load('access_level','department');
+
+        if (!$result) {
+            return response()->json(['error' => 'По данному запросу записей не найдено', 'data' => $result, 'status' => false]);
+        }
+        return response()->json(['data' => $result, 'status' => true]);
     }
 
     public function destroy(Request $request)
@@ -172,14 +207,8 @@ class UserController extends Controller
                 if ($accessLevel) {
                     $accessLevel->delete();
                 }
-                $status = true;
-                $message = 'Удалено';
-            } else {
-                $status = false;
-                $message = 'Ошибка';
             }
-
         }
-        return response()->json(['data' => $data, 'message' => $message, 'status' => $status]);
+        return response()->json(['data' => $data, 'message' => 'Удалено', 'status' => true]);
     }
 }

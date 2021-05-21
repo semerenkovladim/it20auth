@@ -1,5 +1,9 @@
 <template>
     <main class="row departments_management">
+        <MessagePopup :popup-show="popupShow"
+                      v-if="popupShow"
+                      :popup-message="popupMessage"
+                      v-on:closePopup="closePopup"/>
         <div class="container-fluid departments_management__container">
             <div class="col">
                 <div class="row departments_management__header">
@@ -26,27 +30,37 @@
                     <div class="col-12 box-form">
                         <form @submit.prevent="" method="post">
                             <ul>
-                                <li>
-                                    <label for="name">Название:</label>
-                                    <input type="text" id="name" v-model="title" >
+                                <li class="errors" v-if="errors.length">
+                                    <div>
+                                        <span>Пожалуйста исправьте указанные ошибки:</span>
+                                        <ul>
+                                            <li v-for="error in errors">{{ error }}</li>
+                                        </ul>
+                                    </div>
                                 </li>
-                                <li>
+                                <li class="required_field">
+                                    <label for="name">Название:</label>
+                                    <input type="text" id="name" v-model="title" required>
+                                </li>
+                                <li class="required_field">
                                     <label for="lead">Руководитель:</label>
-                                    <select type="text" id="lead" v-model="depHead">
+                                    <select type="text" id="lead" v-model="depHead" required>
                                         <option value="null"></option>
                                         <option v-for="lead in getLeads" :value="lead.id">
-                                            {{ lead.name}} {{lead.surname}}
+                                            {{ lead.name }} {{ lead.surname }}
                                         </option>
                                     </select>
                                 </li>
                                 <li class="anchor_Modal">
                                     <label for="workersCtr">Количество сотрудников:</label>
-                                    <input type="text" id="workersCtr" class="workersCtr"  v-model="countMembers" readonly
+                                    <input type="text" id="workersCtr" class="workersCtr" v-model="countMembers"
+                                           readonly
                                            @click="showWorkers">
                                     <department-workers-list v-if="isActiveWorkersList"
                                                              @close="isActiveWorkersList = false"
-                                    :create-members-count="createMembersCount"
-                                    :department-id="departmentId"/>
+                                                             :create-members-count="createMembersCount"
+                                                             :department-id="departmentId"
+                                                             :to-delete-users="toDeleteUsers"/>
                                 </li>
                                 <li class="form-btns">
                                     <button type="button" class="btnSave" @click="this.sendFormData">Сохранить</button>
@@ -64,6 +78,7 @@
 <script>
 import DepartmentWorkersList from "../../components/layouts/DepartmentWorkersList";
 import {mapActions, mapGetters} from 'vuex';
+import MessagePopup from "../../components/message-popup/MessagePopup";
 
 export default {
     name: "DepartmentEdit",
@@ -71,34 +86,31 @@ export default {
         return {
             depHead: null,
             isActiveWorkersList: false,
+            popupShow: false,
             title: null,
-            head_department: null,
             formData: null,
             departmentId: null,
-            countMembers: null
+            countMembers: null,
+            errors: [],
+            toDeleteUsers: [],
+            popupMessage: "Данные успешно обновлены",
         }
     },
     components: {
+        MessagePopup,
         DepartmentWorkersList,
     },
     methods: {
         showWorkers() {
-            this.isActiveWorkersList = !this.isActiveWorkersList
+            this.isActiveWorkersList = !this.isActiveWorkersList;
         },
-        ...mapActions(['fetchLeads', 'updateDepartment', 'fetchDepartment', 'fetchDepMembers']),
+        ...mapActions(['fetchLeads', 'updateDepartment', 'fetchDepartment', 'fetchDepMembers', 'deleteUsers']),
         async setFormData() {
+            await this.sendOnDelete();
             this.formData = {
                 id: this.departmentId,
                 title: this.title,
                 head_department: this.depHead
-            }
-        },
-        async sendFormData() {
-            await this.setFormData()
-            await this.updateDepartment(this.formData);
-            let $resStatus = this.getResStatusEditDep
-            if($resStatus === 200) {
-                await this.$router.push({name: 'DepartmentsManagement'})
             }
         },
         createMembersCount() {
@@ -114,11 +126,44 @@ export default {
             this.depHead = this.getDepartment.head_department;
             this.departmentId = this.getDepartment.id;
         },
+        async sendOnDelete() {
+            const values = Object.values(this.toDeleteUsers);
+            await values.forEach(value => {
+                this.deleteUsers(value);
+            })
+            await this.fetchDepMembers(this.departmentId);
+        },
         resetChange() {
             this.title = this.getDepartment.title;
             this.depHead = this.getDepartment.head_department;
             this.departmentId = this.getDepartment.id;
-        }
+            this.toDeleteUsers = [];
+        },
+        closePopup() {
+            this.popupShow = false;
+            this.$router.push({name: 'DepartmentsManagement'})
+        },
+        async sendFormData() {
+            this.errors = [];
+            await this.validation();
+            await this.setFormData();
+            await this.updateDepartment(this.formData);
+            let $resStatus = this.getResStatusEditDep
+            if ($resStatus === 200) {
+                this.popupShow = true;
+            }
+        },
+        validation() {
+            let title = this.title;
+            let head_department = this.depHead;
+            console.log(head_department)
+            if (title < 3 || title === null) {
+                this.errors.push('Поле "Название" должно содержать не менее 3х символов.')
+            }
+            if (head_department < 1 || head_department === null) {
+                this.errors.push('Поле "Руководитель" обязательно для заполнения.')
+            }
+        },
     },
     computed: {
         ...mapGetters(['getLeads', 'getDepartmentId', 'getDepartment', 'getDepMembers', 'getResStatusEditDep']),
@@ -233,6 +278,11 @@ form {
         margin-bottom: 21px;
     }
 
+    .errors {
+        color: #FF0000;
+        font-size: 14px;
+    }
+
     input,
     select {
         height: 60px;
@@ -246,6 +296,10 @@ form {
         border-radius: 4px;
         line-height: 30px;
         color: #808080;
+    }
+
+    .empty_field {
+        border: 2px solid #FF0000 !important;
     }
 
     select {

@@ -17,3 +17,38 @@
 
 @import "~slick-slider/slick/slick";
 @import "~slick-slider/slick/slick-theme";
+
+.pagination {
+    display: flex;
+    border-top: 1.5px solid #DADADA;
+    background: #FFFFFF;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.05);
+    border-radius: 6px;
+}
+.page-link {
+    padding: 17px 37px;
+    border-right: 3px solid #DADADA;
+    text-align: center;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    color: #999999;
+    cursor: pointer;
+    border-bottom: none;
+    border-left: none;
+    border-top: none;
+}
+.page-link:hover {
+    color: #999999;
+    text-decoration: none;
+    background-color: #fff;
+    border-color: #DADADA;
+}
+.pagination li:last-child > a {
+    border-right: none;
+}
+.pagination > .page-item.active > .page-link {
+    background-color: #FAFAFA;
+    border-color: #FAFAFA;
+    color: #999999;
+}

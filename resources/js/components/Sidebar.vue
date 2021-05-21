@@ -8,7 +8,7 @@
                 </div>
             </router-link>
         </li>
-        <li class="link" v-bind:class="{'linkss':show}">
+        <li class="link" v-bind:class="{'linkss':show}" v-if="user.access_level.disk">
             <router-link to="/" class="wiget">
                 <div v-bind:class="{'flex':show}">
                     <div v-bind:class="{'dick2':show, 'dick':!show}"></div>
@@ -16,7 +16,7 @@
                 </div>
             </router-link>
         </li>
-        <li class="link" v-bind:class="{'linkss':show}">
+        <li class="link" v-bind:class="{'linkss':show}" v-if="user.access_level.mail">
             <router-link to="/" class="wiget">
                 <div v-bind:class="{'flex':show}">
                     <div v-bind:class="{'post2':show, 'post':!show}"></div>
@@ -24,7 +24,7 @@
                 </div>
             </router-link>
         </li>
-        <li class="link" v-bind:class="{'linkss':show}">
+        <li class="link" v-bind:class="{'linkss':show}" v-if="user.access_level.calendar">
             <router-link to="/" class="wiget">
                 <div v-bind:class="{'flex':show}">
                     <div v-bind:class="{'calendar2':show, 'calendar':!show}"></div>
@@ -32,7 +32,7 @@
                 </div>
             </router-link>
         </li>
-        <li class="link" v-bind:class="{'linkss':show}">
+        <li class="link" v-bind:class="{'linkss':show}" v-if="user.access_level.photo">
             <router-link to="/" class="wiget">
                 <div v-bind:class="{'flex':show}">
                     <div v-bind:class="{'photo2':show, 'photo':!show}"></div>
@@ -40,7 +40,7 @@
                 </div>
             </router-link>
         </li>
-        <li class="link" v-bind:class="{'linkss':show}">
+        <li class="link" v-bind:class="{'linkss':show}" v-if="user.access_level.contacts">
             <router-link to="/" class="wiget">
                 <div v-bind:class="{'flex':show}">
                     <div v-bind:class="{'contact2':show, 'contact':!show}"></div>
@@ -76,6 +76,8 @@
 </template>
 
 <script>
+import {mapActions} from "vuex";
+
 export default {
     name: "Sidebar",
     props: ['show'],
@@ -83,17 +85,29 @@ export default {
         return {
             showMenu: false,
             user:{
-                is_admin:false
-            }
+                is_admin:false,
+                access_level: {
+                    disk: 0,
+                    mail: 0,
+                    contacts: 0,
+                    photo: 0,
+                    calendar: 0
+                }
+            },
         }
     },
-    mounted(){
-        this.user=Object.assign(this.user,this.auth_user)
-        console.log('mounted', this.user)
+    methods: {
+        ...mapActions([
+            'getProfile'
+        ])
+    },
+    async mounted() {
+        await this.getProfile(this.auth_user.id)
+        this.user = Object.assign(this.user, this.auth_user)
+        console.log('User', this.user)
     },
     computed:{
         auth_user(){
-            console.log(this.$store.getters.user)
             return this.$store.getters.user;
         }
     }

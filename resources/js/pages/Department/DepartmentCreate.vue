@@ -1,5 +1,9 @@
 <template>
     <main class="row departments_management">
+        <MessagePopup :popup-show="popupShow"
+                      v-if="popupShow"
+                      :popup-message="popupMessage"
+                      v-on:closePopup="closePopup"/>
         <div class="container-fluid departments_management__container">
             <div class="col">
                 <div class="row departments_management__header">
@@ -26,6 +30,14 @@
                     <div class="col-12 box-form">
                         <form @submit.prevent="sendFormData" method="post">
                             <ul>
+                                <li class="errors" v-if="errors.length">
+                                    <div>
+                                        <span>Пожалуйста исправьте указанные ошибки:</span>
+                                        <ul>
+                                            <li v-for="error in errors">{{ error }}</li>
+                                        </ul>
+                                    </div>
+                                </li>
                                 <li>
                                     <label for="name">Название:</label>
                                     <input type="text" id="name" v-model="department.title">
@@ -35,15 +47,13 @@
                                     <select type="text" id="lead" v-model="department.departmentHead">
                                         <option value="null"></option>
                                         <option v-for="lead in getLeads" :value="lead.id">
-                                            {{ lead.name}} {{lead.surname}}
+                                            {{ lead.name }} {{ lead.surname }}
                                         </option>
                                     </select>
                                 </li>
                                 <li class="anchor_Modal">
                                     <label for="workersCtr">Количество сотрудников:</label>
                                     <input type="text" id="workersCtr" class="workersCtr" placeholder="0" readonly>
-                                    <department-workers-list v-if="isActiveWorkersList"
-                                                             @close="isActiveWorkersList = false"/>
                                 </li>
                                 <li class="form-btns">
                                     <button type="submit" class="btnSave">Сохранить</button>
@@ -60,6 +70,7 @@
 
 <script>
 import DepartmentWorkersList from "../../components/layouts/DepartmentWorkersList";
+import MessagePopup from "../../components/message-popup/MessagePopup";
 import {mapActions, mapGetters} from 'vuex';
 
 export default {
@@ -70,11 +81,14 @@ export default {
                 title: null,
                 departmentHead: 0,
             },
-            isActiveWorkersList: false,
+            popupMessage: "Отдел успешно создан",
+            popupShow: false,
+            errors: [],
         }
     },
     components: {
         DepartmentWorkersList,
+        MessagePopup
     },
     methods: {
         showWorkers() {
@@ -87,19 +101,37 @@ export default {
                 head_department: this.depHead
             }
         },
-         sendFormData() {
-             this.createNewDepartment(this.department);
-             let $resStatus = this.getResStatus;
-             console.log($resStatus)
-            if($resStatus === 200) {
-                 this.$router.push({name: 'DepartmentsManagement'})
-            } else {
-                console.log('error')
+
+        async sendFormData() {
+            this.errors = [];
+            await this.createNewDepartment(this.department);
+            await this.validation();
+            let $resStatus = this.getResStatus;
+            if ($resStatus === 200) {
+                this.popupShow = true;
             }
-        }
+        },
+
+        closePopup() {
+            this.popupShow = false;
+            this.$router.push({name: 'DepartmentsManagement'})
+        },
+
+        validation() {
+            let title = this.department.title;
+            let head_department = this.department.departmentHead;
+            if ( head_department == null || head_department < 1) {
+                this.errors.push('Поле "Руководитель" обязательно для заполнения.')
+            }
+
+            if (title < 3 || title === null) {
+                this.errors.push('Поле "Название" должно содержать не менее 3х символов.')
+            }
+
+        },
     },
     computed: {
-        ...mapGetters(['getLeads', 'getResStatus']),
+        ...mapGetters(['getLeads', 'getResStatus', 'getShowPopup']),
     },
     mounted() {
         this.fetchLeads()
@@ -201,6 +233,11 @@ form {
     ul {
         margin: 0 auto;
         list-style: none;
+    }
+
+    .errors {
+        color: #FF0000;
+        font-size: 14px;
     }
 
     label {

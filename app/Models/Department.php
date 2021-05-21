@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Laravel\Passport\HasApiTokens;
 use App\Http\Controllers\API\DepartmentController;
+use phpDocumentor\Reflection\Types\Object_;
 
 class Department extends Model
 {
@@ -47,13 +48,55 @@ class Department extends Model
 
     //=========== формирование списка отделов ========
 
-    public function fetchAllDep()
+    public function fetchAllDep($request)
+    {
+        if ($request->desc === 'true') {
+            $list = DB::table('departments')
+                ->leftJoin('users', 'users.id', '=', 'departments.head_department')
+                ->select('departments.id', 'departments.title', 'departments.created_at', 'users.name', 'users.surname')
+                ->orderByDesc($request->orderBy)
+                ->paginate(5);
+
+        }   else {
+
+                $list = DB::table('departments')
+                    ->leftJoin('users', 'users.id', '=', 'departments.head_department')
+                    ->select('departments.id', 'departments.title', 'departments.created_at', 'users.name', 'users.surname')
+                    ->orderBy($request->orderBy)
+                    ->paginate(5);
+
+        }
+
+        foreach ($list as $item) {
+            $id = $item->id;
+            $item->count = DB::table('departments')
+                ->select('departments.id', 'users.department_id', 'users.id as users_id')
+                ->rightJoinWhere('users', 'users.department_id', '=', 'departments.id')
+                ->where('users.department_id', '=', "${id}")
+                ->count('users.id');
+        }
+
+        return $list;
+    }
+
+    public function sortListBy($key, $direct)
     {
         return DB::table('departments')
             ->leftJoin('users', 'users.id', '=', 'departments.head_department')
-            ->select('departments.id',  'departments.title', 'departments.created_at', 'users.name', 'users.surname')
-            ->latest()
+            ->select('departments.id', 'departments.title', 'departments.created_at', 'users.name', 'users.surname')
+            ->orderBy("${key}", "${direct}")
             ->paginate(5);
+    }
+
+    public function countMembers($id)
+    {
+        $list = DB::table('departments')
+            ->select('departments.id', 'users.department_id', 'users.id as users_id')
+            ->rightJoinWhere('users', 'users.department_id', '=', 'departments.id')
+            ->where('users.department_id', '=', "${id}")
+            ->count('users.id');
+
+        return $list;
     }
 
     public function depIn()
@@ -105,16 +148,28 @@ class Department extends Model
 
     //====== Редактирование отдела ====
 
-    public function updateDep($data, $department) {
+    public function updateDep($data, $department)
+    {
 
         $department->title = $data->get('title');
         $department->head_department = $data->get('head_department');
 
-        $department -> save();
+        $department->save();
 
     }
 
     //====== /Редактирование отдела ====
+
+    //====== Поиск отдела ====
+
+    public function search($request)
+    {
+        return $result = Department::where('name', $request->keywords)->get();
+    }
+
+    //====== /Поиск отдела ====
+
+
 }
 
 

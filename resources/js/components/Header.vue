@@ -57,8 +57,7 @@ export default {
             show: false,
             user: {
                 name: '',
-                surname: '',
-                middle_name: ''
+                surname: ''
             }
         }
     },
@@ -67,7 +66,7 @@ export default {
             'saveUserFromServer',
             'saveAccessFromServer',
             'saveRefreshFromServer',
-            ''
+            'getProfile'
         ]),
         setInitials(surname, name) {
             if (surname && name) {
@@ -92,13 +91,12 @@ export default {
             'access_token',
         ]),
         auth_user() {
-            console.log(this.$store.getters.user)
             return this.$store.getters.user;
         }
     },
-    mounted() {
+    async mounted() {
+        await this.getProfile(this.auth_user.id)
         this.user = Object.assign(this.user, this.auth_user)
-        console.log('mounted', this.user)
     }
 
 }

@@ -8,12 +8,17 @@
                     </div>
                     <div class="modal-title">Список сотрудников</div>
                     <ul class="workers_list">
-                        <li v-for="member in getDepMembers" >
-                           <span @click="toDelete(member.id)">{{ member.name }} {{member.surname}} </span>
+                        <li v-for="(member, key) in list" :key="member.id" v-show="!member.hide" >
+                            <span>{{ member.name }} {{ member.surname }} </span>
+<!--                            <span @click="toDelete(member.id)">{{ member.name }} {{ member.surname }} </span>-->
+                            <div class="checkbox_section">
+                                <input type="checkbox" :id="member.id" class="checkbox" :value="member.id">
+                                <label :for="member.id" @click="change(member.id)"></label>
+                            </div>
                         </li>
                     </ul>
                     <div class="btns d-flex">
-                        <button type="button" class="btnSave" @click="sendOnDelete">Сохранить</button>
+                        <button type="button" class="btnSave" @click="$emit('close')">Сохранить</button>
                         <button type="button" class="btnCancel" @click="$emit('close')">Отмена</button>
                     </div>
                 </div>
@@ -27,33 +32,35 @@ import {mapActions, mapGetters} from 'vuex'
 
 export default {
     name: "DepartmentWorkersList",
-    data(){
+    data() {
         return {
-            toDeleteUsers: [],
+            list: null,
         }
     },
     methods: {
         ...mapActions(['fetchDepMembers', 'deleteUsers']),
-        toDelete($id){
-            this.toDeleteUsers.push($id);
-            console.log(this.toDeleteUsers)
+        hideItem(id){
+            this.list.forEach(i => i.id === id ? i.hide = true : true);
         },
-
-        async sendOnDelete() {
-            const values = Object.values(this.toDeleteUsers);
-            await values.forEach(value => {
-                this.deleteUsers(value);
-            })
-            this.createMembersCount();
-            this.$emit('close')
-        }
+        addToDel(id) {
+            this.toDeleteUsers.push(id);
+        },
+        change(id){
+            this.addToDel(id);
+            this.hideItem(id)
+        },
+        formList(){
+            this.list = this.getDepMembers;
+        },
     },
     computed: {
-        ...mapGetters(['getDepMembers'])
+        ...mapGetters(['getDepMembers']),
     },
-    props:['createMembersCount', 'departmentId'],
-    created() {
-        this.fetchDepMembers(this.departmentId)
+    props: ['createMembersCount', 'departmentId', 'toDeleteUsers'],
+    async created() {
+        await this.fetchDepMembers(this.departmentId);
+        await this.formList();
+        this.list.map(item => Vue.set(item, 'hide', false))
     }
 }
 </script>
@@ -61,6 +68,9 @@ export default {
 <style lang="scss" scoped>
 @import "resources/sass/variables";
 
+label {
+    display: block !important;
+}
 .modal-mask {
     position: absolute;
     z-index: 9998;
@@ -79,12 +89,12 @@ export default {
 
 .modal-container {
     max-width: 445px;
-    max-height: 473px;
+    max-height: 490px;
     margin: 0px auto;
     padding: 20px 30px;
     background-color: #fff;
     border-radius: 2px;
-    overflow-y: auto;
+    overflow-y: clip;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
     transition: all 0.3s ease;
     font-family: Roboto, sans-serif;
@@ -103,19 +113,21 @@ export default {
 }
 
 .modal-title {
+    padding-bottom: 20px;
+    margin-top: 25px;
     color: #666666;
     font-size: 18px;
-    padding-bottom: 20px;
-    margin-top: 50px;
 }
 
 .workers_list {
-        list-style: none;
-        color: #808080;
-        box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.05);
-        padding: 0;
+    max-height: 308px;
+    overflow-y: scroll;
+    list-style: none;
+    color: #808080;
+    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.05);
+    padding: 0;
 
-    &  li {
+    & li {
         display: flex;
         position: relative;
         justify-content: center;
@@ -127,15 +139,42 @@ export default {
             border-bottom: none;
         }
 
-        &::after {
-            content: '';
-            display: inline-block;
-            position: absolute;
-            right: 15px;
-            height: 25px;
-            width: 25px;
-            background: url("/images/ic_clear.svg") no-repeat center;
-            cursor: pointer;
+        //&::after {
+        //    content: '';
+        //    display: inline-block;
+        //    position: absolute;
+        //    right: 15px;
+        //    height: 25px;
+        //    width: 25px;
+        //    background: url("/images/ic_clear.svg") no-repeat center;
+        //    cursor: pointer;
+        //}
+        .checkbox {
+            display: none;
+
+            & + label::after {
+                content: '';
+                position: absolute;
+                right: 15px;
+                display: block !important;
+                width: 20px;
+                height: 20px;
+                //border: 2px solid #E6E6E6;
+                background: url("/images/ic_clear.svg") no-repeat center;
+                //border-radius: 4px;
+                transition: .4s ease;
+                cursor: pointer;
+
+            }
+
+            &:checked + label::after {
+                //display: none;
+                //position: absolute;
+                //right: 15px;
+                //border-color: #0b76ef;
+                //background-color: #0b76ef;
+                //background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e");
+            }
         }
     }
 }

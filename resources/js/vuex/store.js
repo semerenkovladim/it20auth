@@ -15,7 +15,7 @@ const store = new Vuex.Store({
             settingStatus: false,
             confirmStatus: false,
             confirm: false,
-            personalDataStatus: true,
+            personalDataStatus: false,
             personalAccessStatus: false
         },
         UMMessage: {
@@ -138,6 +138,13 @@ const store = new Vuex.Store({
                 })
                 .catch(reason => {
                     console.log('getAllDepartments --- ошибка ---')
+                })
+        },
+        //редактирование пользователя
+        async getProfile({commit}, id){
+            return axios.get(`api/user/${id}`)
+                .then(response => {
+                    commit('setUser', response.data.data)
                 })
         },
         //

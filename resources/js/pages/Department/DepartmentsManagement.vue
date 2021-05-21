@@ -29,7 +29,9 @@
                         <div class="empty_area"></div>
                     </div>
                     <div class="col-md-9 departments_list-box">
-                        <departments-list/>
+                        <departments-list
+                            ref="departmentsList"
+                        @sortParams="sortParams"/>
                     </div>
                 </div>
                 <div class="row">
@@ -40,17 +42,11 @@
                                 <a href="#" class="page-link" aria-label="Previous">
                                 </a>
                             </li>
-                            <li class="page-item">
-                                <a class="page-link activePage" href="#">1</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">2</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">3</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">4</a>
+                            <li class="page-item"
+                                v-for="(page, index) in getLastPage"
+                                :key='index'
+                                :class='getCurrentPage'>
+                                <span class="page-link activePage">{{ page}}</span>
                             </li>
                             <li class="page-item gotoNextPage" @click.prevent="gotoNextPage">
                                 <a href="#" class="page-link" aria-label="Next">
@@ -75,6 +71,9 @@ export default {
         return {
             nextPage: null,
             prevPage: null,
+            order: 'id',
+            desc: true,
+            paginateList:[],
         }
     },
 
@@ -87,15 +86,29 @@ export default {
         gotoNextPage() {
             this.nextPage = this.getNextPage;
             console.log(this.nextPage)
-            this.fetchDepartments(this.nextPage)
+            this.fetchDepartments(this.order, this.desc, this.nextPage)
+            this.$refs.departmentsList.getDepartmentsList();
         },
         gotoPrevPage() {
             this.prevPage = this.getPrevPage;
-            this.fetchDepartments(this.prevPage)
+            this.fetchDepartments(this.order, this.desc, this.prevPage)
+            this.$refs.departmentsList.getDepartmentsList();
         },
+        sortParams(data) {
+            this.order = data.order
+            this.desc = data.desc
+            this.nextPage = data.nextPage
+            this.prevPage = data.prevPage
+        }
     },
     computed: {
-        ...mapGetters(['getPrevPage', 'getNextPage'])
+        ...mapGetters([
+            'getPrevPage',
+            'getNextPage',
+            'getCurrentPage',
+            'getLastPage',
+            'getLinks'
+        ]),
     },
 }
 </script>

@@ -6,12 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Jobs\ClearCodeReset;
 use App\Mail\SuspiciousMail;
 use App\Mail\TwoStepCode;
+use App\Models\HistoryVisits;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Stevebauman\Location\Facades\Location;
 
 class AuthController extends Controller
 {
@@ -22,7 +25,7 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        $user = User::whereEmail($validated['email'])->with(['department', 'access_level', 'backup_date', 'setting'])->first();
+        $user = User::whereEmail($validated['email'])->with(['department', 'access_level', 'backup_date', 'setting', 'history_visits'])->first();
 
         if (!$user) {
             return response()->json([], 404);
@@ -77,6 +80,16 @@ class AuthController extends Controller
             $user->ip = $user->getIp();
             $user->save();
         }
+        $historyVisits = new HistoryVisits();
+        $location = Location::get();
+        $historyVisits->city = $location->cityName;
+        $historyVisits->state = $location->regionName;
+        $historyVisits->country = $location->countryName;
+        $historyVisits->date_history = Carbon::now();
+        $historyVisits->time_history = Carbon::now()->toTimeString();
+        $historyVisits->type = 'login';
+        $user->history_visits()->save($historyVisits);
+        $user->refresh();
         // Вытаскиваем данные из ответа
         $data = json_decode($response->getContent(), true);
         // Формируем окончательный ответ в нужном формате
@@ -116,7 +129,7 @@ class AuthController extends Controller
             'twostep_code' => 'required'
         ]);
 
-        $user = User::whereEmail($validated['email'])->with(['department', 'access_level', 'backup_date', 'setting'])->first();
+        $user = User::whereEmail($validated['email'])->with(['department', 'access_level', 'backup_date', 'setting', 'history_visits'])->first();
 
         if (!$user) {
             return response()->json([], 422);
@@ -171,6 +184,17 @@ class AuthController extends Controller
             $user->save();
         }
 
+        $historyVisits = new HistoryVisits();
+        $location = Location::get();
+        $historyVisits->city = $location->cityName;
+        $historyVisits->state = $location->regionName;
+        $historyVisits->country = $location->countryName;
+        $historyVisits->date_history = Carbon::now();
+        $historyVisits->time_history = Carbon::now()->toTimeString();
+        $historyVisits->type = 'login';
+        $user->history_visits()->save($historyVisits);
+        $user->refresh();
+
         // Вытаскиваем данные из ответа
         $data = json_decode($response->getContent(), true);
 
@@ -198,6 +222,18 @@ class AuthController extends Controller
             ]);
 
         $accessToken->revoke();
+        $user = auth()->user();
+
+        $historyVisits = new HistoryVisits();
+        $location = Location::get();
+        $historyVisits->city = $location->cityName;
+        $historyVisits->state = $location->regionName;
+        $historyVisits->country = $location->countryName;
+        $historyVisits->date_history = Carbon::now();
+        $historyVisits->time_history = Carbon::now()->toTimeString();
+        $historyVisits->type = 'logout';
+        $user->history_visits()->save($historyVisits);
+        $user->refresh();
 
         return response()->json(['status' => 200]);
     }
@@ -210,7 +246,7 @@ class AuthController extends Controller
             'reservedPassword' => 'required'
         ]);
 
-        $user = User::whereEmail($validated['email'])->with(['department', 'access_level', 'backup_date', 'setting'])->first();
+        $user = User::whereEmail($validated['email'])->with(['department', 'access_level', 'backup_date', 'setting', 'history_visits'])->first();
 
         if (!$user) {
             return response()->json([], 422);
@@ -268,6 +304,17 @@ class AuthController extends Controller
             $user->ip = $request->ip();
             $user->save();
         }
+
+        $historyVisits = new HistoryVisits();
+        $location = Location::get();
+        $historyVisits->city = $location->cityName;
+        $historyVisits->state = $location->regionName;
+        $historyVisits->country = $location->countryName;
+        $historyVisits->date_history = Carbon::now();
+        $historyVisits->time_history = Carbon::now()->toTimeString();
+        $historyVisits->type = 'login';
+        $user->history_visits()->save($historyVisits);
+        $user->refresh();
 
         // Формируем окончательный ответ в нужном формате
         return response()->json([

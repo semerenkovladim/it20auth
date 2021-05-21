@@ -5,12 +5,17 @@ export default {
         department: null,
         nextPage: null,
         prevPage: null,
-        validationErrs: null,
+        currentPage: null,
+        lastPage: null,
         leads: null,
+        membersCount: null,
         depMembers: null,
         resStatus: null,
         ctrDepMembers: null,
-        statusEditDep:null
+        statusEditDep: null,
+        links: null,
+        showPopup: false,
+        desc: true,
 
     },
 
@@ -23,13 +28,11 @@ export default {
             state.department = department;
         },
 
-        updateNextPage(state, nextPage) {
-            state.nextPage = nextPage;
-        },
-
         makePagination(state, res) {
             state.nextPage = res.next_page_url;
             state.prevPage = res.prev_page_url;
+            state.currentPage = res.current_page;
+            state.lastPage = res.last_page;
         },
 
         updateLeads(state, leads) {
@@ -56,19 +59,34 @@ export default {
             state.ctrDepMembers = $ctrDepMembers;
         },
 
-        collectValidErrors(state, err) {
-            state.validationErrs = err;
+        updateShowPopup(state, status) {
+            state.showPopup = status;
+        },
+
+        updateSortedList(state, list) {
+            state.sortedList = list;
+        },
+
+        makeLinks(state, links) {
+            state.links = links;
         }
     },
     actions: {
-        async fetchDepartments(ctx, url = `api/departments`) {
-
+        async fetchDepartments(ctx, orderBy = 'id', desc = "false", url =`api/departments`,) {
+            console.log('common' + desc)
             return await axios
-                .get(url)
+                .get(url, {
+                    params: {
+                        orderBy: orderBy,
+                        desc: desc
+                    }
+                })
                 .then(res => {
                     ctx.commit('updateDepartments', res.data.data)
-                    console.log(res.data)
                     ctx.commit('makePagination', res.data)
+                    ctx.commit('makeLinks', res.data.links)
+
+                    console.log(res.data)
 
                 })
                 .catch(err => console.log('error:', err))
@@ -103,7 +121,12 @@ export default {
         async fetchDepMembers(ctx, departmentId) {
 
             return await axios
-                .get(`/api/users/${departmentId}`)
+                .get(`/api/users/${departmentId}`, {
+                    params: {
+                        orderBy: 'name',
+                        desc: 'desc'
+                    }
+                })
                 .then(res => {
                     ctx.commit('updateDepMembers', res.data.data.data)
                 })
@@ -119,11 +142,11 @@ export default {
                 })
                 .then(res => {
                     ctx.commit('updateResStatus', res.status)
-                    console.log(res.status)
+                    ctx.commit('updateShowPopup', true)
                 })
-                .catch(err => {
-                    ctx.commit('updateResStatus', err.error)
-                    console.log(data)
+                .catch(res => {
+                    ctx.commit('updateResStatus', res.status)
+                    console.log(res.status)
                 })
         },
         async updateDepartment(ctx, data) {
@@ -172,12 +195,20 @@ export default {
             return state.nextPage
         },
 
+        getLastPage(state) {
+            return state.lastPage
+        },
+
+        getLinks(state) {
+            return state.links
+        },
+
         getPrevPage(state) {
             return state.prevPage
         },
 
-        getValidationErrs(state) {
-            return state.validationErrs
+        getCurrentPage(state) {
+            return state.currentPage
         },
 
         getLeads(state) {
@@ -202,6 +233,10 @@ export default {
 
         getResStatusEditDep(state) {
             return state.statusEditDep
+        },
+
+        getShowPopup(state) {
+            return state.showPopup
         },
     },
 }

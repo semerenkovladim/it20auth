@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\AccessLevel;
 use App\Models\User;
 use Database\Factories\DepartmentFactory;
 use Illuminate\Database\Seeder;
@@ -18,7 +19,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        User::factory(30)->create();
+
         DB::table('users')->insert([
             [
                 'position' => 'Developer',
@@ -57,5 +58,36 @@ class UserSeeder extends Seeder
                 'is_admin' => true
             ]
         ]);
+        DB::table('access_levels')->insert([
+            [
+                'account' => 1,
+                'disk' => 1,
+                'mail' => 1,
+                'calendar' => 1,
+                'photo' => 1,
+                'contacts' => 1,
+                'user_id' => 1,
+            ],
+            [
+                'account' => 1,
+                'disk' => 1,
+                'mail' => 1,
+                'calendar' => 1,
+                'photo' => 1,
+                'contacts' => 1,
+                'user_id' => 2,
+            ],
+            [
+                'account' => 1,
+                'disk' => 1,
+                'mail' => 1,
+                'calendar' => 1,
+                'photo' => 1,
+                'contacts' => 1,
+                'user_id' => 3,
+            ]
+        ]);
+        User::factory(30)->create();
+        AccessLevel::factory(30)->create();
     }
 }

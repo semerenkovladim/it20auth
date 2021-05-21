@@ -1,4 +1,4 @@
-<template>
+ <template>
     <div class="users_management__paginator" v-if="data.last_page">
         <nav aria-label="Page navigation">
             <ul class="paginator">
