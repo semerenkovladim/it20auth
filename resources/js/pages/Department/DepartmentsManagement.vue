@@ -31,7 +31,8 @@
                     <div class="col-md-9 departments_list-box">
                         <departments-list
                             ref="departmentsList"
-                        @sortParams="sortParams"/>
+                        @sortParams="sortParams"
+                        :pag-list="pageList"/>
                     </div>
                 </div>
                 <div class="row">
@@ -73,7 +74,7 @@ export default {
             prevPage: null,
             order: 'id',
             desc: true,
-            paginateList:[],
+            pageList:[],
         }
     },
 
@@ -85,14 +86,15 @@ export default {
         ...mapActions(['fetchDepartments']),
         gotoNextPage() {
             this.nextPage = this.getNextPage;
-            console.log(this.nextPage)
             this.fetchDepartments(this.order, this.desc, this.nextPage)
-            this.$refs.departmentsList.getDepartmentsList();
+            this.pageList = this.getDepartments;
+            this.$refs.departmentsList.getDepartmentsList(this.pageList);
         },
         gotoPrevPage() {
             this.prevPage = this.getPrevPage;
-            this.fetchDepartments(this.order, this.desc, this.prevPage)
-            this.$refs.departmentsList.getDepartmentsList();
+            this.fetchDepartments(this.order, this.desc, this.prevPage);
+            this.pageList = this.getDepartments;
+            this.$refs.departmentsList.getDepartmentsList(this.pageList);
         },
         sortParams(data) {
             this.order = data.order
@@ -107,7 +109,8 @@ export default {
             'getNextPage',
             'getCurrentPage',
             'getLastPage',
-            'getLinks'
+            'getLinks',
+            'getDepartments',
         ]),
     },
 }
