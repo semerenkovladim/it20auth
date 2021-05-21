@@ -50,11 +50,9 @@ export default {
         },
         remove() {
             this.$emit('deleteEvent')
-            // this.changeUMConfirmStatus()
         },
         setCounter() {
             this.counter = this.userDataLength
-            console.log('this.counter',this.counter)
         }
     },
     computed: {

@@ -20,6 +20,7 @@
                         </div>
                         <div class="users_management__users_filter">
                             <department-list :data="departments"
+                                             :currentDep="currentDepartment"
                                              @sendDepartmentId="setDepartmentId">
                             </department-list>
                         </div>
@@ -63,14 +64,21 @@
                                         </li>
                                     </ul>
                                 </div>
-                                <form action="#" method="get" class="search_user">
+                                <form action="#"
+                                      method="get"
+                                      class="search_user"
+                                      autocomplete="off"
+                                      @submit.prevent="searchUser(searchInput)">
                                     <div class="row search__row flex-nowrap">
                                         <label class="col-10">
                                             <input type="search"
                                                    name="search"
-                                                   placeholder="Поиск">
+                                                   placeholder="Поиск"
+                                                   v-model="searchInput">
                                         </label>
-                                        <button class="col-2 search_btn" type="button"></button>
+                                        <button class="col-2 search_btn"
+                                                type="button"
+                                                @click="searchUser(searchInput)"></button>
                                     </div>
                                 </form>
                             </div>
@@ -80,10 +88,11 @@
                             :data="usersData.data"
                             :checkStatus="checkStatus"
                             :settings="tempSettings"
+                            :notFoundMessage="notFoundUsers"
                             @allChecked="setAllCheck"
-                            @changeUsersLength="userCount">
+                            @changeUsersLength="userCount"
+                            @orderEvent="setOrder">
                         </users-management-list>
-                        <div class="not_found" v-else>Пользователи не найдены</div>
                     </div>
                 </div>
                 <div class="row users_management__paginator_row"
@@ -152,7 +161,12 @@ export default {
             tempUser: {
                 is_admin: true
             },
-            tempSettings: []
+            tempSettings: [],
+            order: 'id',
+            desc: false,
+            searchInput: '',
+            searchStatus: false,
+            notFoundUsers: 'Пользователи не найдены'
 
         }
     },
@@ -164,6 +178,11 @@ export default {
             'getAllDepartments'
 
         ]),
+        setOrder(data) {
+            this.order = data.order
+            this.desc = data.desc
+            this.getUsers()
+        },
         changeSelectAll() {
             for (let user in this.usersData.data) {
                 this.usersData.data[user].checked = this.checkAll;
@@ -176,12 +195,14 @@ export default {
             }
             this.usersCount = this.selectUsers.length
             this.checkStatus = !this.checkStatus
-            console.log('this.usersData data', this.usersData.data.length)
+
         },
-        async getUMAllUsers(page = 1) {
+        async getUMAllUsers(page = 1, orderBy = 'id', desc = false) {
             axios.get('/api/users', {
                 params: {
-                    page: page
+                    page: page,
+                    orderBy: orderBy,
+                    desc: desc
                 }
             })
                 .then(value => {
@@ -193,10 +214,17 @@ export default {
                     }
                 )
         },
-        async getUsersInDepartment(data = {id: 1, page: 1}) {
+        async getUsersInDepartment(data = {
+            id: 1,
+            page: 1,
+            orderBy: 'id',
+            desc: false
+        }) {
             axios.get('/api/users/' + data.id, {
                 params: {
-                    page: data.page
+                    page: data.page,
+                    orderBy: data.orderBy,
+                    desc: data.desc
                 }
             })
                 .then(value => {
@@ -237,7 +265,7 @@ export default {
         userCount(data) {
             this.usersCount = data.length
             this.selectUsers = data.data
-            console.log('this.usersCount', this.usersCount)
+
         },
         setAllCheck(data) {
             this.checkAll = data.status
@@ -251,14 +279,25 @@ export default {
         setCurrentPage(data) {
             if (this.usersData.last_page >= data.page >= 1) {
                 this.currentPage = data.page
+            }
+            if (!this.searchStatus) {
                 this.getUsers()
             }
+            if (this.searchStatus) {
+                this.searchUser(this.searchInput, this.currentPage)
+            }
+
         },
         getUsers() {
             if (this.currentDepartment > 0) {
-                this.getUsersInDepartment({id: this.currentDepartment, page: this.currentPage})
+                this.getUsersInDepartment({
+                    id: this.currentDepartment,
+                    page: this.currentPage,
+                    orderBy: this.order,
+                    desc: this.desc
+                })
             } else {
-                this.getUMAllUsers(this.currentPage)
+                this.getUMAllUsers(this.currentPage, this.order, this.desc)
             }
         },
         getAdminSettings() {
@@ -267,6 +306,25 @@ export default {
                     this.tempSettings = value.data.data
                 })
         },
+        searchUser(data, page) {
+            this.currentDepartment = -1
+            if (data.length) {
+                return axios.get('/api/users-search', {
+                    params: {
+                        data: data,
+                        page: page
+                    }
+                })
+                    .then(value => {
+                        if (value.data.status) this.usersData = value.data.data
+                        this.searchStatus = true
+                        if (value.data.data.data.length < 1) {
+                            this.notFoundUsers = 'По данному запросу записей не найдено'
+
+                        }
+                    })
+            }
+        }
     },
     computed: {
         ...mapGetters([
@@ -294,7 +352,7 @@ export default {
         this.getAdminSettings()
         this.getUMAllUsers()
         this.getAllDepartments()
-        console.log('select users length', this.selectUsers.length)
+
     }
 }
 </script>
@@ -311,6 +369,7 @@ export default {
 .users_management {
     padding-bottom: 15px;
 }
+
 .search__row {
     align-items: center;
     background: transparent;
@@ -322,6 +381,7 @@ export default {
         font-style: normal;
         color: $lightColor;
         font-size: 14px;
+        -webkit-appearance: textfield;
 
         &::placeholder {
             color: #CCCCCC;
@@ -367,10 +427,20 @@ export default {
 .users_management__add_user, .users_management__edit {
     min-height: 88px;
     align-items: center;
+
+
+}
+
+.users_management__add_user {
+    border-bottom: 2px solid #F5F5F5;
 }
 
 .users_management__edit {
+    > .row {
+        border-bottom: 2px solid #F5F5F5;
+    }
     .row {
+
         flex-wrap: nowrap;
         height: 100%;
         @media all and (max-width: $breakpoint) {
@@ -379,7 +449,6 @@ export default {
                 padding-top: 5px;
                 padding-bottom: 5px;
             }
-
         }
     }
 }
@@ -453,8 +522,6 @@ export default {
 
 .edit__action_checkbox {
     flex: none;
-    //width: 77.33px;
-    //max-width: unset;
 }
 
 .department_col {
@@ -467,18 +534,22 @@ export default {
 
 .users_management__users_filter {
     overflow-y: auto;
+    overflow-x: hidden;
     position: relative;
-    min-height: 400px;
+    min-height: 385px;
 
     &::-webkit-scrollbar {
         width: 5px;
         cursor: pointer;
         background: transparent;
+
         &:hover {
             width: 6px;
         }
+    }
 
-
+    &::-webkit-scrollbar {
+        background-color: lighten($designColorOne, 42%);
     }
 
     &::-webkit-scrollbar-button {
@@ -494,17 +565,25 @@ export default {
     &::-webkit-scrollbar-track-piece {
         background-color: transparent;
     }
+
     &::-webkit-scrollbar-thumb {
         border-radius: 15px;
-        background-color: lighten($designColorOne,20%);
+        background-color: lighten($designColorOne, 20%);
         cursor: pointer;
+
         &:hover {
             cursor: pointer;
-            background-color: lighten($designColorOne,10%);
+            background-color: lighten($designColorOne, 10%);
         }
     }
-    &::-webkit-scrollbar-corner {
-        background-color: #999;
-    }
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:active,
+input:-webkit-autofill:focus {
+    background-color: #FFFFFF !important;
+    color: $lightColor !important;
+    -webkit-text-fill-color: darken($lightColor, 15%) !important;
 }
 </style>

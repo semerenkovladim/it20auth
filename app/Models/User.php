@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use Laravel\Scout\Searchable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory;
+    use HasApiTokens, HasFactory, Searchable;
 
     /**
      * The attributes that are mass assignable.
@@ -87,12 +88,8 @@ class User extends Authenticatable
             $backup->backup_email = null;
             $backup->code_word = null;
 
-            $historyVisits = new HistoryVisits();
-            $historyVisits->user_id = $user->id;
-
             $user->setting()->save($setting);
             $user->backup_date()->save($backup);
-            $user->history_visits()->save($historyVisits);
 
         });
     }

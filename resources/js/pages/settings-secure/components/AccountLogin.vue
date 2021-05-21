@@ -76,8 +76,8 @@
                                                     </svg>
                                                 </div>
                                                 <div class="form-group d-flex flex-row btn-form-group">
-                                                    <button @click.prevent="saveReservedEmail">Сохранить</button>
-                                                    <button class="cancel" @click.prevent="clearReservedEmail">Отмена</button>
+                                                    <button @click.prevent="savePassword">Сохранить</button>
+                                                    <button class="cancel" @click.prevent="clearPassword">Отмена</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -695,6 +695,7 @@ export default {
     font-size: 12px;
     color: #666666;
     padding: 20px 0 0 0;
+    max-width: 90%;
 }
 .modal-header {
     padding: 0;
