@@ -85,7 +85,6 @@ export default {
         ...mapActions(['fetchDepartments']),
         gotoNextPage() {
             this.nextPage = this.getNextPage;
-            console.log(this.nextPage)
             this.fetchDepartments(this.order, this.desc, this.nextPage)
             this.$refs.departmentsList.getDepartmentsList();
         },
