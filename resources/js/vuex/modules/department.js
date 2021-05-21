@@ -73,7 +73,6 @@ export default {
     },
     actions: {
         async fetchDepartments(ctx, orderBy = 'id', desc = true, url =`api/departments`,) {
-            console.log('common' + desc)
             return await axios
                 .get(url, {
                     params: {
@@ -85,8 +84,6 @@ export default {
                     ctx.commit('updateDepartments', res.data.data)
                     ctx.commit('makePagination', res.data)
                     ctx.commit('makeLinks', res.data.links)
-
-                    console.log(res.data)
 
                 })
                 .catch(err => console.log('error:', err))
@@ -158,7 +155,6 @@ export default {
                 })
                 .then(res => {
                     ctx.commit('updateResStatusEditDep', res.status)
-                    console.log(res.status)
                 })
                 .catch(err => {
                     ctx.commit('updateResStatusEditDep', err.error)
@@ -168,9 +164,7 @@ export default {
         async deleteUsers(ctx, user) {
             await axios
                 .put(`/api/user/reset-department/${user}`)
-                .then(res => {
-                    console.log('update');
-                })
+                .then()
                 .catch(err => console.log(err))
         },
 
