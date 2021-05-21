@@ -15,7 +15,7 @@ export default {
         statusEditDep: null,
         links: null,
         showPopup: false,
-        desc: true
+        desc: true,
 
     },
 
@@ -33,7 +33,6 @@ export default {
             state.prevPage = res.prev_page_url;
             state.currentPage = res.current_page;
             state.lastPage = res.last_page;
-            state.links = res.links;
         },
 
         updateLeads(state, leads) {
@@ -66,6 +65,10 @@ export default {
 
         updateSortedList(state, list) {
             state.sortedList = list;
+        },
+
+        makeLinks(state, links) {
+            state.links = links;
         }
     },
     actions: {
@@ -81,23 +84,9 @@ export default {
                 .then(res => {
                     ctx.commit('updateDepartments', res.data.data)
                     ctx.commit('makePagination', res.data)
+                    ctx.commit('makeLinks', res.data.links)
+
                     console.log(res.data)
-
-                })
-                .catch(err => console.log('error:', err))
-        },
-
-        async fetchDepartmentsDesc(ctx, orderBy = 'id', desc = "true", url =`api/departments`) {
-            return await axios
-                .get(url, {
-                    params: {
-                        orderBy: orderBy,
-                        desc: desc
-                    }
-                })
-                .then(res => {
-                    ctx.commit('updateDepartments', res.data.data)
-                    ctx.commit('makePagination', res.data)
 
                 })
                 .catch(err => console.log('error:', err))
@@ -132,9 +121,14 @@ export default {
         async fetchDepMembers(ctx, departmentId) {
 
             return await axios
-                .get(`/api/users/${departmentId}`)
+                .get(`/api/users/${departmentId}`, {
+                    params: {
+                        orderBy: 'name',
+                        desc: 'desc'
+                    }
+                })
                 .then(res => {
-                    ctx.commit('updateDepMembers', res.data)
+                    ctx.commit('updateDepMembers', res.data.data.data)
                 })
                 .catch(err => console.log('error:', err)
                 );
@@ -217,10 +211,6 @@ export default {
             return state.currentPage
         },
 
-        getValidationErrs(state) {
-            return state.validationErrs
-        },
-
         getLeads(state) {
             return state.leads
         },
@@ -247,10 +237,6 @@ export default {
 
         getShowPopup(state) {
             return state.showPopup
-        },
-
-        getSortedList(state) {
-            return state.sortedList
         },
     },
 }

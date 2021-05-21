@@ -84,6 +84,7 @@ export default {
     components: {
         DepartmentConfirmModal,
     },
+
     data() {
         return {
             search: '',
@@ -98,11 +99,12 @@ export default {
             desc: true,
             isActiveConfirmModal: false,
             checkedDepartments: [],
-            list: [],
+            list: []
         }
     },
+
     methods: {
-        ...mapActions(['fetchDepartments', 'delDepartment', 'setDepId', 'fetchDepartmentsDesc']),
+        ...mapActions(['fetchDepartments', 'delDepartment', 'setDepId']),
 
         checkAll() {
             this.uncheck = true;
@@ -191,6 +193,7 @@ export default {
             this.order = order
             await this.formList()
         },
+
     },
 
     computed: {
@@ -215,31 +218,8 @@ export default {
                 return searchBySurname;
             }
 
-            // let searchByCount = this.list.filter(item => item.count.indexOf(searchStr) !== -1);
-            // if (searchByCount.length > 0) {
-            //
-            //     return searchByCount;
-            // }
             return searchByTitle
         },
-
-
-        // sortTitle() {
-        //     if (this.arrowLead === false || this.arrowCtr === false) {
-        //         this.arrowLead = false;
-        //         this.arrowCtr = false;
-        //     }
-        //
-        //     this.arrowName = !this.arrowName;
-        //
-        //     if (this.sortByTitle === 'asc') {
-        //         this.sortListBy('title', 'desc')
-        //         this.list = this.getSortedList;
-        //     } else {
-        //         this.sortListBy('title', 'asc')
-        //         this.list = this.getSortedList;
-        //     }
-        // },
     },
 
     mutations: {
@@ -255,7 +235,18 @@ export default {
             if (this.checkedDepartments.length > 1) {
                 this.disableEditButton = true;
             }
+        },
+        sortParams() {
+            this.$emit('sortParams', {
+                order: this.order,
+                desc: this.desc,
+                nextPage: this.getNextPage,
+                prevPage: this.getPrevPage,
+            })
         }
+    },
+    created() {
+
     }
 }
 </script>

@@ -29,7 +29,9 @@
                         <div class="empty_area"></div>
                     </div>
                     <div class="col-md-9 departments_list-box">
-                        <departments-list/>
+                        <departments-list
+                            ref="departmentsList"
+                        @sortParams="sortParams"/>
                     </div>
                 </div>
                 <div class="row">
@@ -41,10 +43,10 @@
                                 </a>
                             </li>
                             <li class="page-item"
-                                v-for="page in getLastPage"
-                                :key='page'
+                                v-for="(page, index) in getLastPage"
+                                :key='index'
                                 :class='getCurrentPage'>
-                                <a class="page-link activePage" href="#">{{ page }}</a>
+                                <span class="page-link activePage">{{ page}}</span>
                             </li>
                             <li class="page-item gotoNextPage" @click.prevent="gotoNextPage">
                                 <a href="#" class="page-link" aria-label="Next">
@@ -69,6 +71,9 @@ export default {
         return {
             nextPage: null,
             prevPage: null,
+            order: 'id',
+            desc: true,
+            paginateList:[],
         }
     },
 
@@ -81,12 +86,20 @@ export default {
         gotoNextPage() {
             this.nextPage = this.getNextPage;
             console.log(this.nextPage)
-            this.fetchDepartments(this.nextPage)
+            this.fetchDepartments(this.order, this.desc, this.nextPage)
+            this.$refs.departmentsList.getDepartmentsList();
         },
         gotoPrevPage() {
             this.prevPage = this.getPrevPage;
-            this.fetchDepartments(this.prevPage)
+            this.fetchDepartments(this.order, this.desc, this.prevPage)
+            this.$refs.departmentsList.getDepartmentsList();
         },
+        sortParams(data) {
+            this.order = data.order
+            this.desc = data.desc
+            this.nextPage = data.nextPage
+            this.prevPage = data.prevPage
+        }
     },
     computed: {
         ...mapGetters([
@@ -94,7 +107,8 @@ export default {
             'getNextPage',
             'getCurrentPage',
             'getLastPage',
-        ])
+            'getLinks'
+        ]),
     },
 }
 </script>

@@ -60,13 +60,8 @@ Route::put('/user/reset-department/{id}',[UserController::class,'resetDepartment
 
 //  ===== Отделы =====
 Route::get('/departments/all',[DepartmentController::class,'getAllDep'])->name('allDepartment');
-Route::get('/departments/sort/{key}/{direct}',[DepartmentController::class,'sortListBy'])->name('departmentSort');
 Route::apiResource('departments', DepartmentController::class);
 //  ===== /Отделы =====
-
-
-
-
 
 Route::post('/admin-settings/create',[AdminSettingsController::class,'store'])->name('setAdminSettings');
 Route::get('/admin-settings/{id}',[AdminSettingsController::class,'show'])->name('showAdminSettings');
