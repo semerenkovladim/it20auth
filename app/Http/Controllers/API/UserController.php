@@ -120,8 +120,13 @@ class UserController extends Controller
     }
 
     public function updateUser($id){
-        $user = User::find($id);
-        return response()->json($user);
+        $user = User::with(['department', 'access_level', 'backup_date', 'setting', 'history_visits'])->find($id);
+        if (!$user) {
+            $status = 404;
+        } else {
+            $status = 200;
+        }
+        return response()->json(['data' => $user, 'status' => $status]);
     }
 
     public function show($id)
