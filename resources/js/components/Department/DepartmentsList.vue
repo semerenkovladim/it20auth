@@ -165,6 +165,7 @@ export default {
             }
 
             await this.formList()
+            this.checkedDepartments = []
             this.isActiveConfirmModal = false;
         },
 
