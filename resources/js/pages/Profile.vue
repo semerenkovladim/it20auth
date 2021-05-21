@@ -209,6 +209,7 @@ export default {
                         this.popupShow = true
                         this.popupMessage = "Изменения успешно сохранены"
 
+
                     } else {
                         this.message.status = true
                         this.message.text = value.data.error
@@ -231,7 +232,7 @@ export default {
                 }
             }
             if (back) {
-                this.$router.push('/profile')
+                this.$router.go()
             }
         }
     },
@@ -275,7 +276,7 @@ export default {
     align-items: center;
     justify-content: flex-start;
     width: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 7px;
 }
 .styled {
     padding: 0 25px;
