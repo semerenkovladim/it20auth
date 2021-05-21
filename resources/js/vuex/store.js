@@ -142,7 +142,7 @@ const store = new Vuex.Store({
         },
         //редактирование пользователя
         async getProfile({commit}, id){
-            return axios.get(`api/user/${id}`)
+            return axios.get(`api/profile/${id}`)
                 .then(response => {
                     commit('setUser', response.data.data)
                 })

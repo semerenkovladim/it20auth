@@ -64,6 +64,10 @@ Route::get('/departments/all',[DepartmentController::class,'getAllDep'])->name('
 Route::apiResource('departments', DepartmentController::class);
 //  ===== /Отделы =====
 
+
+Route::get('/profile/{id}', [UserController::class, 'updateUser'])->name('updateUser');
+
+
 Route::post('/admin-settings/create',[AdminSettingsController::class,'store'])->name('setAdminSettings');
 Route::get('/admin-settings/{id}',[AdminSettingsController::class,'show'])->name('showAdminSettings');
 Route::put('/admin-settings/update',[AdminSettingsController::class,'update'])->name('updateAdminSettings');
