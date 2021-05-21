@@ -13,8 +13,9 @@ export default {
         resStatus: null,
         ctrDepMembers: null,
         statusEditDep: null,
-        sortedList: null,
+        links: null,
         showPopup: false,
+        desc: true
 
     },
 
@@ -32,6 +33,7 @@ export default {
             state.prevPage = res.prev_page_url;
             state.currentPage = res.current_page;
             state.lastPage = res.last_page;
+            state.links = res.links;
         },
 
         updateLeads(state, leads) {
@@ -64,13 +66,35 @@ export default {
 
         updateSortedList(state, list) {
             state.sortedList = list;
-        },
+        }
     },
     actions: {
-        async fetchDepartments(ctx, url = `api/departments`) {
-
+        async fetchDepartments(ctx, orderBy = 'id', desc = "false", url =`api/departments`,) {
+            console.log('common' + desc)
             return await axios
-                .get(url)
+                .get(url, {
+                    params: {
+                        orderBy: orderBy,
+                        desc: desc
+                    }
+                })
+                .then(res => {
+                    ctx.commit('updateDepartments', res.data.data)
+                    ctx.commit('makePagination', res.data)
+                    console.log(res.data)
+
+                })
+                .catch(err => console.log('error:', err))
+        },
+
+        async fetchDepartmentsDesc(ctx, orderBy = 'id', desc = "true", url =`api/departments`) {
+            return await axios
+                .get(url, {
+                    params: {
+                        orderBy: orderBy,
+                        desc: desc
+                    }
+                })
                 .then(res => {
                     ctx.commit('updateDepartments', res.data.data)
                     ctx.commit('makePagination', res.data)
@@ -110,19 +134,7 @@ export default {
             return await axios
                 .get(`/api/users/${departmentId}`)
                 .then(res => {
-                    ctx.commit('updateDepMembers', res.data.data.data)
-                })
-                .catch(err => console.log('error:', err)
-                );
-        },
-
-        async sortListBy(ctx, key, direct) {
-
-            return await axios
-                .get(`/api//departments/sort/${key}/${direct}'`)
-                .then(res => {
-                    ctx.commit('updateSortedList', res.data.data)
-                    console.log(res)
+                    ctx.commit('updateDepMembers', res.data)
                 })
                 .catch(err => console.log('error:', err)
                 );
@@ -191,6 +203,10 @@ export default {
 
         getLastPage(state) {
             return state.lastPage
+        },
+
+        getLinks(state) {
+            return state.links
         },
 
         getPrevPage(state) {

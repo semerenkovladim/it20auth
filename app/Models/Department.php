@@ -48,14 +48,24 @@ class Department extends Model
 
     //=========== формирование списка отделов ========
 
-    public function fetchAllDep()
+    public function fetchAllDep($request)
     {
+        if ($request->desc === 'true') {
+            $list = DB::table('departments')
+                ->leftJoin('users', 'users.id', '=', 'departments.head_department')
+                ->select('departments.id', 'departments.title', 'departments.created_at', 'users.name', 'users.surname')
+                ->orderByDesc($request->orderBy)
+                ->paginate(5);
 
-        $list = DB::table('departments')
-            ->leftJoin('users', 'users.id', '=', 'departments.head_department')
-            ->select('departments.id', 'departments.title', 'departments.created_at', 'users.name', 'users.surname')
-            ->latest()
-            ->paginate(5);
+        }   else {
+
+                $list = DB::table('departments')
+                    ->leftJoin('users', 'users.id', '=', 'departments.head_department')
+                    ->select('departments.id', 'departments.title', 'departments.created_at', 'users.name', 'users.surname')
+                    ->orderBy($request->orderBy)
+                    ->paginate(5);
+
+        }
 
         foreach ($list as $item) {
             $id = $item->id;

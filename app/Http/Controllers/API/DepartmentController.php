@@ -17,11 +17,11 @@ class DepartmentController extends Controller
         return response()->json($dep);
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $dep = new Department;
 
-        return $dep->fetchAllDep();
+        return $dep->fetchAllDep($request);
     }
 
     public function store(Request $request)

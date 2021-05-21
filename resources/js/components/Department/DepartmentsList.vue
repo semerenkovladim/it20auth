@@ -48,7 +48,7 @@
                               @click="sortLead">Руководитель</span>
                     </li>
                     <li class="col-4">
-                        <span :class="[arrowCtr ? 'with_sort_active' : 'with_sort']" @click="sortCtr">Количество сотрудников</span>
+                        <span>Количество сотрудников</span>
                     </li>
                 </ul>
             </div>
@@ -65,13 +65,12 @@
                                 <label :for="id"></label>
                             </li>
                             <li class="col-3">{{ dep.title }}</li>
-                            <li class="col-4">{{ dep.name }} {{ dep.surname }}</li>
+                            <li class="col-4">{{ dep.surname }} {{ dep.name }}</li>
                             <li class="col-4">{{ dep.count }}</li>
                         </ul>
                     </li>
                 </ul>
             </div>
-            <div>Ничего не найдено</div>
         </div>
     </div>
 </template>
@@ -88,6 +87,7 @@ export default {
     data() {
         return {
             search: '',
+            order: "id",
             nextPage: null,
             prevPage: null,
             successfulSearch: true,
@@ -95,16 +95,14 @@ export default {
             arrowName: false,
             arrowLead: false,
             arrowCtr: false,
-            sortByTitle: 'asc',
-            sortByLead: 'asc',
-            sortByCount: 'asc',
+            desc: true,
             isActiveConfirmModal: false,
             checkedDepartments: [],
             list: [],
         }
     },
     methods: {
-        ...mapActions(['fetchDepartments', 'delDepartment', 'setDepId', 'sortListBy']),
+        ...mapActions(['fetchDepartments', 'delDepartment', 'setDepId', 'fetchDepartmentsDesc']),
 
         checkAll() {
             this.uncheck = true;
@@ -117,7 +115,7 @@ export default {
             }
         },
 
-        sortTitle() {
+        async sortTitle() {
             if (this.arrowLead === false || this.arrowCtr === false) {
                 this.arrowLead = false;
                 this.arrowCtr = false;
@@ -125,31 +123,20 @@ export default {
 
             this.arrowName = !this.arrowName;
 
-            if (this.sortByTitle === 'asc') {
-                this.sortListBy('title', 'desc')
-                this.list = this.getSortedList;
-            } else {
-                this.sortListBy('title', 'asc')
-                this.list = this.getSortedList;
-            }
+            this.desc = !this.desc
+
+            await this.setOrder('title')
 
         },
 
-        async sortLead() {
+        sortLead() {
             if (this.arrowName === false || this.arrowCtr === false) {
                 this.arrowName = false;
                 this.arrowCtr = false;
             }
 
             this.arrowLead = !this.arrowLead;
-
-            if (this.sortByLead === 'asc') {
-                await this.sortListBy('name', 'desc')
-                this.list = this.getSortedList;
-            } else {
-                await this.sortListBy('name', 'asc')
-                this.list = this.getSortedList;
-            }
+            this.setOrder('surname')
         },
 
         sortCtr() {
@@ -160,13 +147,7 @@ export default {
 
             this.arrowCtr = !this.arrowCtr;
 
-            if (this.sortByCount === 'asc') {
-                this.sortListBy('count', 'desc')
-                this.list = this.getSortedList;
-            } else {
-                this.sortListBy('count', 'asc')
-                this.list = this.getSortedList;
-            }
+            this.setOrder('count')
         },
 
         getEdit() {
@@ -188,6 +169,32 @@ export default {
         getDepartmentsList() {
             this.list = this.getDepartments;
         },
+
+        async formList() {
+            if (this.desc === false) {
+                await this.fetchDepartments( this.order, "false");
+            }
+
+            if (this.desc === true) {
+                await this.fetchDepartments( this.order, "true");
+            }
+
+            await this.getDepartmentsList();
+        },
+
+        async setOrder(order) {
+            if (this.order === order) {
+                this.desc = !this.desc
+            } else {
+                this.desc = false
+            }
+            this.order = order
+            await this.formList()
+        },
+    },
+
+    computed: {
+        ...mapGetters(['getDepartments', 'getNextPage', 'getPrevPage', 'getSortedList']),
 
         getSearch() {
             let searchStr = this.search;
@@ -215,16 +222,6 @@ export default {
             // }
             return searchByTitle
         },
-        async formList() {
-            await this.fetchDepartments();
-            await this.getDepartmentsList();
-            await this.getSearch();
-        },
-    },
-
-    computed: {
-        ...mapGetters(['getDepartments', 'getNextPage', 'getPrevPage', 'getSortedList']),
-
 
 
         // sortTitle() {
@@ -250,14 +247,13 @@ export default {
             mapMutations(['updateDepartmentId']),
     },
     mounted() {
-        this.formList()
+        this.setOrder()
     },
 
     watch: {
         disableButton() {
             if (this.checkedDepartments.length > 1) {
                 this.disableEditButton = true;
-                console.log('it work')
             }
         }
     }
