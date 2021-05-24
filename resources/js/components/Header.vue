@@ -105,10 +105,7 @@ export default {
 @import "resources/sass/variables";
 
 .sidebar_wrapper {
-    * {
-        transition: 0.2s ease;
-    }
-
+    transition: 0.2s ease;
     position: relative;
     display: flex;
     width: 100%;
@@ -162,6 +159,14 @@ export default {
     padding-top: $headerHeight;
     left: 0;
     position: fixed;
+    //transition: 0.2s ease;
+    transition: width, height, flex, max-width, min-width, transform, justify, align ease;
+    transition-duration: 0.2s;
+
+    > * {
+        transition: 0.2s ease;
+    }
+
     @media all and (max-width: 500px) {
         width: 100%;
         max-width: 100%;

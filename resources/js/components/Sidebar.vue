@@ -136,6 +136,14 @@ export default {
         auth_user() {
             return this.$store.getters.user;
         }
+    },
+    created() {
+        let vm = this;
+        document.onclick = (el) => {
+            if (window.innerWidth < 768) {
+                if (!el.target.closest('.sidebar') && !el.target.closest('.sidebar_arrow')) vm.$emit('closeEvent');
+            }
+        }
     }
 }
 </script>
@@ -158,16 +166,17 @@ export default {
 }
 
 .sidebar_list {
-    @media all and (max-width: 768px) {
-        transform: translate(-100%);
-    }
     background: #FFFFFF;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     height: 100%;
     position: relative;
     width: 100%;
     max-width: 160px;
+    @media all and (max-width: 768px) {
+        transform: translate(-100%);
+        height: fit-content;
 
+    }
     .link {
         padding: 0;
         border: none;
@@ -182,6 +191,7 @@ export default {
             padding: 0;
             border-right: 2px solid transparent;
             border-left: 2px solid transparent;
+            transition: none;
 
             * {
                 transition: none;
