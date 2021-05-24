@@ -76,10 +76,11 @@
             <div class="col-md-6">
                 <label class="edit_form__label">
                     <span class="input_title">Отдел:</span>
-                    <select name="department"
-                            class="styled"
-                            v-model="userData.data.department_id"
-                            tabindex="5">
+                    <span class="select-wrapper">
+                        <select name="department"
+                                class="styled"
+                                v-model="userData.data.department_id"
+                                tabindex="5">
                         <option v-for="department in ALL_DEPARTMENTS"
                                 :key="department.id"
                                 :value="department.id"
@@ -87,6 +88,7 @@
                             {{ department.title }}
                         </option>
                     </select>
+                    </span>
                 </label>
                 <label class="edit_form__label required_field">
                     <span class="input_title">Должность:</span>
