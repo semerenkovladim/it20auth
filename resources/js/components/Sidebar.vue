@@ -145,6 +145,11 @@ export default {
 
 .sidebar {
     width: 100%;
+
+    .wrapper {
+        width: 100vw;
+        height: 100vh;
+    }
 }
 
 .nav_image {
@@ -214,8 +219,17 @@ export default {
     height: auto;
     overflow: hidden;
     background: transparent;
+
+    .link .wiget {
+        padding-top: 0;
+    }
+
     @media all and (max-width: 768px) {
         transform: translate(0);
+        .wrapper {
+            width: 100vw;
+            height: 100vh;
+        }
     }
 }
 

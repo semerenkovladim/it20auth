@@ -54,48 +54,47 @@
             :key="checkStatus">
             <li class="user"
                 v-for="user in data"
-                :key="user.id">
-                <label :for="'user_'+ user.id" class="w-100 d-block">
-                    <ul class="row user__info flex-nowrap">
-                        <li class="user_info__item col-1 user_checkbox">
-                            <input type="checkbox"
-                                   :id="'user_'+ user.id"
-                                   class="user_check input_checkbox"
-                                   v-model="user.checked"
-                                   @change="changeCheck"
-                            >
-                        </li>
-                        <li class="user_info__item col-2" v-if="settings.surname">{{ user.surname }}</li>
-                        <li class="user_info__item col-2" v-if="settings.name">{{ user.name }}</li>
-                        <li class="user_info__item col-2" v-if="settings.patronymic">
-                            {{ user.middle_name ? user.middle_name : '-' }}
-                        </li>
-                        <li class="user_info__item col-3" v-if="settings.email">
-                            <a :href="'mailto:' + user.email">{{ user.email }}</a>
-                        </li>
-                        <li class="user_info__item col-2" v-if="settings.position">{{
-                                user.position ? user.position : '-'
-                            }}
-                        </li>
-                        <li class="user_info__item col-2" v-if="settings.department">
-                            {{ user.department ? user.department.title : '-' }}
-                        </li>
-                        <li class="user_info__item col-2" v-if="settings.date_of_birth">{{ user.birth }}</li>
-                        <li class="user_info__item col-3" v-if="settings.modules">
+                :key="user.id"
+                @click="$router.push('/users-management/user-edit?id='+user.id)">
+                <ul class="row user__info flex-nowrap">
+                    <li class="user_info__item col-1 user_checkbox">
+                        <input type="checkbox"
+                               :id="'user_'+ user.id"
+                               class="user_check input_checkbox"
+                               v-model="user.checked"
+                               @change="changeCheck"
+                        >
+                    </li>
+                    <li class="user_info__item col-2" v-if="settings.surname">{{ user.surname }}</li>
+                    <li class="user_info__item col-2" v-if="settings.name">{{ user.name }}</li>
+                    <li class="user_info__item col-2" v-if="settings.patronymic">
+                        {{ user.middle_name ? user.middle_name : '-' }}
+                    </li>
+                    <li class="user_info__item col-3" v-if="settings.email">
+                        <a :href="'mailto:' + user.email">{{ user.email }}</a>
+                    </li>
+                    <li class="user_info__item col-2" v-if="settings.position">{{
+                        user.position ? user.position : '-'
+                        }}
+                    </li>
+                    <li class="user_info__item col-2" v-if="settings.department">
+                        {{ user.department ? user.department.title : '-' }}
+                    </li>
+                    <li class="user_info__item col-2" v-if="settings.date_of_birth">{{ user.birth }}</li>
+                    <li class="user_info__item col-3" v-if="settings.modules">
                             <span v-if="user.access_level">
                                 {{ setModules(user.access_level) }}
                             </span>
-                            <span v-else>-</span>
-                        </li>
-                        <li class="user_info__item col-2" v-if="settings.role">
-                            {{ user.is_admin ? 'Админ' : 'Пользователь' }}
-                        </li>
-                    </ul>
-                </label>
+                        <span v-else>-</span>
+                    </li>
+                    <li class="user_info__item col-2" v-if="settings.role">
+                        {{ user.is_admin ? 'Админ' : 'Пользователь' }}
+                    </li>
+                </ul>
             </li>
         </ul>
 
-        <div class="not_found" v-else>{{notFoundMessage}}</div>
+        <div class="not_found" v-else>{{ notFoundMessage }}</div>
     </div>
 </template>
 
@@ -104,7 +103,7 @@ import {mapGetters} from "vuex";
 
 export default {
     name: "UsersManagementList",
-    props: ['data', 'checkStatus', 'settings','notFoundMessage'],
+    props: ['data', 'checkStatus', 'settings', 'notFoundMessage'],
     data() {
         return {
             selectUsers: [],
@@ -185,6 +184,8 @@ export default {
     min-height: 55px;
 
     .user {
+        cursor: pointer;
+
         &:last-child {
             .user_info__item {
                 border-bottom: none;
@@ -373,6 +374,7 @@ export default {
 
     .non_sorted {
         cursor: default;
+
         span {
             &:after {
                 background: none;

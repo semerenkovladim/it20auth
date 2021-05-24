@@ -418,6 +418,7 @@ export default {
     margin: 0 auto;
     padding-bottom: 30px;
 
+
     .select-wrapper {
         width: 100%;
     }
