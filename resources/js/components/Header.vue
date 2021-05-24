@@ -194,7 +194,7 @@ export default {
         bottom: 0;
         left: 0;
         width: 100%;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 3px 3px 0 rgb(0 0 0 / 5%);
         z-index: 1002;
     }
 
