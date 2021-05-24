@@ -284,15 +284,6 @@ ul {
     line-height: 30px;
     color: #808080;
 }
-
-.icon_social {
-    padding-top: 32px;
-}
-
-.icon_social a {
-    padding-right: 19px;
-}
-
 .title_hello {
     background: #FFFFFF;
     position: relative;
@@ -547,24 +538,6 @@ ul {
 /* Profile*/
 
 /*Footer*/
-.icon_social a {
-    padding-right: 25px;
-}
-
-.facebook {
-    background: url("../images/icons/ic_facebook.png") no-repeat;
-    padding-top: 70px;
-}
-
-.instagram {
-    background: url("../images/icons/ic_instagram.png") no-repeat;
-    padding-top: 70px;
-}
-
-.twitter {
-    background: url("../images/icons/ic_twitter.png") no-repeat;
-    padding-top: 70px;
-}
 
 /*Footer*/
 
