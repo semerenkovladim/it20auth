@@ -122,6 +122,10 @@ export default {
             },
         }
     },
+<<<<<<< HEAD
+    computed:{
+        auth_user(){
+=======
     methods: {
         ...mapActions([
             'getProfile'
@@ -134,6 +138,7 @@ export default {
     },
     computed: {
         auth_user() {
+>>>>>>> ef1f5008cb8379f5c9cb2e0ae3b359110fb51749
             return this.$store.getters.user;
         }
     }

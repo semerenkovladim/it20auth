@@ -3,7 +3,7 @@
         <ul class="list-settings">
             <li>
                 <ul class="settings">
-                    <li class="title">Вход в аккаунт</li>
+                    <li class="title">Недавние действия</li>
                     <li class="flex justify-content-between align-items-center settings-item" v-if="actionHostory.modify_password">
                         <div class="title-list">{{ actionHostory.modify_password.action }}</div>
                         <div class="subaction">{{ getFullDataOfIPForAction(actionHostory.modify_password) }}</div>
@@ -261,5 +261,15 @@ export default {
 }
 .list-settings > .history {
     padding-bottom: 37px;
+}
+
+@media screen and (max-width: 768px){
+    .action-list-wrapper, .settings-item {
+        flex-direction: column;
+        text-align: center;
+    }
+    .settings-item .subaction {
+        max-width: 235px;
+    }
 }
 </style>
