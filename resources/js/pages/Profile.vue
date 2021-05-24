@@ -205,10 +205,7 @@ export default {
             let fields = document.querySelectorAll('.required_field > [required]')
             for (let input of fields) {
                 if (input.value.trim().length < 1) {
-                    input.classList.add('form-control')
-                    setTimeout(function () {
-                        input.classList.remove('empty_field')
-                    }, 1500)
+                    input.classList.add('empty_field')
                 } else {
                     input.classList.remove('empty_field')
 
@@ -381,5 +378,8 @@ export default {
     max-width: 1236px;
     margin-left: auto;
     margin-right: auto;
+}
+.empty_field{
+    border: 2px solid #FF0000;
 }
 </style>
