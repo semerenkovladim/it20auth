@@ -215,24 +215,8 @@ export default {
                 }
             }
         },
-        /*handleFileUpload(data) {
-            console.log('handleFileUpload', data)
-            if (data.avatar !== this.$refs.file.files[0] && this.$refs.file.files[0]) {
-                this.imgChange = true
-                data.avatar = this.$refs.file.files[0];
-                this.saveImg(data.avatar, data)
-            }
-        },
-        saveImg(image, data) {
-            let formData = new FormData();
-            formData.append('file', image)
-            return axios.post('/api/image/upload/avatar', formData)
-                .then(value => {
-                    data.avatar = value.data.path
-                })
-        },*/
         shortFio(last, first) {
-            if (last && first) return last.slice(0, 1) + '.' + first.slice(0, 1)
+            if (last && first) return last.slice(0, 1) + ' ' + first.slice(0, 1)
         },
         updateProfile(data) {
             this.checkFields()
@@ -244,6 +228,8 @@ export default {
                         this.message.status = false
                         this.popupShow = true
                         this.popupMessage = "Изменения успешно сохранены"
+                        // this.getProfile(this.auth_user.id)
+                        // this.user = Object.assign(this.user, this.auth_user)
 
 
                     } else {
@@ -274,7 +260,7 @@ export default {
     },
     async mounted() {
         await this.getProfile(this.auth_user.id)
-        this.user = Object.assign(this.user, this.auth_user)
+        this.user = this.auth_user
         console.log('User', this.user)
         this.getAllDepartments()
 
@@ -283,9 +269,11 @@ export default {
         auth_user() {
             return this.$store.getters.user;
         },
+
         ...mapGetters([
             'ALL_DEPARTMENTS'
         ])
+
     }
 }
 </script>

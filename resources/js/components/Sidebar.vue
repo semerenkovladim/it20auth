@@ -6,7 +6,7 @@
                 <router-link to="/home" class="wiget">
                     <div v-bind:class="{'flex':show}">
                         <div v-bind:class="{'home2':show, 'home':!show}"
-                        class="nav_image"></div>
+                             class="nav_image"></div>
                         <div>Главная страница</div>
                     </div>
                 </router-link>
@@ -17,7 +17,7 @@
                 <a href="http://disk.hardsoft.space/" class="wiget">
                     <div v-bind:class="{'flex':show}">
                         <div v-bind:class="{'dick2':show, 'dick':!show}"
-                        class="nav_image"></div>
+                             class="nav_image"></div>
                         <div>Диск</div>
                     </div>
                 </a>
@@ -28,7 +28,7 @@
                 <router-link to="/" class="wiget">
                     <div v-bind:class="{'flex':show}">
                         <div v-bind:class="{'post2':show, 'post':!show}"
-                        class="nav_image"></div>
+                             class="nav_image"></div>
                         <div>Почта</div>
                     </div>
                 </router-link>
@@ -39,7 +39,7 @@
                 <a href="http://a0543833.xsph.ru/" class="wiget">
                     <div v-bind:class="{'flex':show}">
                         <div v-bind:class="{'calendar2':show, 'calendar':!show}"
-                        class="nav_image"></div>
+                             class="nav_image"></div>
                         <div>Календарь</div>
                     </div>
                 </a>
@@ -50,7 +50,7 @@
                 <a href="http://www.ignatenko-project.store/checkPhoto" class="wiget">
                     <div v-bind:class="{'flex':show}">
                         <div v-bind:class="{'photo2':show, 'photo':!show}"
-                        class="nav_image"></div>
+                             class="nav_image"></div>
                         <div>Фото</div>
                     </div>
                 </a>
@@ -61,7 +61,7 @@
                 <a href="http://calendar.hardsoft.space/" class="wiget">
                     <div v-bind:class="{'flex':show}">
                         <div v-bind:class="{'contact2':show, 'contact':!show}"
-                        class="nav_image"></div>
+                             class="nav_image"></div>
                         <div>Контакты</div>
                     </div>
                 </a>
@@ -70,7 +70,7 @@
                 <a class="wiget" @click.prevent="showMenu = !showMenu">
                     <div v-bind:class="{'flex':show}">
                         <div v-bind:class="{'control2':show, 'control':!show}"
-                        class="nav_image"></div>
+                             class="nav_image"></div>
                         <div>Управление</div>
                     </div>
                 </a>
@@ -81,7 +81,7 @@
                 <router-link to="/departments-management" class="wiget">
                     <div v-bind:class="{'flex':show}">
                         <div v-bind:class="{'location2':show, 'location':!show}"
-                        class="nav_image"></div>
+                             class="nav_image"></div>
                         <span>Отделы</span>
                     </div>
                 </router-link>
@@ -92,7 +92,7 @@
                 <router-link to="/users-management" class="wiget">
                     <div v-bind:class="{'flex':show}">
                         <div v-bind:class="{'contact2':show, 'contact':!show}"
-                        class="nav_image"></div>
+                             class="nav_image"></div>
                         <div>Пользователи</div>
                     </div>
                 </router-link>
@@ -122,10 +122,6 @@ export default {
             },
         }
     },
-<<<<<<< HEAD
-    computed:{
-        auth_user(){
-=======
     methods: {
         ...mapActions([
             'getProfile'
@@ -138,7 +134,6 @@ export default {
     },
     computed: {
         auth_user() {
->>>>>>> ef1f5008cb8379f5c9cb2e0ae3b359110fb51749
             return this.$store.getters.user;
         }
     }
@@ -151,10 +146,12 @@ export default {
 .sidebar {
     width: 100%;
 }
+
 .nav_image {
     background: #D8D8D8;
     padding-bottom: 30px;
 }
+
 .sidebar_list {
     @media all and (max-width: 768px) {
         transform: translate(-100%);
@@ -171,20 +168,28 @@ export default {
         border: none;
         background: #FFFFFF;
 
+        .wiget {
+            padding-top: 12px;
+        }
+
         a {
             display: block;
             padding: 0;
             border-right: 2px solid transparent;
             border-left: 2px solid transparent;
+
             * {
                 transition: none;
             }
+
             .nav_image {
-               transition: 0.2s;
+                transition: 0.2s;
             }
+
             &:hover {
                 color: #666666;
                 border-left: 2px solid #1875F0;
+
                 .nav_image {
                     background: #1875F0;
                 }
@@ -194,6 +199,7 @@ export default {
         .active {
             color: #666666;
             border-left: 2px solid #1875F0;
+
             .nav_image {
                 background: #1875F0;
             }

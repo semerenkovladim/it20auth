@@ -23,7 +23,7 @@
             <div class="avatar_wrapper"
                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img :src="user.avatar" alt="avatar" v-if="user.avatar">
-                <div class="initials" v-else>{{ setInitials }}</div>
+                <div class="initials" v-else>{{ setInitials(user.surname, user.name) }}</div>
             </div>
             <div class="dropdown">
                 <button class="btn drop dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
@@ -64,17 +64,15 @@ export default {
             'saveAccessFromServer',
             'saveRefreshFromServer',
         ]),
-<<<<<<< HEAD
-=======
-        toggleShow(){
-          this.show = false
+        toggleShow() {
+            this.show = false
         },
         setInitials(surname, name) {
             if (surname && name) {
                 return surname.slice(0, 1) + ' ' + name.slice(0, 1)
             }
         },
->>>>>>> ef1f5008cb8379f5c9cb2e0ae3b359110fb51749
+
         logout() {
             axios.post('/api/logout', {}, {
                 headers: {
@@ -93,11 +91,11 @@ export default {
             'access_token',
             'user'
         ]),
-        setInitials() {
-            if (this.user.surname && this.user.name) {
-                return this.user.surname.slice(0, 1) + ' ' + this.user.name.slice(0, 1)
-            }
-        },
+        // setInitials() {
+        //     if (this.user.surname && this.user.name) {
+        //         return this.user.surname.slice(0, 1) + ' ' + this.user.name.slice(0, 1)
+        //     }
+        // },
     },
 
 }
@@ -246,9 +244,10 @@ export default {
         width: 26px;
         height: 26px;
         margin-left: 7px;
-        @media all and (max-width: 500px){
-            display:none !important;
+        @media all and (max-width: 500px) {
+            display: none !important;
         }
+
         &:active, &:focus {
             outline: none;
             box-shadow: none;
