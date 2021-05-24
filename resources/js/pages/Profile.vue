@@ -20,7 +20,7 @@
                     <div class="row profile_input">
                         <div class="col-6">
                             <div class="label_wrapper">
-                                <label class="edit_form__label img_input_label" @click="showComponent = !showComponent">
+                                <div class="edit_form__label img_input_label" @click="showComponent = !showComponent">
                                     <div class="cropper-wrapper" v-if="showComponent" @click.stop>
                                         <VueCropper
                                             @closeCropper="showComponent = false"
@@ -34,7 +34,7 @@
                                     <span class="short-fio" v-else>{{
                                             shortFio(user.surname, user.name)
                                         }}</span>
-                                </label>
+                                </div>
                             </div>
                             <label class="required_field">Фамилия:</label>
                             <input type="text" class="form-control" v-model="user.surname" maxlength="255" required>
