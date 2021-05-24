@@ -231,6 +231,9 @@ export default {
                     calendar: 0
                 }
             },
+            oldData: {
+
+            },
             departmentsData: [
                 {
                     id: 1,
@@ -380,6 +383,15 @@ export default {
             this.currentDate = `${year}-${month}-${day}`
 
         },
+        arraysEqual(arr1, arr2) {
+            if (arr1.length !== arr2.length)
+                return false;
+            for (var i = arr1.length; i--;) {
+                if (arr1[i] !== arr2[i])
+                    return false;
+            }
+            return true;
+        }
     },
     computed: {
         ...mapGetters([
@@ -391,11 +403,20 @@ export default {
         auth_user() {
             return this.$store.getters.user;
         },
+        checkUserData() {
+            return Object.values(this.userData.data)
+        }
     },
     watch: {
         setUserData() {
             this.setData()
-        }
+        },
+        // checkUserData() {
+        //     this.arraysEqual(Object.values(this.userData.data), Object.values(this.data)) ? this.confirmDisabled = true : this.confirmDisabled = false
+        //     console.log('userData', Object.values(this.userData.data))
+        //     console.log('data', Object.values(this.data))
+        //     console.log('arraysEqual', this.arraysEqual(Object.values(this.userData.data), Object.values(this.data)) ? this.confirmDisabled = true : this.confirmDisabled = false)
+        // }
     },
     mounted() {
         this.setData()

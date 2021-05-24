@@ -55,14 +55,14 @@
             <li class="user"
                 v-for="user in data"
                 :key="user.id"
-                @click="$router.push('/users-management/user-edit?id='+user.id)">
+                @click="toUser($event,user.id)">
                 <ul class="row user__info flex-nowrap">
                     <li class="user_info__item col-1 user_checkbox">
                         <input type="checkbox"
                                :id="'user_'+ user.id"
                                class="user_check input_checkbox"
                                v-model="user.checked"
-                               @change="changeCheck"
+                               @change.stop="changeCheck($event)"
                         >
                     </li>
                     <li class="user_info__item col-2" v-if="settings.surname">{{ user.surname }}</li>
@@ -112,6 +112,9 @@ export default {
         }
     },
     methods: {
+        toUser(event,id){
+            if(!event.target.closest('input')) this.$router.push('/users-management/user-edit?id='+id)
+        },
         setOrder(order) {
             if (this.order === order) {
                 this.desc = !this.desc
