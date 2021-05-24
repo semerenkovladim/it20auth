@@ -16,13 +16,14 @@
                         @click="show=!show" key="menu">
                 </button>
             </div>
-            <Sidebar class="auth_sidebar" :show="show"></Sidebar>
+            <Sidebar class="auth_sidebar" :show="show" @closeEvent="toggleShow"></Sidebar>
         </div>
         <div class="account_flex">
             <div class="user_name">{{ user.surname }} {{ user.name }}</div>
-            <div class="avatar_wrapper">
+            <div class="avatar_wrapper"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img :src="user.avatar" alt="avatar" v-if="user.avatar">
-                <div class="initials" v-else>{{ setInitials(user.surname, user.name) }}</div>
+                <div class="initials" v-else>{{ setInitials }}</div>
             </div>
             <div class="dropdown">
                 <button class="btn drop dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
@@ -55,10 +56,6 @@ export default {
     data() {
         return {
             show: false,
-            user: {
-                name: '',
-                surname: ''
-            }
         }
     },
     methods: {
@@ -66,13 +63,18 @@ export default {
             'saveUserFromServer',
             'saveAccessFromServer',
             'saveRefreshFromServer',
-            'getProfile'
         ]),
+<<<<<<< HEAD
+=======
+        toggleShow(){
+          this.show = false
+        },
         setInitials(surname, name) {
             if (surname && name) {
                 return surname.slice(0, 1) + ' ' + name.slice(0, 1)
             }
         },
+>>>>>>> ef1f5008cb8379f5c9cb2e0ae3b359110fb51749
         logout() {
             axios.post('/api/logout', {}, {
                 headers: {
@@ -89,15 +91,14 @@ export default {
     computed: {
         ...mapGetters([
             'access_token',
+            'user'
         ]),
-        auth_user() {
-            return this.$store.getters.user;
-        }
+        setInitials() {
+            if (this.user.surname && this.user.name) {
+                return this.user.surname.slice(0, 1) + ' ' + this.user.name.slice(0, 1)
+            }
+        },
     },
-    async mounted() {
-        await this.getProfile(this.auth_user.id)
-        this.user = Object.assign(this.user, this.auth_user)
-    }
 
 }
 </script>
@@ -107,7 +108,7 @@ export default {
 
 .sidebar_wrapper {
     * {
-        transition: 0.5s ease;
+        transition: 0.2s ease;
     }
 
     position: relative;
@@ -123,6 +124,9 @@ export default {
         max-width: 170px;
         position: relative;
         cursor: pointer;
+        @media all and (max-width: 768px) {
+            max-width: 100px;
+        }
 
         img {
             width: 100%;
@@ -160,6 +164,10 @@ export default {
     padding-top: $headerHeight;
     left: 0;
     position: fixed;
+    @media all and (max-width: 500px) {
+        width: 100%;
+        max-width: 100%;
+    }
 
 }
 
@@ -193,6 +201,7 @@ export default {
     }
 
     .avatar_wrapper {
+        cursor: pointer;
         display: flex;
         width: 50px;
         height: 50px;
@@ -224,7 +233,7 @@ export default {
     }
 
     .account_flex {
-
+        z-index: 1030;
         position: relative;
     }
 
@@ -237,7 +246,9 @@ export default {
         width: 26px;
         height: 26px;
         margin-left: 7px;
-
+        @media all and (max-width: 500px){
+            display:none !important;
+        }
         &:active, &:focus {
             outline: none;
             box-shadow: none;
@@ -260,6 +271,8 @@ export default {
         transform: translate3d(0, calc(100% + 7px), 0) !important;
         height: fit-content;
         padding: 0;
+        border: none;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
 
         a {
             font-weight: 500;
@@ -288,6 +301,7 @@ export default {
                     height: 15px;
                     background: #fff;
                     z-index: -1;
+                    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
 
                 }
             }
@@ -300,6 +314,11 @@ export default {
 
         .dropdown-divider {
             display: none;
+        }
+
+        .dropdown-item.active, .dropdown-item:hover {
+            background: #FFFFFF;
+            color: $designColorOne;
         }
     }
 }

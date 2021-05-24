@@ -22,6 +22,7 @@ import TheLoginTwoFactor from "../pages/auth/TheLoginTwoFactor";
 import TheLoginCode from "../pages/auth/TheLoginCode";
 import middlewarePipeline from "./middlewarePipeline";
 import isLogin from './isLogin';
+import trimQuery from './trimQuery';
 import TheRepairPasswordCodeWord from "../pages/auth/TheRepairPasswordCodeWord";
 // import * as path from "path";
 
@@ -36,41 +37,81 @@ const router = new VueRouter({
             path: '/login',
             name: 'login.base',
             component: TheAuth,
+            meta: {
+              middleware: [
+                  trimQuery,
+              ]
+            },
             children: [
                 {
                     path: '/',
                     name: 'login.index',
-                    component: TheLogin
+                    component: TheLogin,
+                    meta: {
+                        middleware: [
+                            trimQuery,
+                        ],
+                    },
                 },
                 {
                     path: 'two-step',
                     name: 'login.two-step',
-                    component: TheLoginTwoFactor
+                    component: TheLoginTwoFactor,
+                    meta: {
+                        middleware: [
+                            trimQuery,
+                        ],
+                    },
                 },
                 {
                     path: 'code',
                     name: 'login.code',
-                    component: TheLoginCode
+                    component: TheLoginCode,
+                    meta: {
+                        middleware: [
+                            trimQuery,
+                        ],
+                    },
                 },
                 {
                     path: 'repair-password',
                     name: 'login.repair',
-                    component: TheRepairPassword
+                    component: TheRepairPassword,
+                    meta: {
+                        middleware: [
+                            trimQuery,
+                        ],
+                    },
                 },
                 {
                     path: 'repair-password/code',
                     name: 'login.repair.code',
-                    component: TheRepairPasswordCode
+                    component: TheRepairPasswordCode,
+                    meta: {
+                        middleware: [
+                            trimQuery,
+                        ],
+                    },
                 },
                 {
                     path: 'repair-password/new-password',
                     name: 'login.repair.new',
-                    component: TheRepairPasswordNew
+                    component: TheRepairPasswordNew,
+                    meta: {
+                        middleware: [
+                            trimQuery,
+                        ],
+                    },
                 },
                 {
                     path: 'repair-password/code-word',
                     name: 'login.repair.word',
-                    component: TheRepairPasswordCodeWord
+                    component: TheRepairPasswordCodeWord,
+                    meta: {
+                        middleware: [
+                            trimQuery,
+                        ],
+                    },
                 }
             ]
         },
@@ -84,7 +125,8 @@ const router = new VueRouter({
                     component: Home,
                     meta: {
                         middleware: [
-                            isLogin
+                            isLogin,
+                            trimQuery,
                         ]
                     }
                 },
@@ -93,7 +135,8 @@ const router = new VueRouter({
                     component: Profile,
                     meta: {
                         middleware: [
-                            isLogin
+                            isLogin,
+                            trimQuery,
                         ]
                     }
                 },
@@ -102,7 +145,8 @@ const router = new VueRouter({
                     component: UsersManagementPage,
                     meta: {
                         middleware: [
-                            isLogin
+                            isLogin,
+                            trimQuery,
                         ]
                     }
                 },
@@ -113,7 +157,8 @@ const router = new VueRouter({
                     params: true,
                     meta: {
                         middleware: [
-                            isLogin
+                            isLogin,
+                            trimQuery,
                         ]
                     }
                 },
@@ -122,7 +167,8 @@ const router = new VueRouter({
                     component: NewUserPage,
                     meta: {
                         middleware: [
-                            isLogin
+                            isLogin,
+                            trimQuery,
                         ]
                     }
                 },
@@ -132,7 +178,8 @@ const router = new VueRouter({
                     name: 'DepartmentsManagement',
                     meta: {
                         middleware: [
-                            isLogin
+                            isLogin,
+                            trimQuery,
                         ]
                     }
 
@@ -143,7 +190,8 @@ const router = new VueRouter({
                     name: 'DepartmentCreate',
                     meta: {
                         middleware: [
-                            isLogin
+                            isLogin,
+                            trimQuery,
                         ]
                     }
                 },
@@ -153,7 +201,8 @@ const router = new VueRouter({
                     name: 'DepartmentEdit',
                     meta: {
                         middleware: [
-                            isLogin
+                            isLogin,
+                            trimQuery,
                         ]
                     }
                 },
@@ -168,7 +217,8 @@ const router = new VueRouter({
                             component: AccountLogin,
                             meta: {
                                 middleware: [
-                                    isLogin
+                                    isLogin,
+                                    trimQuery,
                                 ]
                             }
                         },
@@ -178,7 +228,8 @@ const router = new VueRouter({
                             component: HistoryList,
                             meta: {
                                 middleware: [
-                                    isLogin
+                                    isLogin,
+                                    trimQuery,
                                 ]
                             }
                         }
