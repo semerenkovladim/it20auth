@@ -96,16 +96,6 @@ export default {
             },
         }
     },
-    methods: {
-        ...mapActions([
-            'getProfile'
-        ])
-    },
-    async mounted() {
-        await this.getProfile(this.auth_user.id)
-        this.user = Object.assign(this.user, this.auth_user)
-        console.log('User', this.user)
-    },
     computed:{
         auth_user(){
             return this.$store.getters.user;

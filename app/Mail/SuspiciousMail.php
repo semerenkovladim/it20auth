@@ -13,15 +13,17 @@ class SuspiciousMail extends Mailable
 
     public $name;
     public $subject;
+    public $ip;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($name)
+    public function __construct($name, $ip)
     {
         $this->name = $name;
+        $this->ip = $ip;
         $this->subject = "Обнаружен подозрительный вход в систему IT 2.0 Tools";
     }
 

@@ -22,7 +22,7 @@
             <div class="user_name">{{ user.surname }} {{ user.name }}</div>
             <div class="avatar_wrapper">
                 <img :src="user.avatar" alt="avatar" v-if="user.avatar">
-                <div class="initials" v-else>{{ setInitials(user.surname, user.name) }}</div>
+                <div class="initials" v-else>{{ setInitials }}</div>
             </div>
             <div class="dropdown">
                 <button class="btn drop dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
@@ -55,10 +55,6 @@ export default {
     data() {
         return {
             show: false,
-            user: {
-                name: '',
-                surname: ''
-            }
         }
     },
     methods: {
@@ -66,13 +62,7 @@ export default {
             'saveUserFromServer',
             'saveAccessFromServer',
             'saveRefreshFromServer',
-            'getProfile'
         ]),
-        setInitials(surname, name) {
-            if (surname && name) {
-                return surname.slice(0, 1) + ' ' + name.slice(0, 1)
-            }
-        },
         logout() {
             axios.post('/api/logout', {}, {
                 headers: {
@@ -89,15 +79,14 @@ export default {
     computed: {
         ...mapGetters([
             'access_token',
+            'user'
         ]),
-        auth_user() {
-            return this.$store.getters.user;
-        }
+        setInitials() {
+            if (this.user.surname && this.user.name) {
+                return this.user.surname.slice(0, 1) + ' ' + this.user.name.slice(0, 1)
+            }
+        },
     },
-    async mounted() {
-        await this.getProfile(this.auth_user.id)
-        this.user = Object.assign(this.user, this.auth_user)
-    }
 
 }
 </script>
