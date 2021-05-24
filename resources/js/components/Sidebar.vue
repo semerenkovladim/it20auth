@@ -129,7 +129,7 @@ export default {
     },
     computed: {
         ...mapGettres([
-            'user
+            'user',
         ]),
     }
 }
