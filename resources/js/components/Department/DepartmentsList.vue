@@ -59,7 +59,7 @@
             </div>
             <div class="departments_list-body" v-if="successfulSearch">
                 <ul>
-                    <li class="departments_list-item" v-for="(dep, id) in getDepartments" :key="id">
+                    <li class="departments_list-item" v-for="(dep, id) in getDepartments" :key="id" @click="getEdit(dep.id)">
                         <ul class="row list-item_info">
                             <li class="col-1 checkbox_section">
                                 <input type="checkbox"
@@ -159,8 +159,8 @@ export default {
             this.setOrder('count')
         },
 
-        getEdit() {
-            this.$store.commit('updateDepartmentId', this.checkedDepartments)
+        getEdit( id = this.checkedDepartments) {
+            this.$store.commit('updateDepartmentId', id)
             this.$router.push({name: 'DepartmentEdit'})
         },
 
@@ -327,6 +327,56 @@ export default {
     }
 }
 
+.depList {
+    overflow-x: auto;
+    min-height: 825px;
+
+    &::-webkit-scrollbar {
+        height: 6px;
+        cursor: pointer;
+        background-color: lighten($designColorOne, 42%);
+    }
+
+    &::-webkit-scrollbar-button {
+        display: none;
+        width: 0;
+        height: 0;
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-track-piece {
+        background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 15px;
+        background-color: lighten($designColorOne, 20%);
+        cursor: pointer;
+
+        &:hover {
+            cursor: pointer;
+            background-color: lighten($designColorOne, 10%);
+        }
+    }
+
+    &::-webkit-scrollbar-corner {
+        background-color: transparent;
+    }
+
+    .departments_list-item {
+        cursor: pointer;
+    }
+
+    @media (min-width: 958px) {
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+}
+
 .list_controls {
     > .row {
         height: 88px;
@@ -372,6 +422,7 @@ export default {
 }
 
 .departments_list-header {
+    min-width: 550px;
     font-size: 13px;
     font-style: normal;
     font-weight: 600;
@@ -393,6 +444,10 @@ export default {
     }
 }
 
+.departments_list-body {
+    min-width: 550px;
+}
+
 .list-item_info {
     display: flex;
     align-items: center;
@@ -408,6 +463,10 @@ export default {
 @media (max-width: 768px) {
     .list_control_btns {
         border-bottom: $depBoxBorder;
+    }
+
+    .depList {
+        width: auto;
     }
 }
 </style>

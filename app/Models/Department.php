@@ -57,7 +57,7 @@ class Department extends Model
                 ->leftJoin('users', 'users.id', '=', 'departments.head_department')
                 ->select('departments.id', 'departments.title', 'departments.created_at', 'users.name', 'users.surname')
                 ->orderByDesc($request->orderBy)
-                ->paginate(5);
+                ->paginate(15);
 
         }   else {
 
@@ -65,7 +65,7 @@ class Department extends Model
                     ->leftJoin('users', 'users.id', '=', 'departments.head_department')
                     ->select('departments.id', 'departments.title', 'departments.created_at', 'users.name', 'users.surname')
                     ->orderBy($request->orderBy)
-                    ->paginate(5);
+                    ->paginate(15);
 
         }
 
@@ -87,7 +87,7 @@ class Department extends Model
             ->leftJoin('users', 'users.id', '=', 'departments.head_department')
             ->select('departments.id', 'departments.title', 'departments.created_at', 'users.name', 'users.surname')
             ->orderBy("${key}", "${direct}")
-            ->paginate(5);
+            ->paginate(15);
     }
 
     public function countMembers($id)
