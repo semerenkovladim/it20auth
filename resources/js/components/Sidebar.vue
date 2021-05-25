@@ -128,7 +128,7 @@ export default {
         ])
     },
     computed: {
-        ...mapGettres([
+        ...mapGetters([
             'user',
         ]),
     }
