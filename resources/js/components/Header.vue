@@ -72,7 +72,6 @@ export default {
                 return surname.slice(0, 1) + ' ' + name.slice(0, 1)
             }
         },
-
         logout() {
             axios.post('/api/logout', {}, {
                 headers: {
