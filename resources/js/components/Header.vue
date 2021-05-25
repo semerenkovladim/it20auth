@@ -23,7 +23,7 @@
             <div class="avatar_wrapper"
                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img :src="user.avatar" alt="avatar" v-if="user.avatar">
-                <div class="initials" v-else>{{ setInitials(user.surname, user.name) }}</div>
+                <div class="initials" v-else>{{ setInitials }}</div>
             </div>
             <div class="dropdown">
                 <button class="btn drop dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
