@@ -411,12 +411,6 @@ export default {
         setUserData() {
             this.setData()
         },
-        // checkUserData() {
-        //     this.arraysEqual(Object.values(this.userData.data), Object.values(this.data)) ? this.confirmDisabled = true : this.confirmDisabled = false
-        //     console.log('userData', Object.values(this.userData.data))
-        //     console.log('data', Object.values(this.data))
-        //     console.log('arraysEqual', this.arraysEqual(Object.values(this.userData.data), Object.values(this.data)) ? this.confirmDisabled = true : this.confirmDisabled = false)
-        // }
     },
     mounted() {
         this.setData()
