@@ -39,11 +39,11 @@
                                     </div>
                                 </li>
                                 <li class="required_field">
-                                    <label for="name">Название:</label>
+                                    <label for="name" class="required">Название:</label>
                                     <input type="text" id="name" v-model="title" required>
                                 </li>
                                 <li class="required_field">
-                                    <label for="lead">Руководитель:</label>
+                                    <label for="lead" class="required">Руководитель:</label>
                                     <select type="text" id="lead" v-model="depHead" required>
                                         <option value="null"></option>
                                         <option v-for="lead in getLeads" :value="lead.id">
@@ -272,10 +272,20 @@ form {
     }
 
     label {
-        width: 100%;
+        position: relative;
         font-size: 14px;
         color: #666666;
         margin-bottom: 21px;
+    }
+
+    .required {
+        &::before {
+            position: absolute;
+            content: "*";
+            display: block;
+            right: -10px;
+            color: red;
+        }
     }
 
     .errors {
@@ -285,6 +295,7 @@ form {
 
     input,
     select {
+        display: block;
         height: 60px;
         width: 377px;
         margin-bottom: 30px;
@@ -319,6 +330,7 @@ form {
 
 .form-btns {
     display: flex;
+    flex-wrap: wrap;
 }
 
 .btnSave,
@@ -354,6 +366,12 @@ form {
     }
     .btnSave {
         margin-left: 0px;
+        width: 90%;
+    }
+
+    .btnCancel {
+        width: 90%;
+        margin: 10px 0 0 0;
     }
 }
 </style>

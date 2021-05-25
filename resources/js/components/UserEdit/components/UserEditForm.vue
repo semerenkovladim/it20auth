@@ -231,6 +231,9 @@ export default {
                     calendar: 0
                 }
             },
+            oldData: {
+
+            },
             departmentsData: [
                 {
                     id: 1,
@@ -272,11 +275,16 @@ export default {
         ...mapActions([
             'getUMMessage',
             'getAllDepartments',
-            'changeUMPersonalDataStatus'
+            'changeUMPersonalDataStatus',
+            'getProfile'
 
         ]),
         toManagement() {
-            this.$router.push('/users-management')
+            if (this.$route.path === '/users-management/new-user') {
+                this.$router.push('/users-management')
+            } else {
+                this.popupShow = false
+            }
         },
         setCropImg(data) {
             this.userData.data.avatar = data.path
@@ -326,9 +334,13 @@ export default {
             return axios.put('/api/user/update', data.data)
                 .then(value => {
                     if (value.data.status) {
+                        console.log('value.data.data id', value.data.data.id)
                         this.message.status = false
                         this.popupShow = true
                         this.popupMessage = "Изменения успешно сохранены"
+                        if (value.data.data.id === this.auth_user.id) {
+                            this.getProfile(this.auth_user.id)
+                        }
                     } else {
                         this.message.status = true
                         this.message.text = value.data.error
@@ -371,6 +383,15 @@ export default {
             this.currentDate = `${year}-${month}-${day}`
 
         },
+        arraysEqual(arr1, arr2) {
+            if (arr1.length !== arr2.length)
+                return false;
+            for (var i = arr1.length; i--;) {
+                if (arr1[i] !== arr2[i])
+                    return false;
+            }
+            return true;
+        }
     },
     computed: {
         ...mapGetters([
@@ -378,12 +399,18 @@ export default {
         ]),
         setUserData() {
             return this.data
+        },
+        auth_user() {
+            return this.$store.getters.user;
+        },
+        checkUserData() {
+            return Object.values(this.userData.data)
         }
     },
     watch: {
         setUserData() {
             this.setData()
-        }
+        },
     },
     mounted() {
         this.setData()
@@ -405,6 +432,11 @@ export default {
     max-width: 900px;
     margin: 0 auto;
     padding-bottom: 30px;
+
+
+    .select-wrapper {
+        width: 100%;
+    }
 
     .cropper-wrapper {
         position: absolute;
@@ -434,6 +466,7 @@ export default {
             font-size: 14px;
             color: #808080;
             margin-bottom: 10px;
+
             &:focus {
                 border: 2px solid darken(#F5F5F5, 10%);
             }

@@ -72,7 +72,12 @@ select, input, textarea {
         width: 11px;
     }
 }
-
+.select-wrapper {
+    margin-bottom: 10px;
+}
+select.styled {
+    margin-bottom: 0!important;
+}
 select.styled:focus {
     .select-wrapper {
         &:after {

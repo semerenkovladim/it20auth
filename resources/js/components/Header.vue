@@ -23,7 +23,7 @@
             <div class="avatar_wrapper"
                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img :src="user.avatar" alt="avatar" v-if="user.avatar">
-                <div class="initials" v-else>{{ setInitials }}</div>
+                <div class="initials" v-else>{{ setInitials(user.surname, user.name) }}</div>
             </div>
             <div class="dropdown">
                 <button class="btn drop dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
@@ -64,8 +64,13 @@ export default {
             'saveAccessFromServer',
             'saveRefreshFromServer',
         ]),
-        toggleShow(){
-          this.show = false
+        toggleShow() {
+            this.show = false
+        },
+        setInitials(surname, name) {
+            if (surname && name) {
+                return surname.slice(0, 1) + ' ' + name.slice(0, 1)
+            }
         },
         logout() {
             axios.post('/api/logout', {}, {
@@ -85,11 +90,11 @@ export default {
             'access_token',
             'user'
         ]),
-        setInitials() {
-            if (this.user.surname && this.user.name) {
-                return this.user.surname.slice(0, 1) + ' ' + this.user.name.slice(0, 1)
-            }
-        },
+        // setInitials() {
+        //     if (this.user.surname && this.user.name) {
+        //         return this.user.surname.slice(0, 1) + ' ' + this.user.name.slice(0, 1)
+        //     }
+        // },
     },
 
 }
@@ -99,10 +104,7 @@ export default {
 @import "resources/sass/variables";
 
 .sidebar_wrapper {
-    * {
-        transition: 0.2s ease;
-    }
-
+    transition: 0.2s ease;
     position: relative;
     display: flex;
     width: 100%;
@@ -156,6 +158,14 @@ export default {
     padding-top: $headerHeight;
     left: 0;
     position: fixed;
+    //transition: 0.2s ease;
+    transition: width, height, flex, max-width, min-width, transform, justify, align ease;
+    transition-duration: 0.2s;
+
+    > * {
+        transition: 0.2s ease;
+    }
+
     @media all and (max-width: 500px) {
         width: 100%;
         max-width: 100%;
@@ -183,7 +193,7 @@ export default {
         bottom: 0;
         left: 0;
         width: 100%;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 3px 3px 0 rgb(0 0 0 / 5%);
         z-index: 1002;
     }
 
@@ -238,9 +248,10 @@ export default {
         width: 26px;
         height: 26px;
         margin-left: 7px;
-        @media all and (max-width: 500px){
-            display:none !important;
+        @media all and (max-width: 500px) {
+            display: none !important;
         }
+
         &:active, &:focus {
             outline: none;
             box-shadow: none;

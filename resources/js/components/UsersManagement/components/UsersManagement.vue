@@ -368,6 +368,7 @@ export default {
 
 .users_management {
     padding-bottom: 15px;
+    padding-top: 0;
 }
 
 .search__row {
@@ -415,7 +416,6 @@ export default {
 
 
 .users_management__wrapper {
-    padding-top: 10px;
     padding-bottom: 10px;
     background: rgba(251, 251, 251);
     border-radius: 6px;

@@ -31,8 +31,8 @@
                     <div class="col-md-9 departments_list-box">
                         <departments-list
                             ref="departmentsList"
-                        @sortParams="sortParams"
-                        :pag-list="pageList"/>
+                            @sortParams="sortParams"
+                            :pag-list="pageList"/>
                     </div>
                 </div>
                 <div class="row">
@@ -128,7 +128,6 @@ export default {
 
 .departments_management {
     background-color: #fafafa;
-    padding-top: 7px;
     min-height: 100vh;
 }
 

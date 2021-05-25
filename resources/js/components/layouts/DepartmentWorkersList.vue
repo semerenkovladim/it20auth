@@ -8,9 +8,9 @@
                     </div>
                     <div class="modal-title">Список сотрудников</div>
                     <ul class="workers_list">
-                        <li v-for="(member, key) in list" :key="member.id" v-show="!member.hide" >
+                        <li v-for="(member, key) in list" :key="member.id" v-show="!member.hide">
                             <span>{{ member.name }} {{ member.surname }} </span>
-<!--                            <span @click="toDelete(member.id)">{{ member.name }} {{ member.surname }} </span>-->
+                            <!--                            <span @click="toDelete(member.id)">{{ member.name }} {{ member.surname }} </span>-->
                             <div class="checkbox_section">
                                 <input type="checkbox" :id="member.id" class="checkbox" :value="member.id">
                                 <label :for="member.id" @click="change(member.id)"></label>
@@ -39,17 +39,17 @@ export default {
     },
     methods: {
         ...mapActions(['fetchDepMembers', 'deleteUsers']),
-        hideItem(id){
+        hideItem(id) {
             this.list.forEach(i => i.id === id ? i.hide = true : true);
         },
         addToDel(id) {
             this.toDeleteUsers.push(id);
         },
-        change(id){
+        change(id) {
             this.addToDel(id);
             this.hideItem(id)
         },
-        formList(){
+        formList() {
             this.list = this.getDepMembers;
         },
     },
@@ -71,6 +71,7 @@ export default {
 label {
     display: block !important;
 }
+
 .modal-mask {
     position: absolute;
     z-index: 9998;
@@ -80,6 +81,13 @@ label {
     height: 100%;
     display: table;
     transition: opacity 0.3s ease;
+
+    @media (max-width: 1090px) {
+        top: 115px;
+        left: 0;
+
+
+    }
 }
 
 .modal-wrapper {
@@ -139,16 +147,6 @@ label {
             border-bottom: none;
         }
 
-        //&::after {
-        //    content: '';
-        //    display: inline-block;
-        //    position: absolute;
-        //    right: 15px;
-        //    height: 25px;
-        //    width: 25px;
-        //    background: url("/images/ic_clear.svg") no-repeat center;
-        //    cursor: pointer;
-        //}
         .checkbox {
             display: none;
 
@@ -159,21 +157,10 @@ label {
                 display: block !important;
                 width: 20px;
                 height: 20px;
-                //border: 2px solid #E6E6E6;
                 background: url("/images/ic_clear.svg") no-repeat center;
-                //border-radius: 4px;
                 transition: .4s ease;
                 cursor: pointer;
 
-            }
-
-            &:checked + label::after {
-                //display: none;
-                //position: absolute;
-                //right: 15px;
-                //border-color: #0b76ef;
-                //background-color: #0b76ef;
-                //background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e");
             }
         }
     }
@@ -195,6 +182,7 @@ label {
 
 .btns {
     margin-top: 25px;
+    flex-wrap: wrap;
 }
 
 .btnSave,
@@ -234,8 +222,34 @@ label {
     .modal-container {
         max-width: 320px;
     }
+
+    .modal-container {
+        overflow-y: scroll;
+    }
+
+    .closeModal {
+        right: -16px;
+    }
+
+    .modal-title {
+        font-size: 16px;
+    }
+
+    .workers_list {
+        span {
+            max-width: 136px;
+        }
+    }
+
     .btnSave {
         margin-left: 0px;
+        width: 100%;
     }
+
+    .btnCancel {
+        margin: 10px 0 0 0;
+        width: 100%;
+    }
+
 }
 </style>
