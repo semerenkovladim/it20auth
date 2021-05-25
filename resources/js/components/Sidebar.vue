@@ -124,6 +124,7 @@ export default {
                 if (!el.target.closest('.sidebar') && !el.target.closest('.sidebar_arrow')) vm.$emit('closeEvent');
             }
         }
+    },
     computed: {
         ...mapGetters([
             'user',
