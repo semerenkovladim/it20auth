@@ -117,7 +117,7 @@ export default {
                 'reservedPassword': this.reservedPassword.trim(),
             }
             axios.post('/api/login/reserved-password', payload).then((response) => {
-                if(! response.data.user.access_level.name_your_level]) {
+                if(! response.data.user.access_level.name_your_level) {
                     var myModal = new bootstrap.Modal(document.getElementById('resetPassword'), {
                         keyboard: false
                     })
