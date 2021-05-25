@@ -123,7 +123,7 @@ export default {
 
             axios.post('/api/login/login-code', payload).then((response) => {
                 this.hasError = false;
-                if(! response.data.user.access_level.name_your_level]) {
+                if(! response.data.user.access_level.name_your_level) {
                     var myModal = new bootstrap.Modal(document.getElementById('resetPassword'), {
                         keyboard: false
                     })
