@@ -90,7 +90,7 @@
                         <div class="title-list">Двухэтапная аутентификация</div>
                         <div class="subaction">
                             <label>
-                                <span :class="{'checkbox': true, 'checkbox-active': twofactor}" @click="toogleCheckbox">{{ twofactor ? 'Включено' : 'Выключено' }}</span>
+                                <span :class="{'checkbox': true, 'checkbox-active': twofactor}" @click="toogleCheckbox">{{ window.innerWidth > 768 ? twofactor ? 'Включено' : 'Выключено' : '' }}</span>
                                 <input type="checkbox" v-model="twofactor" hidden>
                             </label>
                         </div>
@@ -136,7 +136,7 @@
                             <label>
                                 <span
                                     :class="{'checkbox': true, 'checkbox-active': reservedPassword}"
-                                    @click="toogleCheckbox">{{ reservedPassword ? 'Включено' : 'Выключено' }}</span>
+                                    @click="toogleCheckbox">{{ window.innerWidth > 768 ? reservedPassword ? 'Включено' : 'Выключено' : '' }}</span>
                                 <input type="checkbox" v-model="reservedPassword" hidden>
                             </label>
                         </div>
@@ -240,7 +240,7 @@
                             <label>
                                 <span
                                     :class="{'checkbox': true, 'checkbox-active': notification}"
-                                    @click="toogleCheckbox">{{ notification ? 'Включено' : 'Выключено' }}</span>
+                                    @click="toogleCheckbox">{{ window.innerWidth > 768 ? notification ? 'Включено' : 'Выключено' : '' }}</span>
                                 <input type="checkbox" v-model="notification" hidden>
                             </label>
                         </div>
@@ -287,7 +287,7 @@
                             <label>
                                 <span
                                     :class="{'checkbox': true, 'checkbox-active': codeWord}"
-                                    @click="toogleCheckbox">{{ codeWord ? 'Включено' : 'Выключено' }}</span>
+                                    @click="toogleCheckbox">{{ window.innerWidth > 768 ? codeWord ? 'Включено' : 'Выключено' : '' }}</span>
                                 <input type="checkbox" v-model="codeWord" hidden>
                             </label>
                         </div>
@@ -414,6 +414,7 @@ export default {
             codeWordText: '',
             reservedEmail: '',
             actionHostory: {},
+            window: document.body,
         }
     },
     methods: {
@@ -817,5 +818,23 @@ export default {
     bottom: 5px;
     right: 10px;
     cursor: pointer;
+}
+@media screen and (max-width: 768px){
+    .checkbox {
+        width: 75px;
+    }
+    .settings-item > div:first-child {
+        flex-shrink: 1;
+    }
+    .settings-item > div:last-child {
+        flex-shrink: 1;
+    }
+    .settings-item > div:nth-child(2) {
+        flex-grow: 5;
+        text-align: center;
+    }
+    .settings > li {
+        padding: 15px;
+    }
 }
 </style>

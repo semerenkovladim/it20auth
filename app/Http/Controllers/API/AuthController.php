@@ -74,7 +74,7 @@ class AuthController extends Controller
 
         if($user->ip) {
             if($user->setting->suspiciousLoginNotifications && $user->getIp() !== $user->ip) {
-                Mail::to($user->email)->send(new SuspiciousMail($user->name));
+                Mail::to($user->email)->send(new SuspiciousMail($user->name, $user->getIp()));
             }
         } else {
             $user->ip = $user->getIp();

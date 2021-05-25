@@ -12,94 +12,130 @@
             <div class="col-12 error-message"
                  v-if="message.status">{{ message.text }}
             </div>
-            <form action="#"
-                  method="post"
-                  class="row user_edit_form__form"
-                  enctype="multipart/form-data">
-                <div class="container">
-                    <div class="row profile_input">
-                        <div class="col-6">
-                            <div class="label_wrapper">
-                                <label class="edit_form__label img_input_label" @click="showComponent = !showComponent">
-                                    <div class="cropper-wrapper" v-if="showComponent" @click.stop>
-                                        <VueCropper
-                                            @closeCropper="showComponent = false"
-                                            @uploadSuccess="setCropImg">
-                                        </VueCropper>
+            <div>
+                <form action="#"
+                      method="post"
+                      class="row user_edit_form__form"
+                      enctype="multipart/form-data">
+                    <div class="col-12">
+                        <div class="row profile_input">
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-md-6 profile_col">
+                                        <div class="label_wrapper">
+                                            <div class="edit_form__label img_input_label"
+                                                 @click="showComponent = !showComponent">
+                                                <div class="cropper-wrapper" v-if="showComponent" @click.stop>
+                                                    <VueCropper
+                                                        @closeCropper="showComponent = false"
+                                                        @uploadSuccess="setCropImg">
+                                                    </VueCropper>
+                                                </div>
+                                                <img :src="user.avatar"
+                                                     :alt="user.surname + ' ' + user.name + ' фото'"
+                                                     v-if="user.avatar"
+                                                     v-cloak>
+                                                <span class="short-fio" v-else>{{
+                                                        shortFio(user.surname, user.name)
+                                                    }}</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <img :src="user.avatar"
-                                         :alt="user.surname + ' ' + user.name + ' фото'"
-                                         v-if="user.avatar"
-                                         v-cloak>
-                                    <span class="short-fio" v-else>{{
-                                            shortFio(user.surname, user.name)
-                                        }}</span>
+                                    <div class="col-md-6 profile_col">
+                                        <label class="required_field">
+                                            <span class="input_title">Дата рождения:</span>
+                                            <input type="date" class="form-control styled" v-model="user.birth"
+                                                   required>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 profile_col">
+                                <label class="required_field">
+                                    <span class="input_title">Фамилия:</span>
+                                    <input type="text" class="form-control styled" v-model="user.surname"
+                                           maxlength="255"
+                                           required>
+                                </label>
+                                <label class="required_field">
+                                    <span class="input_title">Имя:</span>
+                                    <input type="text" class="form-control styled" v-model="user.name" maxlength="255"
+                                           required>
+                                </label>
+                                <label>
+                                    <span class="input_title">Отчество:</span>
+                                    <input type="text" class="form-control styled" v-model="user.middle_name"
+                                           maxlength="255">
                                 </label>
                             </div>
-                            <label class="required_field">Фамилия:</label>
-                            <input type="text" class="form-control" v-model="user.surname" maxlength="255" required>
-
-                            <label class="required_field">Имя:</label>
-                            <input type="text" class="form-control" v-model="user.name" maxlength="255" required>
-
-                            <label>Отчество:</label>
-                            <input type="text" class="form-control" v-model="user.middle_name" maxlength="255">
+                            <div class="col-md-6 row_date profile_col">
+                                <label class="edit_form__label">
+                                    <span class="input_title">Отдел:</span>
+                                    <span class="select-wrapper">
+                                        <select name="department"
+                                                class="styled"
+                                                v-model="user.department_id"
+                                                tabindex="5">
+                                        <option v-for="department in ALL_DEPARTMENTS"
+                                                :key="department.id"
+                                                :value="department.id"
+                                        >
+                                            {{ department.title }}
+                                        </option>
+                                    </select>
+                                    </span>
+                                </label>
+                                <label class="edit_form__label">
+                                    <span class="input_title required_field">Должность:</span>
+                                    <input type="text" class="form-control styled"
+                                           v-model="user.position"
+                                           maxlength="255"
+                                           required>
+                                </label>
+                                <label>
+                                    <span class="input_title">Дата начала работы:</span>
+                                    <input type="date" class="form-control styled" v-model="user.date_start">
+                                </label>
+                            </div>
                         </div>
-                        <div class="col-6 row_date">
-                            <label class="required_field">Дата рождения:</label>
-                            <input type="date" class="form-control" v-model="user.birth" required>
+                        <div class="inform_title">Контактная информация</div>
+                        <div class="row profile_input">
+                            <div class="col-md-6 profile_col">
+                                <label class="required_field">
+                                    <span class="input_title">E-mail</span>
+                                    <input type="text" class="form-control styled" v-model="user.email" maxlength="255"
+                                           required>
+                                </label>
+                                <label>
+                                    <span class="input_title">Skype:</span>
+                                    <input type="text" class="form-control styled" v-model="user.skype" maxlength="255">
+                                </label>
+                            </div>
+                            <div class="col-md-6 profile_col">
+                                <label>
+                                    <span class="input_title">Мобильный телефон:</span>
+                                    <input type="tel" class="form-control styled" v-model="user.mobile_phone"
+                                           maxlength="12"
+                                           minlength="10">
+                                </label>
 
-                            <label class="edit_form__label">
-                                <span class="input_title">Отдел:</span>
-                                <select name="department"
-                                        class="styled"
-                                        v-model="user.department_id"
-                                        tabindex="5">
-                                    <option v-for="department in ALL_DEPARTMENTS"
-                                            :key="department.id"
-                                            :value="department.id"
-                                    >
-                                        {{ department.title }}
-                                    </option>
-                                </select>
-                            </label>
-
-                            <label class="edit_form__label">
-                                <span class="input_title required_field">Должность:</span>
-                                <input type="text" class="form-control" v-model="user.position" maxlength="255" required>
-                            </label>
-                            <label>Дата начала работы:</label>
-                            <input type="date" class="form-control" v-model="user.date_start">
+                                <label>
+                                    <span class="input_title">Рабочий телефон:</span>
+                                    <input type="tel" class="form-control styled" v-model="user.work_phone"
+                                           maxlength="12"
+                                           minlength="10">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form_button">
+                            <ConfirmBtn :text="confirm"
+                                        @confirmEvent="updateProfile(user)" :btnDisabled="confirmDisabled">
+                            </ConfirmBtn>
+                            <CancelBtn @cancelEvent="cancelUser(user)"></CancelBtn>
                         </div>
                     </div>
-                    <div class="inform_title">Контактная информация</div>
-                    <div class="row profile_input">
-                        <div class="col-6">
-                            <label class="required_field">E-mail</label>
-                            <input type="text" class="form-control" v-model="user.email" maxlength="255"
-                                   required>
-
-                            <label>Skype:</label>
-                            <input type="text" class="form-control" v-model="user.skype" maxlength="255">
-                        </div>
-                        <div class="col-6">
-                            <label>Мобильный телефон:</label>
-                            <input type="tel" class="form-control" v-model="user.mobile_phone" maxlength="12"
-                                   minlength="10">
-
-                            <label>Рабочий телефон:</label>
-                            <input type="tel" class="form-control" v-model="user.work_phone" maxlength="12"
-                                   minlength="10">
-                        </div>
-                    </div>
-                    <div class="form_button">
-                        <ConfirmBtn :text="confirm"
-                                    @confirmEvent="updateProfile(user)" :btnDisabled="confirmDisabled">
-                        </ConfirmBtn>
-                        <CancelBtn @cancelEvent="cancelUser(user)"></CancelBtn>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </template>
@@ -169,45 +205,28 @@ export default {
             let fields = document.querySelectorAll('.required_field > [required]')
             for (let input of fields) {
                 if (input.value.trim().length < 1) {
-                    input.classList.add('form-control')
-                    setTimeout(function () {
-                        input.classList.remove('empty_field')
-                    }, 1500)
+                    input.classList.add('empty_field')
                 } else {
                     input.classList.remove('empty_field')
 
                 }
             }
         },
-        /*handleFileUpload(data) {
-            console.log('handleFileUpload', data)
-            if (data.avatar !== this.$refs.file.files[0] && this.$refs.file.files[0]) {
-                this.imgChange = true
-                data.avatar = this.$refs.file.files[0];
-                this.saveImg(data.avatar, data)
-            }
-        },
-        saveImg(image, data) {
-            let formData = new FormData();
-            formData.append('file', image)
-            return axios.post('/api/image/upload/avatar', formData)
-                .then(value => {
-                    data.avatar = value.data.path
-                })
-        },*/
         shortFio(last, first) {
-            if (last && first) return last.slice(0, 1) + '.' + first.slice(0, 1)
+            if (last && first) return last.slice(0, 1) + ' ' + first.slice(0, 1)
         },
         updateProfile(data) {
             this.checkFields()
             this.confirmDisabled = true
             console.log('data', data)
-            return axios.put('/api/user/update',  data)
+            return axios.put('/api/user/update', data)
                 .then(value => {
                     if (value.data.status) {
                         this.message.status = false
                         this.popupShow = true
                         this.popupMessage = "Изменения успешно сохранены"
+                        // this.getProfile(this.auth_user.id)
+                        // this.user = Object.assign(this.user, this.auth_user)
 
 
                     } else {
@@ -238,7 +257,7 @@ export default {
     },
     async mounted() {
         await this.getProfile(this.auth_user.id)
-        this.user = Object.assign(this.user, this.auth_user)
+        this.user = this.auth_user
         console.log('User', this.user)
         this.getAllDepartments()
 
@@ -247,16 +266,21 @@ export default {
         auth_user() {
             return this.$store.getters.user;
         },
+
         ...mapGetters([
             'ALL_DEPARTMENTS'
         ])
+
     }
 }
 </script>
 <style lang="scss">
+@import "resources/sass/variables";
+
 [disabled] {
     opacity: 0.5;
 }
+
 .edit_form__title {
     font-weight: 500;
     font-size: 18px;
@@ -268,6 +292,7 @@ export default {
     margin-bottom: 15px;
 
 }
+
 .input_title {
     font-weight: 500;
     font-size: 14px;
@@ -278,6 +303,7 @@ export default {
     width: 100%;
     margin-bottom: 7px;
 }
+
 .styled {
     padding: 0 25px;
     display: flex;
@@ -285,19 +311,75 @@ export default {
     min-height: 60px;
     width: 100%;
     background: #FFFFFF;
-    border: 1px solid #ced4da;
     border-radius: 4px;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
-    color: #495057;
     margin-bottom: 10px;
+    border: 2px solid #F5F5F5;
+    box-sizing: border-box;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 60px;
+    color: #808080;
 }
+
 .profile {
     .form_button {
         display: flex;
         justify-content: center;
         align-items: center;
     }
+
+    .form-control:focus {
+        color: #808080;
+        background-color: #fff;
+        outline: 0;
+        box-shadow: none;
+        border: 2px solid darken(#F5F5F5, 10%);
+
+    }
+
+    input[type=date] {
+        transition: 0.2s;
+
+        &::-webkit-calendar-picker-indicator {
+            transition: 0.2s ease;
+            color: transparent;
+            opacity: 1;
+            background: url('../../images/icons/ic_today.png') no-repeat center;
+            background-size: 26px 26px;
+            cursor: pointer;
+            padding: 5px 0 5px 5px;
+        }
+
+        &::-webkit-datetime-edit-day-field:focus,
+        &::-webkit-datetime-edit-month-field:focus,
+        &::-webkit-datetime-edit-year-field:focus {
+            background-color: transparent;
+            color: $designColorOne;
+            font-weight: 900;
+            font-size: 18px;
+        }
+    }
+}
+
+.profile_form {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    border-radius: 6px;
+}
+
+.profile_col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.user_edit_form__form {
+    max-width: 1236px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.empty_field{
+    border: 2px solid #FF0000;
 }
 </style>

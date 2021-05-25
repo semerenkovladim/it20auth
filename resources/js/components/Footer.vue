@@ -11,11 +11,11 @@
                     <div class="title_menu">Инструменты</div>
                     <div class="container">
                         <div class="row menu_content">
-                            <div class="col-6">Диск</div>
-                            <div class="col-6">Почта</div>
-                            <div class="col-6">Календарь</div>
-                            <div class="col-6">Фото</div>
-                            <div class="col-6">Контакты</div>
+                            <div class="col-6"><a class="footer_link" href="http://disk.hardsoft.space/">Диск</a></div>
+                            <div class="col-6"><router-link to="/" class="footer_link">Почта</router-link></div>
+                            <div class="col-6"><a class="footer_link" href="http://calendar.hardsoft.space/">Календарь</a></div>
+                            <div class="col-6"><a class="footer_link" href="http://www.ignatenko-project.store/checkPhoto">Фото</a></div>
+                            <div class="col-6"><a class="footer_link" href="http://a0543833.xsph.ru/">Контакты</a></div>
                         </div>
                     </div>
                 </div>
@@ -23,15 +23,15 @@
                     <div class="title_contact">Контакты</div>
                     <div class="container">
                         <div class="row contact_f">
-                            <div class="col_link"> <a href="tel:+380959003800">+38 (099) 607-87-26</a></div>
-                            <div class="col_link"> <a href="mailto:mail@aiti20.com">mail@aiti20.com</a></div>
+                            <div class="col_link"><a href="tel:+380959003800">+38 (099) 607-87-26</a></div>
+                            <div class="col_link"><a href="mailto:mail@aiti20.com">mail@aiti20.com</a></div>
                         </div>
                         <div class="background_line"></div>
-                        <div class="col-12 col-md-6  text-center text-md-left flex icon_social">
-                            <a href="https://www.facebook.com/" class="facebook"></a>
-                            <a href="https://www.facebook.com/" class="twitter"></a>
-                            <a href="https://www.instagram.com" class="instagram"></a>
-                        </div>
+                        <ul class="icon_social">
+                            <li class="icon_social__item"><a href="https://www.facebook.com/" class="facebook"></a></li>
+                            <li class="icon_social__item"><a href="https://www.facebook.com/" class="twitter"></a></li>
+                            <li class="icon_social__item"><a href="https://www.instagram.com" class="instagram"></a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -46,6 +46,25 @@ export default {
 </script>
 
 <style lang="scss">
+@import "resources/sass/variables";
+.footer {
+    padding-top: 48px;
+    padding-bottom: 92px;
+    .title_contact, .title_menu {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    .background_line {
+        margin-bottom: 30px;
+    }
+    .footer_link {
+        text-decoration: none;
+        color: #9B9B9B;
+        &:hover {
+            color: $designColorOne;
+        }
+    }
+}
 .contact_f {
     .col_link {
         flex: 1 1 50%;
@@ -53,9 +72,46 @@ export default {
         padding: 0 15px;
     }
 }
+
 .footer_content {
-   > .row {
-       width: 100%;
-   }
+    > .row {
+        width: 100%;
+    }
 }
+.icon_social {
+    display: flex;
+}
+.icon_social__item {
+    padding-right: 15px;
+    &:last-child {
+        padding-right: 0;
+    }
+}
+.icon_social a {
+    background: #D8D8D8;
+    mask-position: center;
+    display: block;
+    width: 26px;
+    height: 26px;
+    transition: 0.2s;
+
+    &:hover, &:active {
+        background: $designColorOne;
+    }
+}
+
+.facebook {
+    mask-image: url("../../images/icons/ic_facebook.svg");
+
+}
+
+.instagram {
+    mask-image: url("../../images/icons/ic_instagram.svg");
+
+}
+
+.twitter {
+    mask-image: url("../../images/icons/ic_twitter.svg");
+}
+
 </style>

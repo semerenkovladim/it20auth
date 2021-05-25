@@ -128,7 +128,6 @@ export default {
 
 .departments_management {
     background-color: #fafafa;
-    padding-top: 7px;
     min-height: 100vh;
 }
 

@@ -17,6 +17,7 @@
     justify-content: center;
     margin: auto;
     transition: 0.2s ease;
+
     &:before, &:after {
         transition: 0.2s ease;
         content: '';
@@ -28,9 +29,11 @@
         left: 50%;
         transform: translate(-50%, -50%);
     }
+
     &:checked {
         background: $designColorOne;
         border: 2px solid $designColorOne;
+
         &:before {
             background: url('../images/icons/checked.svg') no-repeat center / 100%;
             width: 70%;
@@ -40,11 +43,46 @@
         }
     }
 }
+
 .middle_position {
     &:after {
         background: $designColorOne;
         width: 85%;
         height: 85%;
+    }
+}
+
+select, input, textarea {
+    cursor: pointer;
+}
+
+.select-wrapper {
+    display: block;
+    position: relative;
+
+    &:after {
+        display: block;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 30px;
+        content: '';
+        background: url("../images/icons/select-arrow.svg") no-repeat center /contain;
+        height: 7px;
+        width: 11px;
+    }
+}
+.select-wrapper {
+    margin-bottom: 10px;
+}
+select.styled {
+    margin-bottom: 0!important;
+}
+select.styled:focus {
+    .select-wrapper {
+        &:after {
+            transform: translateY(-50%) rotateX(90deg);
+        }
     }
 }
 

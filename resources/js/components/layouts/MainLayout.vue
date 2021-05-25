@@ -1,11 +1,8 @@
 <template>
     <main class="main_component">
         <header-component/>
-        <div class="container-fluid">
+        <div class="main_component__container container-fluid">
             <div class="row">
-                <!--                <div class="col-2 sidebar">-->
-                <!--                    <sidebar/>-->
-                <!--                </div>-->
                 <div class="col-12 main_home">
                     <router-view></router-view>
                 </div>
@@ -35,5 +32,11 @@ export default {
     @media all and (max-width: 768px) {
         padding-left: 0;
     }
+}
+.main_component__container {
+    min-height: 100vh;
+}
+.main_home {
+    padding-top: 10px;
 }
 </style>

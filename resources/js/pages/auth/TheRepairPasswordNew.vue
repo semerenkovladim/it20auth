@@ -135,6 +135,7 @@ export default {
         clearAll() {
             this.password = '';
             this.passwordRepeate = '';
+            this.$router.push({name: 'login.repair'});
         },
         redirectToLogin() {
             var myModal = new bootstrap.Modal(document.getElementById('resetPassword'), {
