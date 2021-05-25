@@ -55,17 +55,17 @@
                                     <span class="input_title">Фамилия:</span>
                                     <input type="text" class="form-control styled" v-model="user.surname"
                                            maxlength="255"
-                                           required>
+                                           required v-on:change="changeHandler">
                                 </label>
                                 <label class="required_field">
                                     <span class="input_title">Имя:</span>
                                     <input type="text" class="form-control styled" v-model="user.name" maxlength="255"
-                                           required>
+                                           required v-on:change="changeHandler">
                                 </label>
                                 <label>
                                     <span class="input_title">Отчество:</span>
                                     <input type="text" class="form-control styled" v-model="user.middle_name"
-                                           maxlength="255">
+                                           maxlength="255" v-on:change="changeHandler">
                                 </label>
                             </div>
                             <div class="col-md-6 row_date profile_col">
@@ -90,11 +90,11 @@
                                     <input type="text" class="form-control styled"
                                            v-model="user.position"
                                            maxlength="255"
-                                           required>
+                                           required v-on:change="changeHandler">
                                 </label>
                                 <label>
                                     <span class="input_title">Дата начала работы:</span>
-                                    <input type="date" class="form-control styled" v-model="user.date_start">
+                                    <input type="date" class="form-control styled" v-model="user.date_start" v-on:change="changeHandler">
                                 </label>
                             </div>
                         </div>
@@ -104,11 +104,11 @@
                                 <label class="required_field">
                                     <span class="input_title">E-mail</span>
                                     <input type="text" class="form-control styled" v-model="user.email" maxlength="255"
-                                           required>
+                                           required v-on:change="changeHandler">
                                 </label>
                                 <label>
                                     <span class="input_title">Skype:</span>
-                                    <input type="text" class="form-control styled" v-model="user.skype" maxlength="255">
+                                    <input type="text" class="form-control styled" v-model="user.skype" maxlength="255" v-on:change="changeHandler">
                                 </label>
                             </div>
                             <div class="col-md-6 profile_col">
@@ -116,14 +116,14 @@
                                     <span class="input_title">Мобильный телефон:</span>
                                     <input type="tel" class="form-control styled" v-model="user.mobile_phone"
                                            maxlength="12"
-                                           minlength="10">
+                                           minlength="10" v-on:change="changeHandler">
                                 </label>
 
                                 <label>
                                     <span class="input_title">Рабочий телефон:</span>
                                     <input type="tel" class="form-control styled" v-model="user.work_phone"
                                            maxlength="12"
-                                           minlength="10">
+                                           minlength="10" v-on:change="changeHandler">
                                 </label>
                             </div>
                         </div>
@@ -160,7 +160,7 @@ export default {
         return {
             confirm: 'Сохранить',
             popupMessage: '',
-            confirmDisabled: false,
+            confirmDisabled: true,
             popupShow: false,
             showComponent: false,
             imgChange: false,
@@ -208,7 +208,6 @@ export default {
                     input.classList.add('empty_field')
                 } else {
                     input.classList.remove('empty_field')
-
                 }
             }
         },
@@ -217,18 +216,15 @@ export default {
         },
         updateProfile(data) {
             this.checkFields()
-            this.confirmDisabled = true
+            this.confirmDisabled = false
             console.log('data', data)
             return axios.put('/api/user/update', data)
                 .then(value => {
                     if (value.data.status) {
+                        this.confirmDisabled = афдыу
                         this.message.status = false
                         this.popupShow = true
                         this.popupMessage = "Изменения успешно сохранены"
-                        // this.getProfile(this.auth_user.id)
-                        // this.user = Object.assign(this.user, this.auth_user)
-
-
                     } else {
                         this.message.status = true
                         this.message.text = value.data.error
@@ -242,17 +238,12 @@ export default {
                     this.confirmDisabled = false
                 })
         },
-        cancelUser(data) {
-            let back = true
-            for (let key of Object.keys(data)) {
-                if (data[key] !== '') {
-                    data[key] = ''
-                    back = false
-                }
-            }
-            if (back) {
-                this.$router.go()
-            }
+        cancelUser(user) {
+            this.$router.go()
+            window.scrollTo(0, 0)
+        },
+        changeHandler() {
+            return this.confirmDisabled = false
         }
     },
     async mounted() {
@@ -260,7 +251,6 @@ export default {
         this.user = this.auth_user
         console.log('User', this.user)
         this.getAllDepartments()
-
     },
     computed: {
         auth_user() {
@@ -278,9 +268,13 @@ export default {
 @import "resources/sass/variables";
 
 [disabled] {
-    opacity: 0.5;
+    color: #B2B2B2;
+    border: 2px solid #F5F5F5;
+    background: #FFFFFF;
 }
-
+[disabled]:hover {
+    background: none;
+}
 .edit_form__title {
     font-weight: 500;
     font-size: 18px;
@@ -383,3 +377,4 @@ export default {
     border: 2px solid #FF0000;
 }
 </style>
+
