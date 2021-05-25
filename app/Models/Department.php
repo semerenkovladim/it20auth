@@ -9,11 +9,12 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Laravel\Passport\HasApiTokens;
 use App\Http\Controllers\API\DepartmentController;
+use Laravel\Scout\Searchable;
 use phpDocumentor\Reflection\Types\Object_;
 
 class Department extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
 
 
     protected $fillable = [
@@ -42,6 +43,7 @@ class Department extends Model
     }
 
     public function depHeader()
+
     {
         return $this->hasMany(User::class, 'id', 'head_department');
     }
@@ -55,7 +57,7 @@ class Department extends Model
                 ->leftJoin('users', 'users.id', '=', 'departments.head_department')
                 ->select('departments.id', 'departments.title', 'departments.created_at', 'users.name', 'users.surname')
                 ->orderByDesc($request->orderBy)
-                ->paginate(15);
+                ->paginate(5);
 
         }   else {
 
@@ -63,7 +65,7 @@ class Department extends Model
                     ->leftJoin('users', 'users.id', '=', 'departments.head_department')
                     ->select('departments.id', 'departments.title', 'departments.created_at', 'users.name', 'users.surname')
                     ->orderBy($request->orderBy)
-                    ->paginate(15);
+                    ->paginate(5);
 
         }
 
@@ -85,7 +87,7 @@ class Department extends Model
             ->leftJoin('users', 'users.id', '=', 'departments.head_department')
             ->select('departments.id', 'departments.title', 'departments.created_at', 'users.name', 'users.surname')
             ->orderBy("${key}", "${direct}")
-            ->paginate(15);
+            ->paginate(5);
     }
 
     public function countMembers($id)
@@ -118,10 +120,6 @@ class Department extends Model
 //        return $this::find($id)->each->depHeader;
     }
 
-    //======== формирование одного отдела =======
-
-    //======== /формирование одного отдела =======
-
     //========== добавление отдела ==================
 
     public function store($request)
@@ -135,7 +133,7 @@ class Department extends Model
         $dep->save();
     }
 
-    //========== добавление отдела ==================
+    //========== /добавление отдела ==================
 
     //========= удаление отдела =======
 
@@ -164,7 +162,13 @@ class Department extends Model
 
     public function search($request)
     {
-        return $result = Department::where('name', $request->keywords)->get();
+        $result = Department::search($request->data)->paginate(5);
+        $result->load('access_level','department');
+
+        if (!$result) {
+            return response()->json(['error' => 'По данному запросу записей не найдено', 'data' => $result, 'status' => false]);
+        }
+        return response()->json(['data' => $result, 'status' => true]);
     }
 
     //====== /Поиск отдела ====
