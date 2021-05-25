@@ -123,10 +123,17 @@ export default {
 
             axios.post('/api/login/login-code', payload).then((response) => {
                 this.hasError = false;
-                this.saveUserFromServer(response.data.user);
-                this.saveAccessFromServer(response.data.token);
-                this.saveRefreshFromServer(response.data.refresh_token);
-                this.$router.push('/home');
+                if(! response.data.user.access_level.name_your_level]) {
+                    var myModal = new bootstrap.Modal(document.getElementById('resetPassword'), {
+                        keyboard: false
+                    })
+                    myModal.show();
+                } else {
+                    this.saveUserFromServer(response.data.user);
+                    this.saveAccessFromServer(response.data.token);
+                    this.saveRefreshFromServer(response.data.refresh_token);
+                    this.$router.push('/home');
+                }
             }).catch((e) => {
                 this.incorrectCode = true;
             })

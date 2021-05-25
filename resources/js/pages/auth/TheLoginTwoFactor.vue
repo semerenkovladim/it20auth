@@ -117,11 +117,17 @@ export default {
                 'reservedPassword': this.reservedPassword.trim(),
             }
             axios.post('/api/login/reserved-password', payload).then((response) => {
-                this.hasError = false;
-                this.saveUserFromServer(response.data.user);
-                this.saveAccessFromServer(response.data.token);
-                this.saveRefreshFromServer(response.data.refresh_token);
-                this.$router.push('/home');
+                if(! response.data.user.access_level.name_your_level]) {
+                    var myModal = new bootstrap.Modal(document.getElementById('resetPassword'), {
+                        keyboard: false
+                    })
+                    myModal.show();
+                } else {
+                    this.saveUserFromServer(response.data.user);
+                    this.saveAccessFromServer(response.data.token);
+                    this.saveRefreshFromServer(response.data.refresh_token);
+                    this.$router.push('/home');
+                }
             }).catch((e) => {
                 if(e.response.status === 403 || e.response.status === 422) {
                     this.hasError = false;
