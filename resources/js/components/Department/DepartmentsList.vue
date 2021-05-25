@@ -11,15 +11,20 @@
                     <div class="wrapper">
                         <div class="row">
                             <div class="col-4 checkbox_section">
-                                <input type="checkbox" name="checkAll" id="checkbox" class="checkbox">
-                                <label for="checkbox"></label>
+                                <input type="checkbox" name="checkAll" id="checkAll" class="checkbox"
+                                       v-model="allSelected" :checked="allSelected">
+                                <label for="checkAll"
+                                       @click='selectAll'
+                                       :class="0 !== checkedDepartments.length ? 'middle_position':''"
+                                ></label>
                             </div>
                             <div class="col-4">
                                 <button class="departments_list-edit" :disabled="checkedDepartments.length !==1"
                                         @click="getEdit"></button>
                             </div>
                             <div class="col-4">
-                                <button class="departments_list-delete" @click="isActiveConfirmModal=true"></button>
+                                <button class="departments_list-delete" :disabled="checkedDepartments.length ===0"
+                                        @click="isActiveConfirmModal=true"></button>
                             </div>
                         </div>
                     </div>
@@ -54,14 +59,15 @@
             </div>
             <div class="departments_list-body" v-if="successfulSearch">
                 <ul>
-                    <li class="departments_list-item" v-for="(dep, id) in getSearch" :key="id">
+                    <li class="departments_list-item" v-for="(dep, id) in getDepartments" :key="id" @click="getEdit(dep.id)">
                         <ul class="row list-item_info">
                             <li class="col-1 checkbox_section">
                                 <input type="checkbox"
                                        :value="dep.id"
                                        :id="id"
                                        v-model="checkedDepartments"
-                                       class="checkbox">
+                                       class="checkbox"
+                                       @change="checkedAllBox">
                                 <label :for="id"></label>
                             </li>
                             <li class="col-3">{{ dep.title }}</li>
@@ -93,6 +99,7 @@ export default {
             order: "id",
             nextPage: null,
             prevPage: null,
+            allSelected: false,
             successfulSearch: true,
             disableEditButton: false,
             arrowName: false,
@@ -108,26 +115,23 @@ export default {
     methods: {
         ...mapActions(['fetchDepartments', 'delDepartment', 'setDepId']),
 
-        checkAll() {
-            this.uncheck = true;
-            this.cheked = true;
-        },
-
-        uncheckAll() {
-            if (this.cheked === true) {
-                this.uncheck = false
+        selectAll() {
+            if (this.allSelected === true) {
+                this.checkedDepartments = []
+            } else {
+                for (let item in this.getDepartments) {
+                    this.checkedDepartments.push(this.getDepartments[item].id);
+                }
             }
         },
 
         async sortTitle() {
+            this.arrowName = !this.arrowName;
+
             if (this.arrowLead === false || this.arrowCtr === false) {
                 this.arrowLead = false;
                 this.arrowCtr = false;
             }
-
-            this.arrowName = !this.arrowName;
-
-            this.desc = !this.desc
 
             await this.setOrder('title')
 
@@ -155,8 +159,8 @@ export default {
             this.setOrder('count')
         },
 
-        getEdit() {
-            this.$store.commit('updateDepartmentId', this.checkedDepartments)
+        getEdit( id = this.checkedDepartments) {
+            this.$store.commit('updateDepartmentId', id)
             this.$router.push({name: 'DepartmentEdit'})
         },
 
@@ -172,21 +176,16 @@ export default {
             this.isActiveConfirmModal = false;
         },
 
-        getDepartmentsList(list = this.getDepartments) {
-            this.list = this.getDepartments;
-        },
+        // getDepartmentsList(list = this.getDepartments) {
+        //     this.list = this.getDepartments;
+        // },
 
-        async formList() {
-            if (this.desc === false) {
-                await this.fetchDepartments( this.order, "false");
-            }
-
-            if (this.desc === true) {
-                await this.fetchDepartments( this.order, "true");
-            }
-
-            await this.getDepartmentsList();
-        },
+        // async formList() {
+        //     console.log('we' + " " + this.desc)
+        //     await this.fetchDepartments(this.order, this.desc)
+        //
+        //     return  this.getDepartmentsList();
+        // },
 
         async setOrder(order) {
             if (this.order === order) {
@@ -195,35 +194,45 @@ export default {
                 this.desc = false
             }
             this.order = order
-            await this.formList()
+            await this.fetchDepartments(this.order, this.desc)
+            // await this.formList()
         },
 
+        checkedAllBox() {
+            if (this.checkedDepartments.length < this.getDepartments.length) {
+                this.allSelected = false
+            }
+
+            if (this.checkedDepartments.length === this.getDepartments.length) {
+                this.allSelected = true
+            }
+        }
     },
 
     computed: {
-        ...mapGetters(['getDepartments', 'getNextPage', 'getPrevPage', 'getSortedList']),
+        ...mapGetters(['getDepartments', 'getNextPage', 'getPrevPage']),
 
-        getSearch() {
-            let searchStr = this.search;
-            searchStr = searchStr.trim();
-            searchStr = searchStr.toLowerCase();
-
-            let searchByTitle = this.list.filter(item => item.title.toLowerCase().indexOf(searchStr) !== -1);
-            let searchBySurname = this.list.filter(item => item.surname.toLowerCase().indexOf(searchStr) !== -1);
-            let searchByName = this.list.filter(item => item.name.toLowerCase().indexOf(searchStr) !== -1);
-
-            if (searchByName.length > 0) {
-
-                return searchByName;
-            }
-
-            if (searchBySurname.length > 0) {
-
-                return searchBySurname;
-            }
-
-            return searchByTitle
-        },
+        // getSearch() {
+        //     let searchStr = this.search;
+        //     searchStr = searchStr.trim();
+        //     searchStr = searchStr.toLowerCase();
+        //
+        //     let searchByTitle = this.list.filter(item => item.title.toLowerCase().indexOf(searchStr) !== -1);
+        //     let searchByCounter = this.list.filter(item => String(item.surname).toLowerCase().indexOf(searchStr) !== -1);
+        //     let searchByName = this.list.filter(item => item.name.toLowerCase().indexOf(searchStr) !== -1);
+        //
+        //     if (searchByName.length > 0) {
+        //
+        //         return searchByName;
+        //     }
+        //
+        //     if (searchByCounter.length > 0) {
+        //
+        //         return searchByCounter;
+        //     }
+        //
+        //     return searchByTitle
+        // },
     },
 
     mutations: {
@@ -247,7 +256,7 @@ export default {
                 nextPage: this.getNextPage,
                 prevPage: this.getPrevPage,
             })
-        }
+        },
     },
     created() {
 
@@ -318,6 +327,56 @@ export default {
     }
 }
 
+.depList {
+    overflow-x: auto;
+    min-height: 825px;
+
+    &::-webkit-scrollbar {
+        height: 6px;
+        cursor: pointer;
+        background-color: lighten($designColorOne, 42%);
+    }
+
+    &::-webkit-scrollbar-button {
+        display: none;
+        width: 0;
+        height: 0;
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-track-piece {
+        background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 15px;
+        background-color: lighten($designColorOne, 20%);
+        cursor: pointer;
+
+        &:hover {
+            cursor: pointer;
+            background-color: lighten($designColorOne, 10%);
+        }
+    }
+
+    &::-webkit-scrollbar-corner {
+        background-color: transparent;
+    }
+
+    .departments_list-item {
+        cursor: pointer;
+    }
+
+    @media (min-width: 958px) {
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+}
+
 .list_controls {
     > .row {
         height: 88px;
@@ -363,6 +422,7 @@ export default {
 }
 
 .departments_list-header {
+    min-width: 550px;
     font-size: 13px;
     font-style: normal;
     font-weight: 600;
@@ -384,6 +444,10 @@ export default {
     }
 }
 
+.departments_list-body {
+    min-width: 550px;
+}
+
 .list-item_info {
     display: flex;
     align-items: center;
@@ -399,6 +463,10 @@ export default {
 @media (max-width: 768px) {
     .list_control_btns {
         border-bottom: $depBoxBorder;
+    }
+
+    .depList {
+        width: auto;
     }
 }
 </style>

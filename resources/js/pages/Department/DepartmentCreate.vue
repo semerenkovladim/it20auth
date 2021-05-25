@@ -39,11 +39,11 @@
                                     </div>
                                 </li>
                                 <li>
-                                    <label for="name">Название:</label>
+                                    <label for="name" class="required">Название:</label>
                                     <input type="text" id="name" v-model="department.title">
                                 </li>
                                 <li>
-                                    <label for="lead">Руководитель:</label>
+                                    <label for="lead" class="required">Руководитель:</label>
                                     <select type="text" id="lead" v-model="department.departmentHead">
                                         <option value="null"></option>
                                         <option v-for="lead in getLeads" :value="lead.id">
@@ -168,7 +168,6 @@ export default {
 
 .departments_management {
     background-color: #fafafa;
-    padding-top: 7px;
     min-height: 100vh;
 }
 
@@ -241,14 +240,25 @@ form {
     }
 
     label {
-        width: 100%;
         font-size: 14px;
         color: #666666;
         margin-bottom: 21px;
+        position: relative;
+    }
+
+    .required {
+        &::before {
+            position: absolute;
+            content: "*";
+            display: block;
+            right: -10px;
+            color: red;
+        }
     }
 
     input,
     select {
+        display: block;
         height: 60px;
         width: 377px;
         margin-bottom: 30px;
@@ -279,6 +289,7 @@ form {
 
 .form-btns {
     display: flex;
+    flex-wrap: wrap;
 }
 
 .btnSave,
@@ -314,6 +325,12 @@ form {
     }
     .btnSave {
         margin-left: 0px;
+        width: 90%;
+    }
+
+    .btnCancel {
+        width: 90%;
+        margin: 10px 0 0 0;
     }
 }
 </style>

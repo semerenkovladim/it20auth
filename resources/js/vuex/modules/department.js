@@ -72,7 +72,7 @@ export default {
         }
     },
     actions: {
-        async fetchDepartments(ctx, orderBy = 'id', desc = true, url =`api/departments`,) {
+        async fetchDepartments(ctx, orderBy = 'id', desc = true, url =`api/departments`) {
             return await axios
                 .get(url, {
                     params: {

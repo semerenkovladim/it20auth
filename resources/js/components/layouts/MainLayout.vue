@@ -36,4 +36,7 @@ export default {
 .main_component__container {
     min-height: 100vh;
 }
+.main_home {
+    padding-top: 10px;
+}
 </style>
