@@ -90,7 +90,7 @@
                         <div class="title-list">Двухэтапная аутентификация</div>
                         <div class="subaction">
                             <label>
-                                <span :class="{'checkbox': true, 'checkbox-active': twofactor}" @click="toogleCheckbox">{{ window.innerWidth > 768 ? twofactor ? 'Включено' : 'Выключено' : '' }}</span>
+                                <span :class="{'checkbox': true, 'checkbox-active': twofactor}" @click="toogleCheckbox">{{ mobileWidth ? twofactor ? 'Включено' : 'Выключено' : '' }}</span>
                                 <input type="checkbox" v-model="twofactor" hidden>
                             </label>
                         </div>
@@ -136,7 +136,7 @@
                             <label>
                                 <span
                                     :class="{'checkbox': true, 'checkbox-active': reservedPassword}"
-                                    @click="toogleCheckbox">{{ window.innerWidth > 768 ? reservedPassword ? 'Включено' : 'Выключено' : '' }}</span>
+                                    @click="toogleCheckbox">{{ mobileWidth ? reservedPassword ? 'Включено' : 'Выключено' : '' }}</span>
                                 <input type="checkbox" v-model="reservedPassword" hidden>
                             </label>
                         </div>
@@ -240,7 +240,7 @@
                             <label>
                                 <span
                                     :class="{'checkbox': true, 'checkbox-active': notification}"
-                                    @click="toogleCheckbox">{{ window.innerWidth > 768 ? notification ? 'Включено' : 'Выключено' : '' }}</span>
+                                    @click="toogleCheckbox">{{ mobileWidth ? notification ? 'Включено' : 'Выключено' : '' }}</span>
                                 <input type="checkbox" v-model="notification" hidden>
                             </label>
                         </div>
@@ -287,7 +287,13 @@
                             <label>
                                 <span
                                     :class="{'checkbox': true, 'checkbox-active': codeWord}"
-                                    @click="toogleCheckbox">{{ window.innerWidth > 768 ? codeWord ? 'Включено' : 'Выключено' : '' }}</span>
+                                    @click="toogleCheckbox">{{
+                                        mobileWidth ?
+                                            codeWord ?
+                                                'Включено'
+                                                :
+                                                'Выключено'
+                                            : '' }}</span>
                                 <input type="checkbox" v-model="codeWord" hidden>
                             </label>
                         </div>
@@ -365,7 +371,7 @@
             </li>
         </ul>
         <div class="form-group d-flex flex-row btn-form-group">
-            <button @click.prevent="save">Сохранить</button>
+            <button @click.prevent="save" :disabled="isDisabled">Сохранить</button>
             <button class="cancel" @click.prevent="clearAll">Отмена</button>
         </div>
     </form>
@@ -414,7 +420,6 @@ export default {
             codeWordText: '',
             reservedEmail: '',
             actionHostory: {},
-            window: document.body,
         }
     },
     methods: {
@@ -571,6 +576,16 @@ export default {
             'access_token',
             'user'
         ]),
+        isDisabled() {
+            return this.twofactor === this.user.setting.useTwoStepAuth &&
+            this.reservedPassword === this.user.setting.useReservedPassword &&
+            this.notification === this.user.setting.suspiciousLoginNotifications &&
+            this.codeWord === this.user.setting.useCodeWord &&
+            this.codeWordText === this.user.backup_date.code_word
+        },
+        mobileWidth() {
+            return document.body.clientWidth > 768;
+        }
     },
     watch: {
         password() {

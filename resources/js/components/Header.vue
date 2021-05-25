@@ -64,17 +64,9 @@ export default {
             'saveAccessFromServer',
             'saveRefreshFromServer',
         ]),
-<<<<<<< HEAD
-=======
         toggleShow(){
           this.show = false
         },
-        setInitials(surname, name) {
-            if (surname && name) {
-                return surname.slice(0, 1) + ' ' + name.slice(0, 1)
-            }
-        },
->>>>>>> ef1f5008cb8379f5c9cb2e0ae3b359110fb51749
         logout() {
             axios.post('/api/logout', {}, {
                 headers: {
