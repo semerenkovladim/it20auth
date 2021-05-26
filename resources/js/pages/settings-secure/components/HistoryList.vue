@@ -266,7 +266,7 @@ export default {
 @media screen and (max-width: 768px){
     .action-list-wrapper, .settings-item {
         flex-direction: column;
-        text-align: center;
+        text-align: left;
     }
     .settings-item .subaction {
         max-width: 235px;

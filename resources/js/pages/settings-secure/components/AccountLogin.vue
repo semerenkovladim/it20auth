@@ -471,6 +471,7 @@ export default {
             }).then((response) => {
                 this.saveUserFromServer(response.data);
                 this.openModal('saveSettings');
+                this.clearAll();
             });
         },
         clearAll() {
@@ -846,7 +847,7 @@ export default {
     }
     .settings-item > div:nth-child(2) {
         flex-grow: 5;
-        text-align: center;
+        text-align: left;
     }
     .settings > li {
         padding: 15px;
