@@ -72,16 +72,18 @@ export default {
         }
     },
     actions: {
-        async fetchDepartments(ctx, orderBy = 'id', desc = true, url =`api/departments`) {
+        async fetchDepartments(ctx, data, url = `api/departments`) {
+console.log(data)
             return await axios
                 .get(url, {
                     params: {
-                        orderBy: orderBy,
-                        desc: desc
+                        orderBy: data.orderBy,
+                        desc: data.desc
                     }
                 })
                 .then(res => {
                     ctx.commit('updateDepartments', res.data.data)
+                    console.log(res.data)
                     ctx.commit('makePagination', res.data)
                     ctx.commit('makeLinks', res.data.links)
 
@@ -132,7 +134,8 @@ export default {
         },
 
         async createNewDepartment(ctx, data) {
-            await axios
+
+            return await axios
                 .post('/api/departments', {
                     title: data.title,
                     head_department: data.departmentHead,
@@ -148,7 +151,8 @@ export default {
         },
         async updateDepartment(ctx, data) {
             let id = data.id;
-            await axios
+
+            return await axios
                 .put(`/api/departments/${id}`, {
                     title: data.title,
                     head_department: data.head_department,
@@ -162,7 +166,8 @@ export default {
                 })
         },
         async deleteUsers(ctx, user) {
-            await axios
+
+            return await axios
                 .put(`/api/user/reset-department/${user}`)
                 .then()
                 .catch(err => console.log(err))

@@ -56,7 +56,7 @@
                                     <input type="text" id="workersCtr" class="workersCtr" placeholder="0" readonly>
                                 </li>
                                 <li class="form-btns">
-                                    <button type="submit" class="btnSave">Сохранить</button>
+                                    <button type="submit" class="btnCancel">Сохранить</button>
                                     <button type="reset" class="btnCancel">Отмена</button>
                                 </li>
                             </ul>

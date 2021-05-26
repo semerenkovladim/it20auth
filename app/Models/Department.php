@@ -52,14 +52,14 @@ class Department extends Model
 
     public function fetchAllDep($request)
     {
-        if ($request->desc === 'true') {
+        if ($request->desc === "true") {
             $list = DB::table('departments')
                 ->leftJoin('users', 'users.id', '=', 'departments.head_department')
                 ->select('departments.id', 'departments.title', 'departments.created_at', 'users.name', 'users.surname')
                 ->orderByDesc($request->orderBy)
                 ->paginate(15);
 
-        }   else {
+        }   if($request->desc === "false") {
 
                 $list = DB::table('departments')
                     ->leftJoin('users', 'users.id', '=', 'departments.head_department')
@@ -83,11 +83,11 @@ class Department extends Model
 
     public function sortListBy($key, $direct)
     {
-        return DB::table('departments')
-            ->leftJoin('users', 'users.id', '=', 'departments.head_department')
-            ->select('departments.id', 'departments.title', 'departments.created_at', 'users.name', 'users.surname')
-            ->orderBy("${key}", "${direct}")
-            ->paginate(15);
+//        return DB::table('departments')
+//            ->leftJoin('users', 'users.id', '=', 'departments.head_department')
+//            ->select('departments.id', 'departments.title', 'departments.created_at', 'users.name', 'users.surname')
+//            ->orderBy("${key}", "${direct}")
+//            ->paginate(15);
     }
 
     public function countMembers($id)
