@@ -471,6 +471,7 @@ export default {
             }).then((response) => {
                 this.saveUserFromServer(response.data);
                 this.openModal('saveSettings');
+                this.clearAll();
             });
         },
         clearAll() {
