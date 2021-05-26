@@ -75,7 +75,8 @@
                                         <select name="department"
                                                 class="styled"
                                                 v-model="user.department_id"
-                                                tabindex="5">
+                                                tabindex="5"
+                                        @change="changeHandler()">
                                         <option v-for="department in ALL_DEPARTMENTS"
                                                 :key="department.id"
                                                 :value="department.id"
@@ -217,11 +218,10 @@ export default {
         updateProfile(data) {
             this.checkFields()
             this.confirmDisabled = false
-            console.log('data', data)
             return axios.put('/api/user/update', data)
                 .then(value => {
                     if (value.data.status) {
-                        this.confirmDisabled = афдыу
+                        this.confirmDisabled = false
                         this.message.status = false
                         this.popupShow = true
                         this.popupMessage = "Изменения успешно сохранены"
@@ -249,7 +249,6 @@ export default {
     async mounted() {
         await this.getProfile(this.auth_user.id)
         this.user = this.auth_user
-        console.log('User', this.user)
         this.getAllDepartments()
     },
     computed: {
