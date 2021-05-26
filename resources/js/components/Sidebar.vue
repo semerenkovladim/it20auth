@@ -58,7 +58,7 @@
             <li class="link" v-bind:class="{'linkss':show}"
                 v-if="user.access_level.contacts"
                 @click="$emit('closeEvent')">
-                <a href="http://calendar.hardsoft.space/" class="wiget">
+                <a href="http://contacts.hardsoft.space" class="wiget">
                     <div v-bind:class="{'flex':show}">
                         <div v-bind:class="{'contact2':show, 'contact':!show}"
                              class="nav_image"></div>
