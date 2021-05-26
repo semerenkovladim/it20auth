@@ -27,6 +27,7 @@ class AccessLevelController extends Controller
             return response()->json(['error' => $validator->errors(), 'status' => false]);
         }
         $access = AccessLevel::make();
+        $access->account = true;
         $access->user_id = $request->user_id;
         $access->save();
 
