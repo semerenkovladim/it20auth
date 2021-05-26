@@ -113,7 +113,7 @@ export default {
                 this.saveUserFromServer(response.data.user);
                 this.saveAccessFromServer(response.data.token);
                 this.saveRefreshFromServer(response.data.refresh_token);
-                if(! response.data.user.access_level.name_your_level) {
+                if(! response.data.user.access_level.account) {
                     var myModal = new bootstrap.Modal(document.getElementById('resetPassword'), {
                         keyboard: false
                     })

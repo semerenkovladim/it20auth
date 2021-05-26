@@ -26,7 +26,7 @@ class UserSettingsController extends Controller
     public function update(Request $request)
     {
         $validated = $request->validate([
-            'twoFactor' => 'bool',
+            'twofactor' => 'bool',
             'reservedPassword' => 'bool',
             'useCode' => 'bool',
             'codeWord' => 'string',
@@ -36,17 +36,17 @@ class UserSettingsController extends Controller
         ]);
         $location = Location::get();
         $userAuth = $request->user();
-        $user = User::with(['action_recent'])->find($userAuth->id);
-        $setting = Setting::find($user->setting->id);
-        $backup = BackupData::find($user->backup_date->id);
+        $user = User::with(['action_recent', 'setting', 'backup_date', 'access_level'])->find($userAuth->id);
+        $setting = Setting::where('user_id', $user->id)->first();
+        $backup = BackupData::where('user_id', $user->id)->first();
         $actionResent = ActionRecentModel::where('user_id', $user->id)
             ->with(['modify_password', 'modify_twostep', 'modify_reserved_password', 'modify_reserved_email', 'modify_notification', 'modify_codeword'])
             ->first();
         if(! $actionResent) {
             $actionResent = new ActionRecentModel();
         }
-        if(array_key_exists('twoFactor', $validated)) {
-            $setting->useTwoStepAuth = $validated['twoFactor'];
+        if(array_key_exists('twofactor', $validated)) {
+            $setting->useTwoStepAuth = $validated['twofactor'];
             if($actionResent->modify_twostep_id) {
                 $modifyTwostep = ModifyTwostep::find($actionResent->modify_twostep_id);
                 $modifyTwostep->city = $location->cityName;
@@ -54,7 +54,7 @@ class UserSettingsController extends Controller
                 $modifyTwostep->country = $location->countryName;
                 $modifyTwostep->date = Carbon::now();
                 $modifyTwostep->time = Carbon::now()->toTimeString();
-                if($validated['twoFactor']) {
+                if($validated['twofactor']) {
                     $modifyTwostep->action = 'Включена';
                 } else {
                     $modifyTwostep->action = 'Выключена';
@@ -66,7 +66,7 @@ class UserSettingsController extends Controller
                 $modifyTwostep->country = $location->countryName;
                 $modifyTwostep->date = Carbon::now();
                 $modifyTwostep->time = Carbon::now()->toTimeString();
-                if($validated['twoFactor']) {
+                if($validated['twofactor']) {
                     $modifyTwostep->action = 'Включена';
                 } else {
                     $modifyTwostep->action = 'Выключена';
