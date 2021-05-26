@@ -94,6 +94,9 @@ export default {
                     }
                 })
                 .then(res => {
+                    if(res.data.data.length === 0){
+                        ctx.commit('updateDepartments', false)
+                    }
                     ctx.commit('updateDepartments', res.data.data)
                     ctx.commit('makePagination', res.data)
                     ctx.commit('makeLinks', res.data.links)

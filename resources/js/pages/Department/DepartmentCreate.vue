@@ -37,11 +37,11 @@
                                 </li>
                                 <li>
                                     <label for="name" class="required">Название:</label>
-                                    <input type="text" id="name" class="requiredInput" required v-model="department.title">
+                                    <input type="text" id="name" class="requiredInput" v-model="department.title">
                                 </li>
                                 <li>
                                     <label for="lead" class="required">Руководитель:</label>
-                                    <select type="text" id="lead" required class="requiredInput" v-model="department.departmentHead">
+                                    <select type="text" id="lead" class="requiredInput" v-model="department.departmentHead">
                                         <option value="null"></option>
                                         <option v-for="lead in getLeads" :value="lead.id">
                                             {{ lead.name }} {{ lead.surname }}

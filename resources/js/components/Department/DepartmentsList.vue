@@ -78,6 +78,7 @@
                         </ul>
                     </li>
                 </ul>
+                <div v-if="notFound===true" class="notFound">Ничего не найдено</div>
             </div>
         </div>
     </div>
@@ -108,6 +109,7 @@ export default {
                 orderBy: "id",
                 desc: true,
             },
+            notFound: false
         }
     },
 
@@ -202,6 +204,7 @@ export default {
 
         async sendSearchForm() {
             await this.searchDepartment(this.search)
+            this.notFound = this.getDepartments.length === 0;
         }
     },
 
@@ -395,6 +398,17 @@ export default {
         cursor: pointer;
         background: url("/images/search_img.png") no-repeat center;
     }
+}
+
+.notFound {
+    display: flex;
+    justify-content: center;
+    font-size: 16px;
+    margin-top: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 60px;
+    color: #666666;
 }
 
 .departments_list-header {

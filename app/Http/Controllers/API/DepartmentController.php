@@ -40,6 +40,7 @@ class DepartmentController extends Controller
 
         foreach ($list as $item) {
             $id = $item->id;
+
             $item->count = DB::table('departments')
                 ->select('departments.id', 'users.department_id', 'users.id as users_id')
                 ->rightJoinWhere('users', 'users.department_id', '=', 'departments.id')
