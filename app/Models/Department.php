@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -23,8 +24,12 @@ class Department extends Model
     ];
 
     protected $rules = [
-        'title' => 'bail|required|string|min:3|max:150',
-        'head_department' => 'bail|required|integer|min:1|max:150000',
+        'title' => 'required|string|min:1|max:255',
+        'head_department' => 'required|integer|min:1|max:150000',
+    ];
+
+    protected $searchRules = [
+        'data' => 'string|min:1|max:255'
     ];
 
     //========== Валидация при редактировании отдела ======
@@ -35,6 +40,16 @@ class Department extends Model
     }
 
     //========== /Валидация при редактировании отдела ======
+
+    //========== Валидация при поиске отдела ======
+
+    public function validateSearch($request)
+    {
+        $request->validate($this->searchRules);
+    }
+
+    //========== /Валидация при поиске отдела ======
+
 
     public function members()
     {
@@ -52,14 +67,14 @@ class Department extends Model
 
     public function fetchAllDep($request)
     {
-        if ($request->desc === 'true') {
+        if ($request->desc === "true") {
             $list = DB::table('departments')
                 ->leftJoin('users', 'users.id', '=', 'departments.head_department')
                 ->select('departments.id', 'departments.title', 'departments.created_at', 'users.name', 'users.surname')
                 ->orderByDesc($request->orderBy)
                 ->paginate(15);
 
-        }   else {
+        }   if($request->desc === "false") {
 
                 $list = DB::table('departments')
                     ->leftJoin('users', 'users.id', '=', 'departments.head_department')
@@ -81,15 +96,6 @@ class Department extends Model
         return $list;
     }
 
-    public function sortListBy($key, $direct)
-    {
-        return DB::table('departments')
-            ->leftJoin('users', 'users.id', '=', 'departments.head_department')
-            ->select('departments.id', 'departments.title', 'departments.created_at', 'users.name', 'users.surname')
-            ->orderBy("${key}", "${direct}")
-            ->paginate(15);
-    }
-
     public function countMembers($id)
     {
         $list = DB::table('departments')
@@ -99,11 +105,6 @@ class Department extends Model
             ->count('users.id');
 
         return $list;
-    }
-
-    public function depIn()
-    {
-        return $this->fetchAllDep();
     }
 
     //=========== /формирование списка отделов ========
@@ -116,8 +117,6 @@ class Department extends Model
     public function getHeader($department)
     {
         return $department;
-
-//        return $this::find($id)->each->depHeader;
     }
 
     //========== добавление отдела ==================
@@ -158,20 +157,6 @@ class Department extends Model
 
     //====== /Редактирование отдела ====
 
-    //====== Поиск отдела ====
-
-    public function search($request)
-    {
-        $result = Department::search($request->data)->paginate(5);
-        $result->load('access_level','department');
-
-        if (!$result) {
-            return response()->json(['error' => 'По данному запросу записей не найдено', 'data' => $result, 'status' => false]);
-        }
-        return response()->json(['data' => $result, 'status' => true]);
-    }
-
-    //====== /Поиск отдела ====
 
 
 }

@@ -30,13 +30,14 @@
                     </div>
                 </div>
                 <form class="col-sm-12 col-md-8 col-xl-9 departments_list-search" method="get"
+                      @submit.prevent="sendSearchForm()"
                       action="#">
                     <div class="row">
                         <div class="col-10 col-sm-8 col-md-10">
                             <input type="text" v-model="search" placeholder="Поиск">
                         </div>
-                        <div class="col-2 col-sm-4 col-md-2 search-btn">
-                        </div>
+                        <button type="submit" class="col-2 col-sm-4 col-md-2 search-btn">
+                        </button>
                     </div>
                 </form>
             </div>
@@ -46,7 +47,8 @@
                 <ul class="row">
                     <li class="col-1"></li>
                     <li class="col-3">
-                        <span :class="[arrowName ? 'with_sort_active' : 'with_sort']" @click="sortTitle">Название</span>
+                        <span :class="[arrowTitle ? 'with_sort_active' : 'with_sort']"
+                              @click="sortTitle">Название</span>
                     </li>
                     <li class="col-4">
                         <span :class="[arrowLead ? 'with_sort_active' : 'with_sort']"
@@ -57,9 +59,9 @@
                     </li>
                 </ul>
             </div>
-            <div class="departments_list-body" v-if="successfulSearch">
+            <div class="departments_list-body">
                 <ul>
-                    <li class="departments_list-item" v-for="(dep, id) in getDepartments" :key="id" @click="getEdit(dep.id)">
+                    <li class="departments_list-item" v-for="(dep, id) in getDepartments" :key="id">
                         <ul class="row list-item_info">
                             <li class="col-1 checkbox_section">
                                 <input type="checkbox"
@@ -70,9 +72,9 @@
                                        @change="checkedAllBox">
                                 <label :for="id"></label>
                             </li>
-                            <li class="col-3">{{ dep.title }}</li>
-                            <li class="col-4">{{ dep.surname }} {{ dep.name }}</li>
-                            <li class="col-4">{{ dep.count }}</li>
+                            <li class="col-3" @click="getEdit(dep.id)">{{ dep.title }}</li>
+                            <li class="col-4" @click="getEdit(dep.id)">{{ dep.surname }} {{ dep.name }}</li>
+                            <li class="col-4" @click="getEdit(dep.id)">{{ dep.count }}</li>
                         </ul>
                     </li>
                 </ul>
@@ -96,24 +98,21 @@ export default {
     data() {
         return {
             search: '',
-            order: "id",
-            nextPage: null,
-            prevPage: null,
             allSelected: false,
-            successfulSearch: true,
-            disableEditButton: false,
-            arrowName: false,
+            arrowTitle: false,
             arrowLead: false,
             arrowCtr: false,
-            desc: true,
             isActiveConfirmModal: false,
             checkedDepartments: [],
-            list: []
+            orderData: {
+                orderBy: "id",
+                desc: true,
+            },
         }
     },
 
     methods: {
-        ...mapActions(['fetchDepartments', 'delDepartment', 'setDepId']),
+        ...mapActions(['fetchDepartments', 'delDepartment', 'setDepId', 'searchDepartment']),
 
         selectAll() {
             if (this.allSelected === true) {
@@ -125,41 +124,42 @@ export default {
             }
         },
 
-        async sortTitle() {
-            this.arrowName = !this.arrowName;
+        sortTitle() {
+            this.arrowTitle = !this.arrowTitle;
+            this.orderData.orderBy = 'title';
 
             if (this.arrowLead === false || this.arrowCtr === false) {
                 this.arrowLead = false;
                 this.arrowCtr = false;
             }
 
-            await this.setOrder('title')
-
+            this.setOrder('title')
         },
 
         sortLead() {
-            if (this.arrowName === false || this.arrowCtr === false) {
-                this.arrowName = false;
+            this.orderData.orderBy = 'surname';
+
+            if (this.arrowTitle === false || this.arrowCtr === false) {
+                this.arrowTitle = false;
                 this.arrowCtr = false;
             }
 
             this.arrowLead = !this.arrowLead;
-
             this.setOrder('surname')
         },
 
         sortCtr() {
-            if (this.arrowName === false || this.arrowLead === false) {
-                this.arrowName = false;
+            this.orderData.orderBy = 'count';
+            if (this.arrowTitle === false || this.arrowLead === false) {
+                this.arrowTitle = false;
                 this.arrowLead = false;
             }
 
             this.arrowCtr = !this.arrowCtr;
-
             this.setOrder('count')
         },
 
-        getEdit( id = this.checkedDepartments) {
+        getEdit(id = this.checkedDepartments) {
             this.$store.commit('updateDepartmentId', id)
             this.$router.push({name: 'DepartmentEdit'})
         },
@@ -171,31 +171,23 @@ export default {
                 await this.delDepartment(arr[i])
             }
 
-            await this.formList()
+            await this.fetchDepartments()
+
             this.checkedDepartments = []
             this.isActiveConfirmModal = false;
         },
 
-        // getDepartmentsList(list = this.getDepartments) {
-        //     this.list = this.getDepartments;
-        // },
-
-        // async formList() {
-        //     console.log('we' + " " + this.desc)
-        //     await this.fetchDepartments(this.order, this.desc)
-        //
-        //     return  this.getDepartmentsList();
-        // },
-
         async setOrder(order) {
-            if (this.order === order) {
-                this.desc = !this.desc
+
+            if (this.orderData.orderBy === order) {
+                this.orderData.desc = !this.orderData.desc
             } else {
-                this.desc = false
+                this.orderData.desc = false
             }
-            this.order = order
-            await this.fetchDepartments(this.order, this.desc)
-            // await this.formList()
+
+            await this.$store.commit('updateOrderBy', this.orderData.orderBy);
+            await this.$store.commit('updateDesc', this.orderData.desc);
+            await this.fetchDepartments();
         },
 
         checkedAllBox() {
@@ -206,41 +198,27 @@ export default {
             if (this.checkedDepartments.length === this.getDepartments.length) {
                 this.allSelected = true
             }
+        },
+
+        async sendSearchForm() {
+            await this.searchDepartment(this.search)
         }
     },
 
     computed: {
-        ...mapGetters(['getDepartments', 'getNextPage', 'getPrevPage']),
+        ...mapGetters(['getDepartments', 'getNextPage', 'getPrevPage', 'getDesc', 'getOrderBy']),
 
-        // getSearch() {
-        //     let searchStr = this.search;
-        //     searchStr = searchStr.trim();
-        //     searchStr = searchStr.toLowerCase();
-        //
-        //     let searchByTitle = this.list.filter(item => item.title.toLowerCase().indexOf(searchStr) !== -1);
-        //     let searchByCounter = this.list.filter(item => String(item.surname).toLowerCase().indexOf(searchStr) !== -1);
-        //     let searchByName = this.list.filter(item => item.name.toLowerCase().indexOf(searchStr) !== -1);
-        //
-        //     if (searchByName.length > 0) {
-        //
-        //         return searchByName;
-        //     }
-        //
-        //     if (searchByCounter.length > 0) {
-        //
-        //         return searchByCounter;
-        //     }
-        //
-        //     return searchByTitle
-        // },
     },
 
     mutations: {
         ...
-            mapMutations(['updateDepartmentId']),
+            mapMutations(['updateDepartmentId', 'updateDesc', 'updateOrderBy']),
     },
+
     mounted() {
-        this.setOrder()
+        this.$store.commit('updateOrderBy', this.orderData.orderBy);
+        this.$store.commit('updateDesc', this.orderData.desc);
+        this.fetchDepartments()
     },
 
     watch: {
@@ -249,18 +227,7 @@ export default {
                 this.disableEditButton = true;
             }
         },
-        sortParams() {
-            this.$emit('sortParams', {
-                order: this.order,
-                desc: this.desc,
-                nextPage: this.getNextPage,
-                prevPage: this.getPrevPage,
-            })
-        },
     },
-    created() {
-
-    }
 }
 </script>
 
@@ -328,51 +295,55 @@ export default {
 }
 
 .depList {
-    overflow-x: auto;
-    min-height: 825px;
-
-    &::-webkit-scrollbar {
-        height: 6px;
-        cursor: pointer;
-        background-color: lighten($designColorOne, 42%);
-    }
-
-    &::-webkit-scrollbar-button {
-        display: none;
-        width: 0;
-        height: 0;
-    }
-
-    &::-webkit-scrollbar-track {
-        background-color: transparent;
-    }
-
-    &::-webkit-scrollbar-track-piece {
-        background-color: transparent;
-    }
-
-    &::-webkit-scrollbar-thumb {
-        border-radius: 15px;
-        background-color: lighten($designColorOne, 20%);
-        cursor: pointer;
-
-        &:hover {
-            cursor: pointer;
-            background-color: lighten($designColorOne, 10%);
-        }
-    }
-
-    &::-webkit-scrollbar-corner {
-        background-color: transparent;
-    }
+    min-height: 894px;
 
     .departments_list-item {
         cursor: pointer;
     }
 
-    @media (min-width: 958px) {
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    @media (max-width: 958px) {
+        & {
+            min-height: auto;
+            overflow-x: auto;
+        }
+
         &::-webkit-scrollbar {
+            height: 6px;
+            cursor: pointer;
+            background-color: lighten($designColorOne, 42%);
+        }
+
+        &::-webkit-scrollbar-button {
             display: none;
+            width: 0;
+            height: 0;
+        }
+
+        &::-webkit-scrollbar-track {
+            background-color: transparent;
+        }
+
+        &::-webkit-scrollbar-track-piece {
+            background-color: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            border-radius: 15px;
+            background-color: lighten($designColorOne, 20%);
+            cursor: pointer;
+
+            &:hover {
+                cursor: pointer;
+                background-color: lighten($designColorOne, 10%);
+            }
+        }
+
+        &::-webkit-scrollbar-corner {
+            background-color: transparent;
         }
     }
 }
@@ -381,6 +352,10 @@ export default {
     > .row {
         height: 88px;
         border-bottom: $depBoxBorder;
+    }
+
+    button[disabled] {
+        border: none;
     }
 
     .departments_list-edit {
@@ -417,6 +392,7 @@ export default {
 
     .search-btn {
         height: 100%;
+        cursor: pointer;
         background: url("/images/search_img.png") no-repeat center;
     }
 }

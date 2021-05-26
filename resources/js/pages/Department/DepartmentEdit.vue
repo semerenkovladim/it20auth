@@ -28,24 +28,20 @@
                 </div>
                 <div class="row departments_create__container">
                     <div class="col-12 box-form">
-                        <form @submit.prevent="" method="post">
+                        <form @submit.prevent="sendFormData" method="post">
                             <ul>
                                 <li class="errors" v-if="errors.length">
                                     <div>
-                                        <span>Пожалуйста исправьте указанные ошибки:</span>
-                                        <ul>
-                                            <li v-for="error in errors">{{ error }}</li>
-                                        </ul>
+                                        <span>Заполните, пожалуйста, все обязательные поля</span>
                                     </div>
                                 </li>
                                 <li class="required_field">
                                     <label for="name" class="required">Название:</label>
-                                    <input type="text" id="name" v-model="title" required>
+                                    <input type="text" id="name" class="requiredInput" v-model="title" >
                                 </li>
                                 <li class="required_field">
                                     <label for="lead" class="required">Руководитель:</label>
-                                    <select type="text" id="lead" v-model="depHead" required>
-                                        <option value="null"></option>
+                                    <select type="text" id="lead" class="requiredInput" v-model="depHead" required>
                                         <option v-for="lead in getLeads" :value="lead.id">
                                             {{ lead.name }} {{ lead.surname }}
                                         </option>
@@ -63,7 +59,7 @@
                                                              :to-delete-users="toDeleteUsers"/>
                                 </li>
                                 <li class="form-btns">
-                                    <button type="button" class="btnSave" @click="this.sendFormData">Сохранить</button>
+                                    <button type="submit" class="btnSave">Сохранить</button>
                                     <button type="button" class="btnCancel" @click="this.resetChange">Отмена</button>
                                 </li>
                             </ul>
@@ -156,12 +152,22 @@ export default {
         validation() {
             let title = this.title;
             let head_department = this.depHead;
-            console.log(head_department)
+            if ( head_department == null || head_department < 1) {
+                this.errors.push('Поле "Руководитель" обязательно для заполнения.')
+            }
+
             if (title < 3 || title === null) {
                 this.errors.push('Поле "Название" должно содержать не менее 3х символов.')
             }
-            if (head_department < 1 || head_department === null) {
-                this.errors.push('Поле "Руководитель" обязательно для заполнения.')
+
+            let inputs = document.querySelectorAll('.requiredInput')
+            for (let input of inputs) {
+                if (input.value.trim().length < 1) {
+                    input.classList.add('emptyInput')
+                } else {
+                    input.classList.remove('emptyInput')
+
+                }
             }
         },
     },
@@ -309,7 +315,7 @@ form {
         color: #808080;
     }
 
-    .empty_field {
+    .emptyInput {
         border: 2px solid #FF0000 !important;
     }
 
