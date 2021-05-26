@@ -32,19 +32,16 @@
                             <ul>
                                 <li class="errors" v-if="errors.length">
                                     <div>
-                                        <span>Пожалуйста исправьте указанные ошибки:</span>
-                                        <ul>
-                                            <li v-for="error in errors">{{ error }}</li>
-                                        </ul>
+                                        <span>Заполните, пожалуйста, все обязательные поля</span>
                                     </div>
                                 </li>
                                 <li>
                                     <label for="name" class="required">Название:</label>
-                                    <input type="text" id="name" v-model="department.title">
+                                    <input type="text" id="name" class="requiredInput" required v-model="department.title">
                                 </li>
                                 <li>
                                     <label for="lead" class="required">Руководитель:</label>
-                                    <select type="text" id="lead" v-model="department.departmentHead">
+                                    <select type="text" id="lead" required class="requiredInput" v-model="department.departmentHead">
                                         <option value="null"></option>
                                         <option v-for="lead in getLeads" :value="lead.id">
                                             {{ lead.name }} {{ lead.surname }}
@@ -56,7 +53,7 @@
                                     <input type="text" id="workersCtr" class="workersCtr" placeholder="0" readonly>
                                 </li>
                                 <li class="form-btns">
-                                    <button type="submit" class="btnCancel">Сохранить</button>
+                                    <button type="submit" class="btnSave" :disabled='disableSave'>Сохранить</button>
                                     <button type="reset" class="btnCancel">Отмена</button>
                                 </li>
                             </ul>
@@ -83,6 +80,7 @@ export default {
             },
             popupMessage: "Отдел успешно создан",
             popupShow: false,
+            disableSave: false,
             errors: [],
         }
     },
@@ -117,6 +115,18 @@ export default {
             this.$router.push({name: 'DepartmentsManagement'})
         },
 
+        checkInputs() {
+            let inputs = document.querySelectorAll('.requiredInput')
+            for (let input of inputs) {
+                if (input.value.trim().length < 1) {
+                    input.classList.add('emptyInput')
+                } else {
+                    input.classList.remove('emptyInput')
+
+                }
+            }
+        },
+
         validation() {
             let title = this.department.title;
             let head_department = this.department.departmentHead;
@@ -128,6 +138,15 @@ export default {
                 this.errors.push('Поле "Название" должно содержать не менее 3х символов.')
             }
 
+            let inputs = document.querySelectorAll('.requiredInput')
+            for (let input of inputs) {
+                if (input.value.trim().length < 1) {
+                    input.classList.add('emptyInput')
+                } else {
+                    input.classList.remove('emptyInput')
+
+                }
+            }
         },
     },
     computed: {
@@ -135,7 +154,7 @@ export default {
     },
     mounted() {
         this.fetchLeads()
-    }
+    },
 
 }
 </script>
@@ -239,6 +258,10 @@ form {
         font-size: 14px;
     }
 
+    .emptyInput {
+        border: 2px solid #FF0000;
+    }
+
     label {
         font-size: 14px;
         color: #666666;
@@ -309,28 +332,30 @@ form {
     background-color: #1875F0;
 }
 
-.btnCancel {
+.btnCancel,
+.btnSave[disabled]{
     margin-left: 5px;
     color: #B3B3B3;
     background-color: #FFFFFF;
     border: solid 2px #F5F5F5;
+    opacity: 1;
 }
 
 @media (max-width: 460px) {
-    form {
-        input,
-        select {
-            width: 90%;
-        }
-    }
-    .btnSave {
-        margin-left: 0px;
-        width: 90%;
-    }
+form {
+input,
+select {
+    width: 90%;
+}
+}
+.btnSave {
+margin-left: 0px;
+width: 90%;
+}
 
-    .btnCancel {
-        width: 90%;
-        margin: 10px 0 0 0;
-    }
+.btnCancel {
+width: 90%;
+margin: 10px 0 0 0;
+}
 }
 </style>

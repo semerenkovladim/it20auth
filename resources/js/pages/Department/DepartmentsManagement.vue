@@ -77,12 +77,15 @@ export default {
         DepartmentsList,
         DepartmentConfirmModal
     },
+
     methods: {
         ...mapActions(['fetchDepartments']),
+
         gotoNextPage() {
             this.nextPage = this.getNextPage;
             this.fetchDepartments(this.nextPage)
         },
+
         gotoPrevPage() {
             this.prevPage = this.getPrevPage;
             this.fetchDepartments(this.prevPage);
@@ -91,6 +94,7 @@ export default {
         gotoPage(url) {
           this.fetchDepartments(url)
         },
+
         pages() {
             let i = 1;
             let linksLength = this.getLastPage;
@@ -98,10 +102,9 @@ export default {
             for (i; i <= linksLength; i++) {
                 this.pageList.push(this.getLinks[i])
             }
-
-            console.log(this.pageList)
         },
     },
+
     computed: {
         ...mapGetters([
             'getPrevPage',
@@ -112,6 +115,7 @@ export default {
             'getDepartments',
         ]),
     },
+
     mounted() {
         this.pages()
     }

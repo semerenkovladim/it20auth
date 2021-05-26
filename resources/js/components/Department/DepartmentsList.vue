@@ -30,13 +30,14 @@
                     </div>
                 </div>
                 <form class="col-sm-12 col-md-8 col-xl-9 departments_list-search" method="get"
+                      @submit.prevent="sendSearchForm()"
                       action="#">
                     <div class="row">
                         <div class="col-10 col-sm-8 col-md-10">
                             <input type="text" v-model="search" placeholder="Поиск">
                         </div>
-                        <div class="col-2 col-sm-4 col-md-2 search-btn">
-                        </div>
+                        <button type="submit" class="col-2 col-sm-4 col-md-2 search-btn">
+                        </button>
                     </div>
                 </form>
             </div>
@@ -58,7 +59,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="departments_list-body" v-if="successfulSearch">
+            <div class="departments_list-body">
                 <ul>
                     <li class="departments_list-item" v-for="(dep, id) in getDepartments" :key="id">
                         <ul class="row list-item_info">
@@ -97,25 +98,21 @@ export default {
     data() {
         return {
             search: '',
-            nextPage: null,
-            prevPage: null,
             allSelected: false,
-            successfulSearch: true,
-            disableEditButton: false,
             arrowTitle: false,
             arrowLead: false,
             arrowCtr: false,
             isActiveConfirmModal: false,
             checkedDepartments: [],
             orderData: {
-                orderBy: 'id',
-                desc: false
-            }
+                orderBy: "id",
+                desc: true,
+            },
         }
     },
 
     methods: {
-        ...mapActions(['fetchDepartments', 'delDepartment', 'setDepId']),
+        ...mapActions(['fetchDepartments', 'delDepartment', 'setDepId', 'searchDepartment']),
 
         selectAll() {
             if (this.allSelected === true) {
@@ -127,7 +124,7 @@ export default {
             }
         },
 
-        async sortTitle() {
+        sortTitle() {
             this.arrowTitle = !this.arrowTitle;
             this.orderData.orderBy = 'title';
 
@@ -136,19 +133,18 @@ export default {
                 this.arrowCtr = false;
             }
 
-            await this.setOrder('title')
-
+            this.setOrder('title')
         },
 
         sortLead() {
             this.orderData.orderBy = 'surname';
+
             if (this.arrowTitle === false || this.arrowCtr === false) {
                 this.arrowTitle = false;
                 this.arrowCtr = false;
             }
 
             this.arrowLead = !this.arrowLead;
-
             this.setOrder('surname')
         },
 
@@ -160,7 +156,6 @@ export default {
             }
 
             this.arrowCtr = !this.arrowCtr;
-
             this.setOrder('count')
         },
 
@@ -176,10 +171,10 @@ export default {
                 await this.delDepartment(arr[i])
             }
 
+            await this.fetchDepartments()
+
             this.checkedDepartments = []
             this.isActiveConfirmModal = false;
-
-            await this.fetchDepartments();
         },
 
         async setOrder(order) {
@@ -192,7 +187,6 @@ export default {
 
             await this.$store.commit('updateOrderBy', this.orderData.orderBy);
             await this.$store.commit('updateDesc', this.orderData.desc);
-
             await this.fetchDepartments();
         },
 
@@ -204,40 +198,26 @@ export default {
             if (this.checkedDepartments.length === this.getDepartments.length) {
                 this.allSelected = true
             }
+        },
+
+        async sendSearchForm() {
+            await this.searchDepartment(this.search)
         }
     },
 
     computed: {
         ...mapGetters(['getDepartments', 'getNextPage', 'getPrevPage', 'getDesc', 'getOrderBy']),
 
-        // getSearch() {
-        //     let searchStr = this.search;
-        //     searchStr = searchStr.trim();
-        //     searchStr = searchStr.toLowerCase();
-        //
-        //     let searchByTitle = this.list.filter(item => item.title.toLowerCase().indexOf(searchStr) !== -1);
-        //     let searchByCounter = this.list.filter(item => String(item.surname).toLowerCase().indexOf(searchStr) !== -1);
-        //     let searchByName = this.list.filter(item => item.name.toLowerCase().indexOf(searchStr) !== -1);
-        //
-        //     if (searchByName.length > 0) {
-        //
-        //         return searchByName;
-        //     }
-        //
-        //     if (searchByCounter.length > 0) {
-        //
-        //         return searchByCounter;
-        //     }
-        //
-        //     return searchByTitle
-        // },
     },
 
     mutations: {
         ...
             mapMutations(['updateDepartmentId', 'updateDesc', 'updateOrderBy']),
     },
+
     mounted() {
+        this.$store.commit('updateOrderBy', this.orderData.orderBy);
+        this.$store.commit('updateDesc', this.orderData.desc);
         this.fetchDepartments()
     },
 
@@ -246,14 +226,6 @@ export default {
             if (this.checkedDepartments.length > 1) {
                 this.disableEditButton = true;
             }
-        },
-        sortParams() {
-            this.$emit('sortParams', {
-                order: this.order,
-                desc: this.desc,
-                nextPage: this.getNextPage,
-                prevPage: this.getPrevPage,
-            })
         },
     },
 }
@@ -420,6 +392,7 @@ export default {
 
     .search-btn {
         height: 100%;
+        cursor: pointer;
         background: url("/images/search_img.png") no-repeat center;
     }
 }

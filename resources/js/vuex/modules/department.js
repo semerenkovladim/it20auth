@@ -95,12 +95,10 @@ export default {
                 })
                 .then(res => {
                     ctx.commit('updateDepartments', res.data.data)
-                    console.log(res.data)
                     ctx.commit('makePagination', res.data)
                     ctx.commit('makeLinks', res.data.links)
 
                 })
-                .catch(err => console.log('error:', err))
         },
 
         setDepId(ctx, $departmentId) {
@@ -114,19 +112,20 @@ export default {
                 .then(res => {
                     ctx.commit('updateDepartment', res.data)
                 })
-                .catch(err => console.log('error:', err)
-                );
         },
 
         async fetchLeads(ctx) {
 
             return await axios
-                .get(`/api/users`)
+                .get(`/api/users`, {
+                    params: {
+                        orderBy: 'id',
+                        desc: true
+                    }
+            })
                 .then(res => {
                     ctx.commit('updateLeads', res.data.data.data)
                 })
-                .catch(err => console.log('error:', err)
-                );
         },
 
         async fetchDepMembers(ctx, departmentId) {
@@ -134,15 +133,13 @@ export default {
             return await axios
                 .get(`/api/users/${departmentId}`, {
                     params: {
-                        orderBy: 'name',
+                        orderBy: 'id',
                         desc: 'desc'
                     }
                 })
                 .then(res => {
                     ctx.commit('updateDepMembers', res.data.data.data)
                 })
-                .catch(err => console.log('error:', err)
-                );
         },
 
         async createNewDepartment(ctx, data) {
@@ -158,7 +155,6 @@ export default {
                 })
                 .catch(res => {
                     ctx.commit('updateResStatus', res.status)
-                    console.log(res.status)
                 })
         },
         async updateDepartment(ctx, data) {
@@ -174,15 +170,12 @@ export default {
                 })
                 .catch(err => {
                     ctx.commit('updateResStatusEditDep', err.error)
-                    console.log(data)
                 })
         },
         async deleteUsers(ctx, user) {
 
             return await axios
                 .put(`/api/user/reset-department/${user}`)
-                .then()
-                .catch(err => console.log(err))
         },
 
         async delDepartment(ctx, idDel) {
@@ -190,7 +183,22 @@ export default {
             return await axios
                 .delete(`api/departments/${idDel}`)
                 .then()
-                .catch(err => console.log(err))
+                .catch()
+        },
+
+        searchDepartment(ctx, data) {
+
+            return axios.get('/api/departments-search', {
+                params: {
+                    data: data
+                }
+            })
+                .then(res => {
+                        ctx.commit('updateDepartments', res.data.data)
+                        ctx.commit('makePagination', res.data)
+                        ctx.commit('makeLinks', res.data.links)
+
+                    })
         },
     },
     getters: {
