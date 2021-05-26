@@ -13,9 +13,9 @@
                         <div class="row menu_content">
                             <div class="col-6"><a class="footer_link" href="http://disk.hardsoft.space/">Диск</a></div>
                             <div class="col-6"><router-link to="/" class="footer_link">Почта</router-link></div>
-                            <div class="col-6"><a class="footer_link" href="http://calendar.hardsoft.space/">Календарь</a></div>
+                            <div class="col-6"><a class="footer_link" href="http://a0543833.xsph.ru/">Календарь</a></div>
                             <div class="col-6"><a class="footer_link" href="http://www.ignatenko-project.store/checkPhoto">Фото</a></div>
-                            <div class="col-6"><a class="footer_link" href="http://a0543833.xsph.ru/">Контакты</a></div>
+                            <div class="col-6"><a class="footer_link" href="http://contacts.hardsoft.space">Контакты</a></div>
                         </div>
                     </div>
                 </div>
