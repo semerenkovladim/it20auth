@@ -46,7 +46,8 @@
                 <ul class="row">
                     <li class="col-1"></li>
                     <li class="col-3">
-                        <span :class="[arrowName ? 'with_sort_active' : 'with_sort']" @click="sortTitle">Название</span>
+                        <span :class="[arrowTitle ? 'with_sort_active' : 'with_sort']"
+                              @click="sortTitle">Название</span>
                     </li>
                     <li class="col-4">
                         <span :class="[arrowLead ? 'with_sort_active' : 'with_sort']"
@@ -59,7 +60,7 @@
             </div>
             <div class="departments_list-body" v-if="successfulSearch">
                 <ul>
-                    <li class="departments_list-item" v-for="(dep, id) in getDepartments" :key="id" @click="getEdit(dep.id)">
+                    <li class="departments_list-item" v-for="(dep, id) in getDepartments" :key="id">
                         <ul class="row list-item_info">
                             <li class="col-1 checkbox_section">
                                 <input type="checkbox"
@@ -70,9 +71,9 @@
                                        @change="checkedAllBox">
                                 <label :for="id"></label>
                             </li>
-                            <li class="col-3">{{ dep.title }}</li>
-                            <li class="col-4">{{ dep.surname }} {{ dep.name }}</li>
-                            <li class="col-4">{{ dep.count }}</li>
+                            <li class="col-3" @click="getEdit(dep.id)">{{ dep.title }}</li>
+                            <li class="col-4" @click="getEdit(dep.id)">{{ dep.surname }} {{ dep.name }}</li>
+                            <li class="col-4" @click="getEdit(dep.id)">{{ dep.count }}</li>
                         </ul>
                     </li>
                 </ul>
@@ -96,19 +97,20 @@ export default {
     data() {
         return {
             search: '',
-            order: "id",
             nextPage: null,
             prevPage: null,
             allSelected: false,
             successfulSearch: true,
             disableEditButton: false,
-            arrowName: false,
+            arrowTitle: false,
             arrowLead: false,
             arrowCtr: false,
-            desc: true,
             isActiveConfirmModal: false,
             checkedDepartments: [],
-            list: []
+            orderData: {
+                orderBy: 'id',
+                desc: false
+            }
         }
     },
 
@@ -126,7 +128,8 @@ export default {
         },
 
         async sortTitle() {
-            this.arrowName = !this.arrowName;
+            this.arrowTitle = !this.arrowTitle;
+            this.orderData.orderBy = 'title';
 
             if (this.arrowLead === false || this.arrowCtr === false) {
                 this.arrowLead = false;
@@ -138,8 +141,9 @@ export default {
         },
 
         sortLead() {
-            if (this.arrowName === false || this.arrowCtr === false) {
-                this.arrowName = false;
+            this.orderData.orderBy = 'surname';
+            if (this.arrowTitle === false || this.arrowCtr === false) {
+                this.arrowTitle = false;
                 this.arrowCtr = false;
             }
 
@@ -149,8 +153,9 @@ export default {
         },
 
         sortCtr() {
-            if (this.arrowName === false || this.arrowLead === false) {
-                this.arrowName = false;
+            this.orderData.orderBy = 'count';
+            if (this.arrowTitle === false || this.arrowLead === false) {
+                this.arrowTitle = false;
                 this.arrowLead = false;
             }
 
@@ -159,7 +164,7 @@ export default {
             this.setOrder('count')
         },
 
-        getEdit( id = this.checkedDepartments) {
+        getEdit(id = this.checkedDepartments) {
             this.$store.commit('updateDepartmentId', id)
             this.$router.push({name: 'DepartmentEdit'})
         },
@@ -171,7 +176,7 @@ export default {
                 await this.delDepartment(arr[i])
             }
 
-            await this.formList()
+            await this.fetchDepartments(this.orderData);
             this.checkedDepartments = []
             this.isActiveConfirmModal = false;
         },
@@ -188,14 +193,14 @@ export default {
         // },
 
         async setOrder(order) {
-            if (this.order === order) {
-                this.desc = !this.desc
+
+            if (this.orderData.orderBy === order) {
+                this.orderData.desc = !this.orderData.desc
             } else {
-                this.desc = false
+                this.orderData.desc = false
             }
-            this.order = order
-            await this.fetchDepartments(this.order, this.desc)
-            // await this.formList()
+
+            await this.fetchDepartments(this.orderData);
         },
 
         checkedAllBox() {
@@ -240,7 +245,7 @@ export default {
             mapMutations(['updateDepartmentId']),
     },
     mounted() {
-        this.setOrder()
+        this.setOrder("id")
     },
 
     watch: {
@@ -258,9 +263,6 @@ export default {
             })
         },
     },
-    created() {
-
-    }
 }
 </script>
 

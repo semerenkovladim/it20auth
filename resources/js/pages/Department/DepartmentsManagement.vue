@@ -47,7 +47,7 @@
                                 v-for="(page, index) in getLastPage"
                                 :key='index'
                                 :class='getCurrentPage'>
-                                <span class="page-link activePage">{{ page}}</span>
+                                <span class="page-link activePage">{{ page }}</span>
                             </li>
                             <li class="page-item gotoNextPage" @click.prevent="gotoNextPage">
                                 <a href="#" class="page-link" aria-label="Next">
@@ -74,7 +74,7 @@ export default {
             prevPage: null,
             order: 'id',
             desc: true,
-            pageList:[],
+            pageList: [],
         }
     },
 
@@ -101,7 +101,17 @@ export default {
             this.desc = data.desc
             this.nextPage = data.nextPage
             this.prevPage = data.prevPage
-        }
+        },
+        pages() {
+            let i = 1;
+            let linksLength = this.getLinks.length - 1;
+            let pages;
+            for (i; i < linksLength; i++) {
+                this.pageList.push(this.getLinks[i])
+            }
+            console.log(this.pageList)
+            console.log(this.getLinks)
+        },
     },
     computed: {
         ...mapGetters([
@@ -113,6 +123,9 @@ export default {
             'getDepartments',
         ]),
     },
+    mounted() {
+        this.pages()
+    }
 }
 </script>
 

@@ -102,7 +102,7 @@
 </template>
 
 <script>
-import {mapActions} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
     name: "Sidebar",
@@ -110,32 +110,12 @@ export default {
     data() {
         return {
             showMenu: false,
-            user: {
-                is_admin: false,
-                access_level: {
-                    disk: 0,
-                    mail: 0,
-                    contacts: 0,
-                    photo: 0,
-                    calendar: 0
-                }
-            },
         }
     },
     methods: {
         ...mapActions([
             'getProfile'
         ])
-    },
-    async mounted() {
-        await this.getProfile(this.auth_user.id)
-        this.user = Object.assign(this.user, this.auth_user)
-        console.log('User', this.user)
-    },
-    computed: {
-        auth_user() {
-            return this.$store.getters.user;
-        }
     },
     created() {
         let vm = this;
@@ -144,6 +124,11 @@ export default {
                 if (!el.target.closest('.sidebar') && !el.target.closest('.sidebar_arrow')) vm.$emit('closeEvent');
             }
         }
+    },
+    computed: {
+        ...mapGetters([
+            'user',
+        ]),
     }
 }
 </script>

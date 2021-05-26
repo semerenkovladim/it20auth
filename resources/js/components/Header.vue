@@ -23,7 +23,7 @@
             <div class="avatar_wrapper"
                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img :src="user.avatar" alt="avatar" v-if="user.avatar">
-                <div class="initials" v-else>{{ setInitials(user.surname, user.name) }}</div>
+                <div class="initials" v-else>{{ setInitials }}</div>
             </div>
             <div class="dropdown">
                 <button class="btn drop dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
@@ -67,12 +67,6 @@ export default {
         toggleShow() {
             this.show = false
         },
-        setInitials(surname, name) {
-            if (surname && name) {
-                return surname.slice(0, 1) + ' ' + name.slice(0, 1)
-            }
-        },
-
         logout() {
             axios.post('/api/logout', {}, {
                 headers: {
@@ -91,11 +85,11 @@ export default {
             'access_token',
             'user'
         ]),
-        // setInitials() {
-        //     if (this.user.surname && this.user.name) {
-        //         return this.user.surname.slice(0, 1) + ' ' + this.user.name.slice(0, 1)
-        //     }
-        // },
+        setInitials() {
+             if (this.user.surname && this.user.name) {
+                 return this.user.surname.slice(0, 1) + ' ' + this.user.name.slice(0, 1)
+             }
+        },
     },
 
 }
