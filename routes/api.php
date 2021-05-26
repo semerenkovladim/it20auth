@@ -42,6 +42,7 @@ Route::post('/login/resend-code/reserved', [ResetPasswordController::class, 'res
 Route::post('/login/repair-password/new-password', [ResetPasswordController::class, 'resetPassword']);
 
 Route::get('/users', [UserController::class, 'index'])->name('users');
+Route::get('/users/all', [UserController::class, 'allUsersForDepartment'])->name('allUsersForDepartment');
 Route::get('/users/{id}', [UserController::class, 'in_department'])->name('usersInDepartment');
 Route::post('/users/delete', [UserController::class, 'destroy'])->name('usersDelete');
 Route::get('/user/{id}', [UserController::class, 'show'])->name('user');

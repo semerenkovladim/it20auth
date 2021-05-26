@@ -30,6 +30,11 @@ class UserController extends Controller
         return response()->json(['data' => $users, 'request' => $request->all(), 'status' => $status]);
     }
 
+    public function allUsersForDepartment()
+    {
+        return $users = User::all();
+    }
+
     public function in_department(Request $request, $id)
     {
         if ($request->desc === 'true') {

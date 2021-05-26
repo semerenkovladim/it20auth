@@ -117,14 +117,14 @@ export default {
         async fetchLeads(ctx) {
 
             return await axios
-                .get(`/api/users`, {
+                .get(`/api/users/all`, {
                     params: {
                         orderBy: 'id',
                         desc: true
                     }
             })
                 .then(res => {
-                    ctx.commit('updateLeads', res.data.data.data)
+                    ctx.commit('updateLeads', res.data)
                 })
         },
 

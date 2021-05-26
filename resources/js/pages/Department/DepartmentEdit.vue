@@ -37,7 +37,7 @@
                                 </li>
                                 <li class="required_field">
                                     <label for="name" class="required">Название:</label>
-                                    <input type="text" id="name" class="requiredInput" v-model="title" >
+                                    <input type="text" id="name" class="requiredInput" v-model="title">
                                 </li>
                                 <li class="required_field">
                                     <label for="lead" class="required">Руководитель:</label>
@@ -59,7 +59,7 @@
                                                              :to-delete-users="toDeleteUsers"/>
                                 </li>
                                 <li class="form-btns">
-                                    <button type="submit" class="btnSave">Сохранить</button>
+                                    <button type="submit" class="btnSave" :disabled="disableSaveBtn">Сохранить</button>
                                     <button type="button" class="btnCancel" @click="this.resetChange">Отмена</button>
                                 </li>
                             </ul>
@@ -81,6 +81,7 @@ export default {
     data() {
         return {
             depHead: null,
+            disableSaveBtn: false,
             isActiveWorkersList: false,
             popupShow: false,
             title: null,
@@ -152,7 +153,7 @@ export default {
         validation() {
             let title = this.title;
             let head_department = this.depHead;
-            if ( head_department == null || head_department < 1) {
+            if (head_department == null || head_department < 1) {
                 this.errors.push('Поле "Руководитель" обязательно для заполнения.')
             }
 
@@ -166,7 +167,6 @@ export default {
                     input.classList.add('emptyInput')
                 } else {
                     input.classList.remove('emptyInput')
-
                 }
             }
         },
@@ -174,6 +174,14 @@ export default {
     computed: {
         ...mapGetters(['getLeads', 'getDepartmentId', 'getDepartment', 'getDepMembers', 'getResStatusEditDep']),
     },
+    watch: {
+        disableButton() {
+            if (this.title.length < 1) {
+                this.disableSaveBtn = true;
+            }
+        },
+    },
+
     mounted() {
         this.selectDepartment()
 
@@ -356,7 +364,13 @@ form {
     background-color: #1875F0;
 }
 
-.btnCancel {
+.btnSave[disabled] {
+    margin-left: 60px;
+}
+
+.btnCancel,
+.btnSave[disabled] {
+    opacity: 1;
     margin-left: 5px;
     color: #B3B3B3;
     background-color: #FFFFFF;
