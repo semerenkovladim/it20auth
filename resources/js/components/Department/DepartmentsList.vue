@@ -176,21 +176,11 @@ export default {
                 await this.delDepartment(arr[i])
             }
 
-            await this.fetchDepartments(this.orderData);
             this.checkedDepartments = []
             this.isActiveConfirmModal = false;
+
+            await this.fetchDepartments();
         },
-
-        // getDepartmentsList(list = this.getDepartments) {
-        //     this.list = this.getDepartments;
-        // },
-
-        // async formList() {
-        //     console.log('we' + " " + this.desc)
-        //     await this.fetchDepartments(this.order, this.desc)
-        //
-        //     return  this.getDepartmentsList();
-        // },
 
         async setOrder(order) {
 
@@ -200,7 +190,10 @@ export default {
                 this.orderData.desc = false
             }
 
-            await this.fetchDepartments(this.orderData);
+            await this.$store.commit('updateOrderBy', this.orderData.orderBy);
+            await this.$store.commit('updateDesc', this.orderData.desc);
+
+            await this.fetchDepartments();
         },
 
         checkedAllBox() {
@@ -215,7 +208,7 @@ export default {
     },
 
     computed: {
-        ...mapGetters(['getDepartments', 'getNextPage', 'getPrevPage']),
+        ...mapGetters(['getDepartments', 'getNextPage', 'getPrevPage', 'getDesc', 'getOrderBy']),
 
         // getSearch() {
         //     let searchStr = this.search;
@@ -242,10 +235,10 @@ export default {
 
     mutations: {
         ...
-            mapMutations(['updateDepartmentId']),
+            mapMutations(['updateDepartmentId', 'updateDesc', 'updateOrderBy']),
     },
     mounted() {
-        this.setOrder("id")
+        this.fetchDepartments()
     },
 
     watch: {
@@ -330,51 +323,55 @@ export default {
 }
 
 .depList {
-    overflow-x: auto;
-    min-height: 825px;
-
-    &::-webkit-scrollbar {
-        height: 6px;
-        cursor: pointer;
-        background-color: lighten($designColorOne, 42%);
-    }
-
-    &::-webkit-scrollbar-button {
-        display: none;
-        width: 0;
-        height: 0;
-    }
-
-    &::-webkit-scrollbar-track {
-        background-color: transparent;
-    }
-
-    &::-webkit-scrollbar-track-piece {
-        background-color: transparent;
-    }
-
-    &::-webkit-scrollbar-thumb {
-        border-radius: 15px;
-        background-color: lighten($designColorOne, 20%);
-        cursor: pointer;
-
-        &:hover {
-            cursor: pointer;
-            background-color: lighten($designColorOne, 10%);
-        }
-    }
-
-    &::-webkit-scrollbar-corner {
-        background-color: transparent;
-    }
+    min-height: 894px;
 
     .departments_list-item {
         cursor: pointer;
     }
 
-    @media (min-width: 958px) {
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    @media (max-width: 958px) {
+        & {
+            min-height: auto;
+            overflow-x: auto;
+        }
+
         &::-webkit-scrollbar {
+            height: 6px;
+            cursor: pointer;
+            background-color: lighten($designColorOne, 42%);
+        }
+
+        &::-webkit-scrollbar-button {
             display: none;
+            width: 0;
+            height: 0;
+        }
+
+        &::-webkit-scrollbar-track {
+            background-color: transparent;
+        }
+
+        &::-webkit-scrollbar-track-piece {
+            background-color: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            border-radius: 15px;
+            background-color: lighten($designColorOne, 20%);
+            cursor: pointer;
+
+            &:hover {
+                cursor: pointer;
+                background-color: lighten($designColorOne, 10%);
+            }
+        }
+
+        &::-webkit-scrollbar-corner {
+            background-color: transparent;
         }
     }
 }
@@ -383,6 +380,10 @@ export default {
     > .row {
         height: 88px;
         border-bottom: $depBoxBorder;
+    }
+
+    button[disabled] {
+        border: none;
     }
 
     .departments_list-edit {

@@ -15,6 +15,7 @@ export default {
         statusEditDep: null,
         links: null,
         showPopup: false,
+        orderBy: "id",
         desc: true,
 
     },
@@ -67,18 +68,29 @@ export default {
             state.sortedList = list;
         },
 
+        updateOrderBy(state, order) {
+            state.orderBy = order;
+        },
+
+        updateDesc(state, desc) {
+            state.desc = desc;
+        },
+
         makeLinks(state, links) {
             state.links = links;
-        }
+        },
+
     },
     actions: {
-        async fetchDepartments(ctx, data, url = `api/departments`) {
-console.log(data)
+        async fetchDepartments(ctx, url = `api/departments`) {
+            let order = this.getters.getOrderBy;
+            let desc = this.getters.getDesc;
+
             return await axios
                 .get(url, {
                     params: {
-                        orderBy: data.orderBy,
-                        desc: data.desc
+                        orderBy: order,
+                        desc: desc
                     }
                 })
                 .then(res => {
@@ -236,6 +248,14 @@ console.log(data)
 
         getShowPopup(state) {
             return state.showPopup
+        },
+
+        getDesc(state) {
+            return state.desc
+        },
+
+        getOrderBy(state) {
+            return state.orderBy
         },
     },
 }

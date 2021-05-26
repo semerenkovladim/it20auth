@@ -29,10 +29,7 @@
                         <div class="empty_area"></div>
                     </div>
                     <div class="col-md-9 departments_list-box">
-                        <departments-list
-                            ref="departmentsList"
-                            @sortParams="sortParams"
-                            :pag-list="pageList"/>
+                        <departments-list/>
                     </div>
                 </div>
                 <div class="row">
@@ -40,18 +37,16 @@
                     <div class="col-md-9 box-pagination">
                         <ul class="row pagination">
                             <li class="page-item gotoPrevPage" @click.prevent="gotoPrevPage">
-                                <a href="#" class="page-link" aria-label="Previous">
-                                </a>
+                                <button :disabled='getPrevPage === null' class="page-link"></button>
                             </li>
                             <li class="page-item"
-                                v-for="(page, index) in getLastPage"
+                                v-for="(page, index) in pageList"
                                 :key='index'
-                                :class='getCurrentPage'>
-                                <span class="page-link activePage">{{ page }}</span>
+                                @click="gotoPage(page.url)">
+                                <span class="page-link activePage">{{ page.label }}</span>
                             </li>
                             <li class="page-item gotoNextPage" @click.prevent="gotoNextPage">
-                                <a href="#" class="page-link" aria-label="Next">
-                                </a>
+                                <button :disabled='getNextPage === null' class="page-link"></button>
                             </li>
                         </ul>
                     </div>
@@ -86,31 +81,25 @@ export default {
         ...mapActions(['fetchDepartments']),
         gotoNextPage() {
             this.nextPage = this.getNextPage;
-            this.fetchDepartments(this.order, this.desc, this.nextPage)
-            this.pageList = this.getDepartments;
-            this.$refs.departmentsList.getDepartmentsList(this.pageList);
+            this.fetchDepartments(this.nextPage)
         },
         gotoPrevPage() {
             this.prevPage = this.getPrevPage;
-            this.fetchDepartments(this.order, this.desc, this.prevPage);
-            this.pageList = this.getDepartments;
-            this.$refs.departmentsList.getDepartmentsList(this.pageList);
+            this.fetchDepartments(this.prevPage);
         },
-        sortParams(data) {
-            this.order = data.order
-            this.desc = data.desc
-            this.nextPage = data.nextPage
-            this.prevPage = data.prevPage
+
+        gotoPage(url) {
+          this.fetchDepartments(url)
         },
         pages() {
             let i = 1;
-            let linksLength = this.getLinks.length - 1;
-            let pages;
-            for (i; i < linksLength; i++) {
+            let linksLength = this.getLastPage;
+
+            for (i; i <= linksLength; i++) {
                 this.pageList.push(this.getLinks[i])
             }
+
             console.log(this.pageList)
-            console.log(this.getLinks)
         },
     },
     computed: {
