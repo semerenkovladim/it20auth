@@ -157,7 +157,7 @@ export default {
                     ctx.commit('updateShowPopup', true)
                 })
                 .catch(res => {
-                    ctx.commit('updateResStatus', res.status)
+                    ctx.commit('updateResStatus', res.response.status)
                 })
         },
         async updateDepartment(ctx, data) {

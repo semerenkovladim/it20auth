@@ -24,7 +24,7 @@ class Department extends Model
     ];
 
     protected $rules = [
-        'title' => 'required|string|min:1|max:255',
+        'title' => 'required|unique:departments|string|min:1|max:255',
         'head_department' => 'required|integer|min:1|max:150000',
     ];
 

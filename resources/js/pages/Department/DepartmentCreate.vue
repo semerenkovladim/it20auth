@@ -72,6 +72,7 @@ import {mapActions, mapGetters} from 'vuex';
 
 export default {
     name: "DepartmentCreate",
+
     data() {
         return {
             department: {
@@ -84,49 +85,13 @@ export default {
             errors: [],
         }
     },
+
     components: {
         DepartmentWorkersList,
         MessagePopup
     },
+
     methods: {
-        showWorkers() {
-            this.isActiveWorkersList = !this.isActiveWorkersList
-        },
-        ...mapActions(['fetchLeads', 'createNewDepartment']),
-        async setFormData() {
-            this.formData = {
-                title: this.title,
-                head_department: this.depHead
-            }
-        },
-
-        async sendFormData() {
-            this.errors = [];
-            await this.createNewDepartment(this.department);
-            await this.validation();
-            let $resStatus = this.getResStatus;
-            if ($resStatus === 200) {
-                this.popupShow = true;
-            }
-        },
-
-        closePopup() {
-            this.popupShow = false;
-            this.$router.push({name: 'DepartmentsManagement'})
-        },
-
-        checkInputs() {
-            let inputs = document.querySelectorAll('.requiredInput')
-            for (let input of inputs) {
-                if (input.value.trim().length < 1) {
-                    input.classList.add('emptyInput')
-                } else {
-                    input.classList.remove('emptyInput')
-
-                }
-            }
-        },
-
         validation() {
             let title = this.department.title;
             let head_department = this.department.departmentHead;
@@ -148,14 +113,53 @@ export default {
                 }
             }
         },
+
+        showWorkers() {
+            this.isActiveWorkersList = !this.isActiveWorkersList
+        },
+        ...mapActions(['fetchLeads', 'createNewDepartment']),
+        async setFormData() {
+            this.formData = {
+                title: this.title,
+                head_department: this.depHead
+            }
+        },
+
+        async sendFormData() {
+            this.errors = [];
+            await this.createNewDepartment(this.department);
+            await this.validation();
+            let $resStatus = this.getResStatus;
+            if ($resStatus === 200) {
+
+                 return this.popupShow = true;
+            }
+        },
+
+        closePopup() {
+            this.popupShow = false;
+            this.$router.push({name: 'DepartmentsManagement'})
+        },
+
+        checkInputs() {
+            let inputs = document.querySelectorAll('.requiredInput')
+            for (let input of inputs) {
+                if (input.value.trim().length < 1) {
+                    input.classList.add('emptyInput')
+                } else {
+                    input.classList.remove('emptyInput')
+
+                }
+            }
+        },
     },
-    computed: {
+        computed: {
         ...mapGetters(['getLeads', 'getResStatus', 'getShowPopup']),
     },
+
     mounted() {
         this.fetchLeads()
     },
-
 }
 </script>
 
